@@ -22,7 +22,7 @@
         <activity
             android:configChanges="orientation"
             android:label="@string/app_name"
-            android:name=".RoutePager"
+            android:name=".activites.RoutePickerActivity"
             android:screenOrientation="portrait" >
             <intent-filter >
                 <action android:name="android.intent.action.MAIN" />
@@ -33,28 +33,28 @@
         <activity
             android:configChanges="orientation"
             android:label="Stop List"
-            android:name=".StopList"
+            android:name=".activites.StopListActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity
             android:configChanges="orientation"
             android:label="Stop View"
-            android:name=".StopView"
+            android:name=".activites.StopViewActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity
             android:configChanges="orientation"
             android:label="About"
-            android:name=".AboutView"
+            android:name=".activites.CreditsActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity
             android:label="Preferences"
-            android:name=".Preferences" >
+            android:name=".activites.PreferencesActivity" >
         </activity>
         <activity
             android:label="Nearest Stops"
-            android:name=".NearestStops" >
+            android:name=".activites.NearbyStopListActivity" >
         </activity>
     </application>
 
