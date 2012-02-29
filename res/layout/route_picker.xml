@@ -27,6 +27,16 @@
             android:textColor="@color/white"
             android:textSize="25sp"
             android:textStyle="bold" />
+        
+        <ImageView
+            android:id="@+id/mapButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignBottom="@+id/textView1"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:padding="5dp"
+            android:src="@drawable/ic_menu_mapmode" />
 
         <ImageView
             android:id="@+id/nearestStopsButton"
@@ -36,7 +46,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:padding="5dp"
-            android:src="@drawable/ic_menu_compass" />
+            android:src="@drawable/ic_menu_mylocation" />
     </LinearLayout>
 
     <com.viewpagerindicator.TitlePageIndicator

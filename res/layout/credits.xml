@@ -10,7 +10,7 @@
         android:background="@drawable/titlebardrawable"
         android:gravity="center"
         android:paddingLeft="5sp"
-        android:text="GT NextBus"
+        android:text="GT NEXTBUS"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/white"
         android:textSize="25sp"
