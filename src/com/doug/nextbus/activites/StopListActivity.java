@@ -54,7 +54,7 @@ public class StopListActivity extends Activity {
 
 //		routeTitle.setOnClickListener(new OnClickListener() {
 //
-//			@Override
+//			
 //			public void onClick(View v) {
 //
 //				Intent intent = new Intent(getApplicationContext(), RoutePager.class);
@@ -77,7 +77,7 @@ public class StopListActivity extends Activity {
 			stopList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, stops));
 
 			stopList.setOnItemClickListener(new OnItemClickListener() {
-				@Override
+				
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 					Intent intent = new Intent(getApplicationContext(), StopViewActivity.class);
 					intent.putExtra("stoptag", ((String[]) stoptags)[position]);
@@ -91,14 +91,14 @@ public class StopListActivity extends Activity {
 
 	}
 
-	@Override
+	
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.stock_menu, menu);
 		return true;
 	}
 
-	@Override
+	
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {

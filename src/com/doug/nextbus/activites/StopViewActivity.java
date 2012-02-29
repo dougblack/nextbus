@@ -149,7 +149,7 @@ public class StopViewActivity extends Activity {
 
 		arrivalList.setOnItemClickListener(new OnItemClickListener() {
 
-			@Override
+			
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
 				if (!arrivals[0].equals("No other arrivals")) {
@@ -175,7 +175,7 @@ public class StopViewActivity extends Activity {
 		//
 		// titleBar.setOnClickListener(new OnClickListener() {
 		//
-		// @Override
+		// 
 		// public void onClick(View v) {
 		//
 		// Intent intent = new Intent(getApplicationContext(),
@@ -188,7 +188,7 @@ public class StopViewActivity extends Activity {
 
 		refreshButton.setOnClickListener(new OnClickListener() {
 
-			@Override
+			
 			public void onClick(View v) {
 				routeViewProgressBar.setVisibility(View.VISIBLE);
 				refresh(route, stoptag);
@@ -198,7 +198,7 @@ public class StopViewActivity extends Activity {
 
 		// starButton.setOnClickListener(new OnClickListener() {
 		//
-		// @Override
+		// 
 		// public void onClick(View v) {
 		// Data.setFavoriteStop(route, stoptag, stop);
 		// Toast.makeText(thisActivity.getApplicationContext(),
@@ -211,7 +211,7 @@ public class StopViewActivity extends Activity {
 		arrivalDrawer = (SlidingDrawer) this.findViewById(R.id.arrivalsDrawer);
 		arrivalDrawer.setOnDrawerOpenListener(new OnDrawerOpenListener() {
 
-			@Override
+			
 			public void onDrawerOpened() {
 				drawerHandleTextView.setText(stop);
 			}
@@ -220,7 +220,7 @@ public class StopViewActivity extends Activity {
 
 		arrivalDrawer.setOnDrawerCloseListener(new OnDrawerCloseListener() {
 
-			@Override
+			
 			public void onDrawerClosed() {
 				drawerHandleTextView.setText("All Routes for this Stop");
 			}
@@ -238,14 +238,14 @@ public class StopViewActivity extends Activity {
 
 	}
 
-	@Override
+	
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.stock_menu, menu);
 		return true;
 	}
 
-	@Override
+	
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
@@ -289,7 +289,7 @@ public class StopViewActivity extends Activity {
 
 	private class loadPredictionData extends AsyncTask<String, Void, ArrayList<Integer>> {
 
-		@Override
+		
 		protected ArrayList<Integer> doInBackground(String... values) {
 			
 			start = System.currentTimeMillis();

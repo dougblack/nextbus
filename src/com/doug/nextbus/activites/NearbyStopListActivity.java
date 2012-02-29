@@ -57,7 +57,7 @@ public class NearbyStopListActivity extends Activity implements LocationResult {
 
 	}
 
-	@Override
+	
 	public void gotLocation(Location location) {
 
 		if (location != null) {
@@ -114,7 +114,7 @@ public class NearbyStopListActivity extends Activity implements LocationResult {
 					R.layout.customarrivallist, titles, routeDrawables, false));
 			nearestStopsList.setOnItemClickListener(new OnItemClickListener() {
 
-				@Override
+				
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
 					Intent intent = new Intent(thisActivity.getApplicationContext(), StopViewActivity.class);

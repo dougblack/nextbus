@@ -72,7 +72,7 @@ public class LocationController {
     };
     
     private Runnable getLastLocation = new Runnable () {
-        @Override
+
         public void run() {
              lm.removeUpdates(locationListenerGps);
              lm.removeUpdates(locationListenerNetwork);

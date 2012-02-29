@@ -123,19 +123,19 @@ public class RoutePickerActivity extends Activity implements OnSharedPreferenceC
 
 		titleIndicator.setOnPageChangeListener(new OnPageChangeListener() {
 
-			@Override
+			
 			public void onPageScrollStateChanged(int arg0) {
 				// TODO Auto-generated method stub
 
 			}
 
-			@Override
+			
 			public void onPageScrolled(int arg0, float arg1, int arg2) {
 				// TODO Auto-generated method stub
 
 			}
 
-			@Override
+			
 			public void onPageSelected(int position) {
 				if (position > 0 && position < colorOrder.length - 1) {
 					titleIndicator.setSelectedColor(colorOrder[position]);
@@ -169,7 +169,7 @@ public class RoutePickerActivity extends Activity implements OnSharedPreferenceC
 		
 		nearestStopsButton.setOnTouchListener(new OnTouchListener() {
 
-			@Override
+			
 			public boolean onTouch(View arg0, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_DOWN) {
 					nearestStopsButton.setBackgroundColor(R.color.black);
@@ -294,14 +294,14 @@ public class RoutePickerActivity extends Activity implements OnSharedPreferenceC
 
 	}
 
-	@Override
+	
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.stock_menu, menu);
 		return true;
 	}
 
-	@Override
+	
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
@@ -320,19 +320,19 @@ public class RoutePickerActivity extends Activity implements OnSharedPreferenceC
 
 	private class RoutePagerAdapter extends PagerAdapter implements TitleProvider {
 
-		@Override
+		
 		public void destroyItem(View container, int position, Object view) {
 			((ViewPager) container).removeView((ListView) view);
 
 		}
 
-		@Override
+		
 		public void finishUpdate(View arg0) {
 			// TODO Auto-generated method stub
 
 		}
 
-		@Override
+		
 		public int getCount() {
 			if (activeRoutesExist) {
 				return currentRoutes.length;
@@ -345,7 +345,7 @@ public class RoutePickerActivity extends Activity implements OnSharedPreferenceC
 			return POSITION_NONE;
 		}
 		
-		@Override
+		
 		/**
 		 * For each page, make a list view of available stops. Or, if there are directions,
 		 * make a list view of available directions. Then launch the correct activity based
@@ -374,7 +374,7 @@ public class RoutePickerActivity extends Activity implements OnSharedPreferenceC
 				ListView stopList = new ListView(cxt);
 				stopList.setAdapter(new ArrayAdapter<String>(cxt, android.R.layout.simple_list_item_1, itemList));
 				stopList.setOnItemClickListener(new OnItemClickListener() {
-					@Override
+					
 					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 						if (thisRouteHasDirection) {
 							// Route has direction so items have to point to StopListActivity with correct
@@ -411,7 +411,7 @@ public class RoutePickerActivity extends Activity implements OnSharedPreferenceC
 			}
 		}
 
-		@Override
+		
 		public boolean isViewFromObject(View view, Object object) {
 			if (object instanceof ListView)  {
 				return view == ((ListView) object);
@@ -419,26 +419,26 @@ public class RoutePickerActivity extends Activity implements OnSharedPreferenceC
 			return view == ((TextView) object);
 		}
 
-		@Override
+		
 		public void restoreState(Parcelable arg0, ClassLoader arg1) {
 			// TODO Auto-generated method stub
 
 		}
 
-		@Override
+		
 		public Parcelable saveState() {
 			// TODO Auto-generated method stub
 			return null;
 		}
 
-		@Override
+		
 		public void startUpdate(View arg0) {
 
 			// TODO Auto-generated method stub
 
 		}
 
-		@Override
+		
 		public String getTitle(int position) {
 			if (activeRoutesExist) {
 				return Data.capitalize(currentRoutes[position]);
@@ -449,7 +449,7 @@ public class RoutePickerActivity extends Activity implements OnSharedPreferenceC
 
 	}
 
-	@Override
+	
 	public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
 		
 		if (key.equals("showActiveRoutes")) {

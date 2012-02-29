@@ -33,7 +33,7 @@ public class CreditsActivity extends Activity {
 
 		contactList.setOnItemClickListener(new OnItemClickListener() {
 
-			@Override
+			
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
 				switch (position) {
@@ -67,14 +67,14 @@ public class CreditsActivity extends Activity {
 		});
 	}
 
-	@Override
+	
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.about_menu, menu);
 		return true;
 	}
 
-	@Override
+	
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
