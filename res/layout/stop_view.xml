@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/frameLayout1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:id="@+id/titleBar"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/titlebardrawable"
+        android:gravity="center"
+        android:text=""
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/white"
+        android:textSize="25sp"
+        android:textStyle="bold" >
+
+        <ImageView
+            android:id="@+id/homeButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="5dp"
+            android:src="@drawable/ic_menu_home" />
+
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1.10"
+            android:gravity="center_vertical"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:textColor="@color/fade2"
+            android:paddingLeft="5dp"
+            android:text="STOP" />
+
+        <ProgressBar
+            android:id="@+id/routeviewprogressbar"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:padding="10dp" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/arrivalView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/titleBar"
+        android:orientation="vertical"
+        android:textColor="@color/black" >
+
+        <TextView
+            android:id="@+id/stopTextView"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@color/subtitlecolor"
+            android:gravity="center"
+            android:paddingTop="0dp"
+            android:text="Fitten Hall"
+            android:textColor="@color/red"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <View
+            android:id="@+id/colorbar"
+            android:layout_width="wrap_content"
+            android:layout_height="5dp"
+            android:layout_below="@+id/stopTextView"
+            android:layout_centerHorizontal="true"
+            android:background="@color/red" />
+
+        <TextView
+            android:id="@+id/firstArrival"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/colorbar"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="25dp"
+            android:gravity="center"
+            android:text="4"
+            android:textColor="@color/white"
+            android:textSize="150sp" />
+
+        <ImageView
+            android:id="@+id/refreshButton"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/firstArrival"
+            android:layout_marginRight="34dp"
+            android:src="@drawable/ic_menu_refresh" />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/colorSeperator"
+        android:layout_width="270dp"
+        android:layout_height="1dp"
+        android:layout_below="@+id/arrivalView"
+        android:layout_centerHorizontal="true"
+        android:background="@color/red" />
+
+    <TextView
+        android:id="@+id/thirdArrival"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_below="@+id/colorSeperator"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="12"
+        android:textColor="@color/fade2"
+        android:textSize="50sp" />
+
+    <TextView
+        android:id="@+id/fourthArrival"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignBaseline="@+id/thirdArrival"
+        android:layout_alignBottom="@+id/thirdArrival"
+        android:layout_alignRight="@+id/colorSeperator"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="17"
+        android:textColor="@color/fade3"
+        android:textSize="50sp" />
+
+    <TextView
+        android:id="@+id/secondArrival"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignLeft="@+id/colorSeperator"
+        android:layout_below="@+id/arrivalView"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="8"
+        android:textColor="@color/fade1"
+        android:textSize="50sp" />
+
+    <!--
+         <ImageView
+        android:id="@+id/starButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/titleBar"
+        android:src="@drawable/ic_menu_star" />
+    -->
+
+    <SlidingDrawer
+        android:id="@+id/arrivalsDrawer"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/titleBar"
+        android:content="@+id/arrivalList"
+        android:handle="@+id/drawerHandle" >
+
+        <LinearLayout
+            android:id="@+id/drawerHandle"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:background="@color/titlecolor"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/drawerTextView"
+                android:layout_width="fill_parent"
+                android:layout_height="45dp"
+                android:gravity="center"
+                android:text="All Routes for this Stop"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/colorBand"
+                android:layout_width="fill_parent"
+                android:layout_height="5dp"
+                android:orientation="horizontal" >
+
+                <View
+                    android:layout_width="45dp"
+                    android:layout_height="fill_parent" />
+
+                <View
+                    android:layout_width="50dp"
+                    android:layout_height="fill_parent"
+                    android:background="@color/red" />
+
+                <View
+                    android:layout_width="10dp"
+                    android:layout_height="fill_parent" />
+
+                <View
+                    android:layout_width="50dp"
+                    android:layout_height="fill_parent"
+                    android:background="@color/yellow" />
+
+                <View
+                    android:layout_width="10dp"
+                    android:layout_height="fill_parent" />
+
+                <View
+                    android:layout_width="50dp"
+                    android:layout_height="fill_parent"
+                    android:background="@color/blue" />
+
+                <View
+                    android:layout_width="10dp"
+                    android:layout_height="fill_parent" />
+
+                <View
+                    android:layout_width="50dp"
+                    android:layout_height="fill_parent"
+                    android:background="@color/green" />
+
+                <View
+                    android:layout_width="45dp"
+                    android:layout_height="fill_parent" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/arrivalList"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@color/black" >
+        </ListView>
+    </SlidingDrawer>
+
+</RelativeLayout>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<color name="themecolor">#000000</color>
+    <style name="Theme.DarkTheme" parent="android:Theme.NoTitleBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/themecolor</item>
+        <item name="android:colorBackground">@color/themecolor</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+    
+</resources>

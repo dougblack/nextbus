@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="Layout" >
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="showActiveRoutes"
+            android:summary="Based on default route schedule"
+            android:title="Only show active routes" />
+    </PreferenceCategory>
+
+<!--     <PreferenceCategory android:title="Location" >
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="useGPSLocation"
+            android:title="Use GPS location" />
+    </PreferenceCategory> -->
+
+    <PreferenceCategory
+        android:enabled="false"
+        android:title="Upcoming features" >
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:enabled="false"
+            android:key="enableFavoriteStops"
+            android:summary="Allow stops to be saved as favorites"
+            android:title="Enable favorite stops" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:enabled="false"
+            android:key="useColloquialNames"
+            android:summary="Allows renaming of stops to user-supplied names"
+            android:title="Use colloquial names" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:enabled="false"
+            android:key="showMapView"
+            android:summary="Show current bus positions on maps"
+            android:title="Show map view" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

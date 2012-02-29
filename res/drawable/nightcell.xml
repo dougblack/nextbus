@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<item>
+    <shape>
+        <solid android:color="@color/black"></solid>
+    </shape>
+</item>
+<!-- This is the line -->
+<item android:top="10dp" android:bottom="10dp">
+      <shape>
+            <solid android:color="@color/night" />
+      </shape>
+      
+</item>
+<!-- This is the main color -->
+<item android:left="6dp">
+     <shape>
+           <solid android:color="@color/themecolor" />
+            <padding android:left="15dp" />
+     </shape>
+     
+</item>
+
+</layer-list>

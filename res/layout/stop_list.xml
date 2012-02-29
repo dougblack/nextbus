@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linearLayout1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/titleBar"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/titlebardrawable"
+        android:gravity="center"
+        android:text=""
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/white"
+        android:textSize="25sp"
+        android:textStyle="bold" >
+
+        <ImageView
+            android:id="@+id/homeButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="5dp"
+            android:src="@drawable/ic_menu_home" />
+
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1.10"
+            android:gravity="center_vertical"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:textColor="@color/fade2"
+            android:paddingLeft="5dp"
+            android:text="DIRECTION" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/directionTextView"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/subtitlecolor"
+        android:gravity="center"
+        android:paddingLeft="5dp"
+        android:paddingTop="0dp"
+        android:text=""
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <View
+        android:id="@+id/colorbar"
+        android:layout_width="wrap_content"
+        android:layout_height="5dp"
+        android:layout_below="@+id/stopTextView"
+        android:layout_centerHorizontal="true"
+        android:background="@color/red" />
+
+    <ListView
+        android:id="@+id/stopListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" >
+    </ListView>
+
+</LinearLayout>

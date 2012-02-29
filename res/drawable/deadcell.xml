@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<!-- This is the line -->
+<item>
+      <shape>
+            <solid android:color="@color/red" />
+      </shape>
+      
+</item>
+<!-- This is the main color -->
+<item android:left="6dp" android:right="6dp">
+     <shape>
+           <solid android:color="@color/themecolor" />
+            <padding android:left="15dp" />
+     </shape>
+     
+</item>
+
+</layer-list>
