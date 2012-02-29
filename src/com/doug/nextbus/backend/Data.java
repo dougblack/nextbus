@@ -321,7 +321,6 @@ public class Data {
 				for (int j = 0; j < stops.length() -1; j++) {
 					JSONObject stop = stops.getJSONObject(j);
 					if (stop.getString("tag").equals(stoptag)) {
-						Log.i("ARRIVAL", "FOUND ANOTHER ROUTE " + routeName);
 						routesForThisStop.add(routeName);
 					}
 				}

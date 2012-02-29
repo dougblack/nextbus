@@ -70,7 +70,7 @@ public class RoutePickerActivity extends Activity implements OnSharedPreferenceC
 
 		super.onCreate(savedInstance);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.routepager);
+		setContentView(R.layout.route_picker);
 		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		prefs.registerOnSharedPreferenceChangeListener(this);

@@ -45,32 +45,16 @@ public class NearbyStopListActivity extends Activity implements LocationResult {
 	ArrayList<String> stopidOrder;
 	ArrayList<String> titlesOrder;
 	static NearbyStopListActivity thisActivity;
-	static ImageView homeButton;
 
 	public void onCreate(Bundle savedInstance) {
 		super.onCreate(savedInstance);
-		setContentView(R.layout.nearest_stops);
+		setContentView(R.layout.nearby_stop_list);
 		locationController = new LocationController();
-		homeButton = (ImageView) findViewById(R.id.homeButton);
 		nearestStopsList = (ListView) findViewById(R.id.nearestStopsList);
 		gpsProgressBar = (ProgressBar) findViewById(R.id.gpsProgressBar);
 		locationController.getLocation(this.getApplicationContext(), this);
 		thisActivity = this;
 
-		homeButton.setOnTouchListener(new OnTouchListener() {
-
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				if (event.getAction() == MotionEvent.ACTION_DOWN) {
-					homeButton.setBackgroundColor(R.color.black);
-					return true;
-				} else if (event.getAction() == MotionEvent.ACTION_UP) {
-					finish();
-					return true;
-				}
-				return false;	
-			}	
-		});
 	}
 
 	@Override

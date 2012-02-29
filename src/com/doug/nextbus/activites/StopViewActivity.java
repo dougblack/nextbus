@@ -57,10 +57,6 @@ public class StopViewActivity extends Activity {
 
 	static View colorBar;
 	static View colorSeperator;
-	static View colorBandRed;
-	static View colorBandBlue;
-	static View colorBandYellow;
-	static View colorBandGreen;
 
 	static ProgressBar routeViewProgressBar;
 	static ImageView refreshButton;
@@ -76,7 +72,7 @@ public class StopViewActivity extends Activity {
 	static Drawable[] colorInts;
 	static StopViewActivity thisActivity;
 	static Resources resources;
-	static ImageView homeButton;
+	static long start;
 	boolean deadCellOnly;
 
 	public void onCreate(Bundle savedInstance) {
@@ -94,7 +90,6 @@ public class StopViewActivity extends Activity {
 		thisActivity = this;
 		resources = getResources();
 		refreshButton = (ImageView) this.findViewById(R.id.refreshButton);
-		homeButton = (ImageView) this.findViewById(R.id.homeButton);
 		// starButton = (ImageView) this.findViewById(R.id.starButton);
 		firstArrival = (TextView) this.findViewById(R.id.firstArrival);
 		secondArrival = (TextView) this.findViewById(R.id.secondArrival);
@@ -105,10 +100,6 @@ public class StopViewActivity extends Activity {
 
 		colorBar = (View) this.findViewById(R.id.colorbar);
 		colorSeperator = (View) this.findViewById(R.id.colorSeperator);
-		colorBandRed = (View) this.findViewById(R.id.colorBandRed);
-		colorBandBlue = (View) this.findViewById(R.id.colorBandBlue);
-		colorBandGreen = (View) this.findViewById(R.id.colorBandGreen);
-		colorBandYellow = (View) this.findViewById(R.id.colorBandYellow);
 
 		drawerHandleTextView = (TextView) this.findViewById(R.id.drawerTextView);
 		arrivalList = (ListView) this.findViewById(R.id.arrivalList);
@@ -119,7 +110,6 @@ public class StopViewActivity extends Activity {
 		for (String route : arrivalsList) {
 			arrivalsTextList.add(Data.capitalize(route));
 		}
-		Log.i("INFO", "DEAD CELL ONLY");
 		
 
 		drawableList = new ArrayList<Drawable>();
@@ -218,21 +208,6 @@ public class StopViewActivity extends Activity {
 		//
 		// });
 
-		homeButton.setOnTouchListener(new OnTouchListener() {
-
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				if (event.getAction() == MotionEvent.ACTION_DOWN) {
-					homeButton.setBackgroundColor(R.color.black);
-					return true;
-				} else if (event.getAction() == MotionEvent.ACTION_UP) {
-					finish();
-					return true;
-				}
-				return false;
-			}
-		});
-
 		arrivalDrawer = (SlidingDrawer) this.findViewById(R.id.arrivalsDrawer);
 		arrivalDrawer.setOnDrawerOpenListener(new OnDrawerOpenListener() {
 
@@ -316,14 +291,19 @@ public class StopViewActivity extends Activity {
 
 		@Override
 		protected ArrayList<Integer> doInBackground(String... values) {
-
+			
+			start = System.currentTimeMillis();
+			
 			ArrayList<Integer> predictions = APIController.getPrediction(values[0], values[1]);
 
 			return predictions;
 		}
 
 		public void onPostExecute(ArrayList<Integer> predictions) {
-
+			
+			long end = System.currentTimeMillis() - start;
+			Log.i("TIME", "Received and processed prediction in: " + end + "ms");
+			
 			routeViewProgressBar.setVisibility(View.INVISIBLE);
 			// Split up TreeMap into ArrayList for regular view.
 
@@ -339,7 +319,6 @@ public class StopViewActivity extends Activity {
 			} else {
 
 				firstArrival.setText(predictions.get(0).toString());
-				Log.i("INFO", "Prediction values length=" + predictions.size());
 
 				if (predictions.size() > 1)
 					secondArrival.setText(predictions.get(1).toString());

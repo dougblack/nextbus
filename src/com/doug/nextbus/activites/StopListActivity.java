@@ -38,7 +38,6 @@ public class StopListActivity extends Activity {
 	static String route;
 	static String direction;
 	static View colorBar;
-	static ImageView homeButton;
 
 	public void onCreate(Bundle savedInstanceState) {
 
@@ -47,7 +46,6 @@ public class StopListActivity extends Activity {
 		setContentView(R.layout.stop_list);
 
 		data = new Data();
-		homeButton = (ImageView) findViewById(R.id.homeButton);
 		stopList = (ListView) findViewById(R.id.stopListView);
 		directionTextView = (TextView) findViewById(R.id.directionTextView);
 		Bundle extras = getIntent().getExtras();
@@ -90,21 +88,6 @@ public class StopListActivity extends Activity {
 
 			});
 		}
-		
-		homeButton.setOnTouchListener(new OnTouchListener() {
-
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				if (event.getAction() == MotionEvent.ACTION_DOWN) {
-					homeButton.setBackgroundColor(R.color.black);
-					return true;
-				} else if (event.getAction() == MotionEvent.ACTION_UP) {
-					finish();
-					return true;
-				}
-				return false;	
-			}	
-		});
 
 	}
 

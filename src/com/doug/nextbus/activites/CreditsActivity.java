@@ -25,7 +25,7 @@ public class CreditsActivity extends Activity {
 
 	public void onCreate(Bundle savedInstance) {
 		super.onCreate(savedInstance);
-		setContentView(R.layout.about_view);
+		setContentView(R.layout.credits);
 
 		contactList = (ListView) findViewById(R.id.contactList);
 

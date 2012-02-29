@@ -29,7 +29,7 @@ public class APIController {
 	 * @return the ordered array list
 	 */
 	public static ArrayList<Integer> getPrediction(String route, String stoptag) {
-
+		
 		Log.i("Info", "Getting prediction for stoptag=" + stoptag + " and route=" + route);
 		String finalURL = createYQLUrl(route, stoptag);
 		
@@ -44,12 +44,9 @@ public class APIController {
 			e.printStackTrace();
 		}
 		
-		Log.i("JSON!?", "JSON: " + stopPredictionJSON.toString());
-		
 		try {
 			return parseResults(stopPredictionJSON);
 		} catch (Exception e) {
-			e.printStackTrace();
 			ArrayList<Integer> errorPredictionFlag = new ArrayList<Integer>();
 			errorPredictionFlag.add(-1);
 			return errorPredictionFlag;
@@ -69,7 +66,7 @@ public class APIController {
 		
 		JSONArray predictionsJSON = stopPredictionJSON.getJSONObject("query").getJSONObject("results").getJSONArray("p");
 		
-		if (predictionsJSON.length() == 0) {
+		if (predictionsJSON.isNull(0)) {
 			return null;
 		} else {
 			for (int i = 0; i<predictionsJSON.length()-1;i++) {
