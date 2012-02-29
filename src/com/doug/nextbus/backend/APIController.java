@@ -1,161 +1,120 @@
 package com.doug.nextbus.backend;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.TreeMap;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.xml.sax.SAXException;
 
 import android.location.Location;
 import android.util.Log;
 
 public class APIController {
 
-	static String baseURL = "http://www.nextmuni.com/s/COM.NextBus.Servlets.XMLFeed?command=predictions&a=georgia-tech";
+	/**
+	 * This grabs the prediction data for a given stop and returns it in an ordered
+	 * array list
+	 * @param route the route
+	 * @param stoptag the stop tag
+	 * @return the ordered array list
+	 */
+	public static ArrayList<Integer> getPrediction(String route, String stoptag) {
 
-	public static TreeMap<Integer, Object> getPrediction(String route, String stopid) {
-
-		Log.i("Info", "Getting prediction for stopID=" + stopid + " and route=" + route);
-		HashMap<String, Object> predictionData = null;
-		String finalURL = baseURL + "&stopId=" + stopid;
-
-		SAXParserFactory spf = SAXParserFactory.newInstance();
-		SAXParser sp;
+		Log.i("Info", "Getting prediction for stoptag=" + stoptag + " and route=" + route);
+		String finalURL = createYQLUrl(route, stoptag);
+		
+		JSONObject stopPredictionJSON = null;
 		try {
-			sp = spf.newSAXParser();
-			DataHandler dataHandler = new DataHandler();
-			URL predictionXMLURL = new URL(finalURL);
-			InputStream conn = predictionXMLURL.openConnection().getInputStream();
-			sp.parse(conn, dataHandler);
-			predictionData = dataHandler.getXMLData();
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-		} catch (SAXException e) {
-			e.printStackTrace();
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			stopPredictionJSON = readJsonFromUrl(finalURL);
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		Log.i("JSON!?", "JSON: " + stopPredictionJSON.toString());
+		
 		try {
-			HashMap<String, Object> predictionDataMinusBodyTags = (HashMap<String, Object>) predictionData.get("body");
-			return parseResults(predictionDataMinusBodyTags);
-		} catch (NullPointerException npe) {
-			TreeMap<Integer, Object> errorTreeMap = new TreeMap<Integer, Object>();
-			errorTreeMap.put(-1, "error");
-			return errorTreeMap;
+			return parseResults(stopPredictionJSON);
+		} catch (Exception e) {
+			e.printStackTrace();
+			ArrayList<Integer> errorPredictionFlag = new ArrayList<Integer>();
+			errorPredictionFlag.add(-1);
+			return errorPredictionFlag;
 		}
-
 	}
-
-	@SuppressWarnings("unchecked")
-	public static TreeMap<Integer, Object> parseResults(HashMap<String, Object> predictionData) {
-
-		TreeMap<Integer, Object> predictionTreeMap = new TreeMap<Integer, Object>();
-
-		Object predictionObject = predictionData.get("predictions");
-		int deadRoutes = 0;
-		if (predictionObject instanceof ArrayList) {
-			// Multiple routes
-			ArrayList<HashMap<String, Object>> predictionArrayList = (ArrayList<HashMap<String, Object>>) predictionObject;
-			for (HashMap<String, Object> routeHash : predictionArrayList) {
-				String route = (String) routeHash.get("routeTag");
-				HashMap<String, Object> direction = (HashMap<String, Object>) routeHash.get("direction");
-				if ((direction != null) && (direction.get("prediction") != null)) {
-
-					// Get list of predictions.
-					try {
-						ArrayList<HashMap<String, String>> predictions = (ArrayList<HashMap<String, String>>) direction
-								.get("prediction");
-
-						// Cycle through each prediction.
-						for (HashMap<String, String> prediction : predictions) {
-
-							predictionTreeMap = addPredictionToTreeMap(prediction, predictionTreeMap, route);
-						}
-					} catch (ClassCastException e) {
-						predictionTreeMap = addPredictionToTreeMap(
-								(HashMap<String, String>) direction.get("prediction"), predictionTreeMap, route);
-					}
-				} else {
-					// If no predictions exist, put flag in TreeMap.
-					deadRoutes--;
-					Log.i("INFO", "No predictions. Added (" + deadRoutes + ", " + route + ") to TreeMap.");
-					predictionTreeMap.put(deadRoutes, route);
-				}
-			}
-
+	
+	/**
+	 * This takes in the JSON returned from the nextbus feed and puts the predictions into an 
+	 * ArrayList
+	 * @param stopPredictionJSON the nextbus feed
+	 * @return the prediction values in an array list
+	 * @throws JSONException if something fails while grabbing the values
+	 */
+	private static ArrayList<Integer> parseResults(JSONObject stopPredictionJSON) throws JSONException {
+		
+		ArrayList<Integer> predictions = new ArrayList<Integer>();
+		
+		JSONArray predictionsJSON = stopPredictionJSON.getJSONObject("query").getJSONObject("results").getJSONArray("p");
+		
+		if (predictionsJSON.length() == 0) {
+			return null;
 		} else {
-			Log.i("Info", "One route.");
-
-			HashMap<String, Object> predictionHash = (HashMap<String, Object>) predictionObject;
-			String route = (String) predictionHash.get("routeTag");
-			HashMap<String, Object> direction = (HashMap<String, Object>) predictionHash.get("direction");
-			if ((direction != null) && (direction.get("prediction") != null)) {
-				Log.i("Info", "Direction non null");
-				// Get list of predictions.
+			for (int i = 0; i<predictionsJSON.length()-1;i++) {
+				String element = predictionsJSON.getString(i);
+				String trimmedElement = element.trim();
+				Integer timestamp = null;
 				try {
-					ArrayList<HashMap<String, String>> predictions = (ArrayList<HashMap<String, String>>) direction
-							.get("prediction");
-
-					// Cycle through each prediction.
-					for (HashMap<String, String> prediction : predictions) {
-						// Put in tree map > (time, route)
-						Integer minutes = Integer.parseInt(prediction.get("minutes"));
-						predictionTreeMap.put(minutes, route);
-					}
-				} catch (ClassCastException e) {
-					Log.i("INFO", "Class cast exception.");
-					HashMap<String, String> prediction = (HashMap<String, String>) direction.get("prediction");
-					predictionTreeMap.put(Integer.parseInt(prediction.get("minutes")), route);
+					timestamp = Integer.parseInt(trimmedElement);
+				} catch (NumberFormatException nfe) {
+					timestamp = Integer.parseInt(trimmedElement.substring(1));
 				}
-			} else {
-				// If no predictions exist, put flag in TreeMap.
-				deadRoutes--;
-				predictionTreeMap.put(deadRoutes, route);
+				predictions.add(timestamp);
 			}
-
 		}
-		Log.i("INFO", "TreeMap=" + predictionTreeMap.toString());
-		return predictionTreeMap;
-
+		
+		return predictions;
 	}
 
-	public static TreeMap<Integer, Object> addPredictionToTreeMap(HashMap<String, String> prediction,
-			TreeMap<Integer, Object> predictionTreeMap, String route) {
-		// Put in tree map > (time, route)
-		Integer minutes = Integer.parseInt(prediction.get("minutes"));
-		if (predictionTreeMap.containsKey(minutes)) {
-			Log.i("INFO", "Collision!");
-			LinkedList<String> value;
-			if (predictionTreeMap.get(minutes) instanceof LinkedList) {
-				Log.i("INFO", "Added to old LinkedList");
-				value = (LinkedList<String>) predictionTreeMap.get(minutes);
-				value.add(route);
-			} else {
-				Log.i("INFO", "Converted value to LinkedList");
-				value = new LinkedList<String>();
-				value.add((String) predictionTreeMap.get(minutes));
-				value.add(route);
-			}
-			predictionTreeMap.put(minutes, value);
-		} else {
-			predictionTreeMap.put(minutes, route);
+	private static String readAll(Reader rd) throws IOException {
+		StringBuilder sb = new StringBuilder();
+		int cp;
+		while ((cp = rd.read()) != -1) {
+			sb.append((char) cp);
 		}
+		return sb.toString();
+	}
 
-		return predictionTreeMap;
+	private static JSONObject readJsonFromUrl(String url) throws IOException, JSONException {
+		InputStream is = new URL(url).openStream();
+		try {
+			BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+			String jsonText = readAll(rd);
+			JSONObject json = new JSONObject(jsonText);
+			return json;
+		} finally {
+			is.close();
+		}
+	}
+
+	private static String createYQLUrl(String route, String stoptag) {
+		return "http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D%22http"
+				+ "%3A%2F%2Fwww.nextbus.com%2Fpredictor%2FfancyBookmarkablePredictionLayer.shtml%3Fa%3Dgeorgi"
+				+ "a-tech%26r%3D" + route + "%26d%3Dnull%26s%3D" + stoptag + "%26ts%3Dfitten%22%20and%20xpath"
+				+ "%3D%22%2F%2Ftd%5B%40class%3D'predictionNumberForFirstPred'%5D%2Fdiv%2Fp%7C%2F%2Ftd%5B%40cl"
+				+ "ass%3D'predictionNumberForOtherPreds'%5D%2Fdiv%2Fp%22&format=json";
 	}
 
 	public static Object[] findNearestStops(Location location) {

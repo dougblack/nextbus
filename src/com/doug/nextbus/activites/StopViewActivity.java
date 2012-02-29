@@ -66,7 +66,7 @@ public class StopViewActivity extends Activity {
 	static ImageView refreshButton;
 	static ImageView starButton;
 	static String route;
-	static String stopid;
+	static String stoptag;
 	static String stop;
 	static TextView drawerHandleTextView;
 	static ListView arrivalList;
@@ -75,7 +75,6 @@ public class StopViewActivity extends Activity {
 	static String[] arrivals;
 	static Drawable[] colorInts;
 	static StopViewActivity thisActivity;
-	static ArrayList<String> arrivalRouteOrder;
 	static Resources resources;
 	static ImageView homeButton;
 	boolean deadCellOnly;
@@ -87,7 +86,7 @@ public class StopViewActivity extends Activity {
 		setContentView(R.layout.stop_view);
 		Bundle extras = getIntent().getExtras();
 		route = extras.getString("route");
-		stopid = extras.getString("stopid");
+		stoptag = extras.getString("stoptag");
 		stop = extras.getString("stop");
 		deadCellOnly = false;
 		routeViewProgressBar = (ProgressBar) this.findViewById(R.id.routeviewprogressbar);
@@ -96,7 +95,7 @@ public class StopViewActivity extends Activity {
 		resources = getResources();
 		refreshButton = (ImageView) this.findViewById(R.id.refreshButton);
 		homeButton = (ImageView) this.findViewById(R.id.homeButton);
-//		starButton = (ImageView) this.findViewById(R.id.starButton);
+		// starButton = (ImageView) this.findViewById(R.id.starButton);
 		firstArrival = (TextView) this.findViewById(R.id.firstArrival);
 		secondArrival = (TextView) this.findViewById(R.id.secondArrival);
 		thirdArrival = (TextView) this.findViewById(R.id.thirdArrival);
@@ -114,50 +113,111 @@ public class StopViewActivity extends Activity {
 		drawerHandleTextView = (TextView) this.findViewById(R.id.drawerTextView);
 		arrivalList = (ListView) this.findViewById(R.id.arrivalList);
 		arrivalList.setBackgroundColor(getResources().getColor(R.color.black));
+		
+		arrivalsList = Data.getAllRoutesForStop(stoptag);
+		ArrayList<String> arrivalsTextList = new ArrayList<String>();
+		for (String route : arrivalsList) {
+			arrivalsTextList.add(Data.capitalize(route));
+		}
+		Log.i("INFO", "DEAD CELL ONLY");
+		
+
+		drawableList = new ArrayList<Drawable>();
+		if (arrivalsList.size() <= 0) {
+			drawableList.add(getResources().getDrawable(R.drawable.deadcell));
+			arrivalsTextList.add("No other arrivals");
+			deadCellOnly = true;
+		} else {
+			
+			for (String route : arrivalsList) {
+				Drawable cellDrawable = null;
+				if (route.equals("red")) {
+					cellDrawable = getResources().getDrawable(R.drawable.redcell);
+					// colorBandRed.getBackground().setAlpha(255);
+				} else if (route.equals("blue")) {
+					cellDrawable = getResources().getDrawable(R.drawable.bluecell);
+					// colorBandBlue.getBackground().setAlpha(255);
+				} else if (route.equals("trolley")) {
+					cellDrawable = getResources().getDrawable(R.drawable.yellowcell);
+					// colorBandYellow.getBackground().setAlpha(255);
+				} else if (route.equals("green")) {
+					cellDrawable = getResources().getDrawable(R.drawable.greencell);
+					// colorBandGreen.getBackground().setAlpha(255);
+				} else if (route.equals("night")) {
+					cellDrawable = getResources().getDrawable(R.drawable.nightcell);
+				}
+				
+				drawableList.add(cellDrawable);
+			}
+			
+		}
+		
+		arrivals = Data.convertToStringArray(arrivalsTextList);
+
+		arrivalList.setAdapter(new RainbowArrayAdapter(thisActivity, R.layout.customarrivallist, arrivals,
+				drawableList, deadCellOnly));
+
+		arrivalList.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+				if (!arrivals[0].equals("No other arrivals")) {
+					Intent intent = new Intent(thisActivity.getApplicationContext(), StopViewActivity.class);
+					intent.putExtra("stoptag", stoptag);
+					intent.putExtra("route", arrivalsList.get(position));
+					intent.putExtra("stop", stop);
+					startActivity(intent);
+				}
+			}
+
+		});
 
 		// routeTextView.setText(route.toUpperCase());
 		stopTextView.setText(stop);
-//		titleBar = (TextView) this.findViewById(R.id.titleBar);
-//		// TODO
-//		// Doesn't work because View doesn't get redrawn. Fix later
-//		// colorBandRed.getBackground().setAlpha(100);
-//		// colorBandBlue.getBackground().setAlpha(100);
-//		// colorBandYellow.getBackground().setAlpha(100);
-//		// colorBandGreen.getBackground().setAlpha(100);
-//
-//		titleBar.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//
-//				Intent intent = new Intent(getApplicationContext(), RoutePager.class);
-//				intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-//				startActivity(intent);
-//			}
-//
-//		});
+		// titleBar = (TextView) this.findViewById(R.id.titleBar);
+		// // TODO
+		// // Doesn't work because View doesn't get redrawn. Fix later
+		// // colorBandRed.getBackground().setAlpha(100);
+		// // colorBandBlue.getBackground().setAlpha(100);
+		// // colorBandYellow.getBackground().setAlpha(100);
+		// // colorBandGreen.getBackground().setAlpha(100);
+		//
+		// titleBar.setOnClickListener(new OnClickListener() {
+		//
+		// @Override
+		// public void onClick(View v) {
+		//
+		// Intent intent = new Intent(getApplicationContext(),
+		// RoutePager.class);
+		// intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+		// startActivity(intent);
+		// }
+		//
+		// });
 
 		refreshButton.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				routeViewProgressBar.setVisibility(View.VISIBLE);
-				refresh(route, stopid);
+				refresh(route, stoptag);
 			}
 
 		});
 
-//		starButton.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//				Data.setFavoriteStop(route, stopid, stop);
-//				Toast.makeText(thisActivity.getApplicationContext(), "Saved this stop for quick access",
-//						Toast.LENGTH_SHORT).show();
-//			}
-//
-//		});
-		
+		// starButton.setOnClickListener(new OnClickListener() {
+		//
+		// @Override
+		// public void onClick(View v) {
+		// Data.setFavoriteStop(route, stoptag, stop);
+		// Toast.makeText(thisActivity.getApplicationContext(),
+		// "Saved this stop for quick access",
+		// Toast.LENGTH_SHORT).show();
+		// }
+		//
+		// });
+
 		homeButton.setOnTouchListener(new OnTouchListener() {
 
 			@Override
@@ -169,8 +229,8 @@ public class StopViewActivity extends Activity {
 					finish();
 					return true;
 				}
-				return false;	
-			}	
+				return false;
+			}
 		});
 
 		arrivalDrawer = (SlidingDrawer) this.findViewById(R.id.arrivalsDrawer);
@@ -199,7 +259,7 @@ public class StopViewActivity extends Activity {
 		thirdArrival.setText("");
 		fourthArrival.setText("");
 
-		refresh(route, stopid);
+		refresh(route, stoptag);
 
 	}
 
@@ -248,24 +308,29 @@ public class StopViewActivity extends Activity {
 		colorSeperator.setBackgroundColor(getResources().getColor(color));
 	}
 
-	public void refresh(String route, String stopid) {
-		new loadPredictionData().execute(route, stopid);
+	public void refresh(String route, String stoptag) {
+		new loadPredictionData().execute(route, stoptag);
 	}
 
-	private class loadPredictionData extends AsyncTask<String, Void, TreeMap<Integer, Object>> {
+	private class loadPredictionData extends AsyncTask<String, Void, ArrayList<Integer>> {
 
 		@Override
-		protected TreeMap<Integer, Object> doInBackground(String... values) {
+		protected ArrayList<Integer> doInBackground(String... values) {
 
-			TreeMap<Integer, Object> predictionTreeMap = APIController.getPrediction(values[0], values[1]);
+			ArrayList<Integer> predictions = APIController.getPrediction(values[0], values[1]);
 
-			return predictionTreeMap;
+			return predictions;
 		}
 
-		public void onPostExecute(TreeMap<Integer, Object> predictionTreeMap) {
+		public void onPostExecute(ArrayList<Integer> predictions) {
 
-			if (predictionTreeMap.firstKey() == Integer.valueOf(-1)
-					&& predictionTreeMap.get(Integer.valueOf(-1)).equals("error")) {
+			routeViewProgressBar.setVisibility(View.INVISIBLE);
+			// Split up TreeMap into ArrayList for regular view.
+
+			
+			drawableList = new ArrayList<Drawable>();
+
+			if (predictions.get(0) == Integer.valueOf(-1)) {
 				firstArrival.setText("--");
 				secondArrival.setText("");
 				thirdArrival.setText("");
@@ -273,158 +338,25 @@ public class StopViewActivity extends Activity {
 
 			} else {
 
-				routeViewProgressBar.setVisibility(View.INVISIBLE);
-				// Split up TreeMap into ArrayList for regular view.
+				firstArrival.setText(predictions.get(0).toString());
+				Log.i("INFO", "Prediction values length=" + predictions.size());
 
-				ArrayList<String> predictionValues = new ArrayList<String>();
-				arrivalsList = new ArrayList<String>();
-				drawableList = new ArrayList<Drawable>();
-				arrivalRouteOrder = new ArrayList<String>();
-
-				int i = 0;
-				for (Map.Entry<Integer, Object> entry : predictionTreeMap.entrySet()) {
-					Object value = entry.getValue();
-					if (value instanceof String) {
-						if (i < 4 && route.equals(entry.getValue())) {
-							if (entry.getKey() != null) {
-								predictionValues.add(entry.getKey().toString());
-							} else {
-								predictionValues.add("--");
-								i = 5;
-							}
-							i++;
-						}
-					} else {
-
-						LinkedList<String> valueLL = (LinkedList<String>) value;
-						ListIterator<String> itr = valueLL.listIterator();
-						while (itr.hasNext()) {
-							String next = itr.next();
-							if (next.equals(route)) {
-								predictionValues.add(entry.getKey().toString());
-							}
-						}
-					}
-				}
-
-				if (Integer.parseInt(predictionValues.get(0)) < 0) {
-					firstArrival.setText("--");
+				if (predictions.size() > 1)
+					secondArrival.setText(predictions.get(1).toString());
+				else
 					secondArrival.setText("");
+				if (predictions.size() > 2)
+					thirdArrival.setText(predictions.get(2).toString());
+				else
 					thirdArrival.setText("");
+				if (predictions.size() > 3)
+					fourthArrival.setText(predictions.get(3).toString());
+				else
 					fourthArrival.setText("");
-				} else {
-					firstArrival.setText(predictionValues.get(0));
-					Log.i("INFO", "Prediction values length=" + predictionValues.size());
-
-					if (predictionValues.size() > 1)
-						secondArrival.setText(predictionValues.get(1));
-					else
-						secondArrival.setText("");
-					if (predictionValues.size() > 2)
-						thirdArrival.setText(predictionValues.get(2));
-					else
-						thirdArrival.setText("");
-					if (predictionValues.size() > 3)
-						fourthArrival.setText(predictionValues.get(3));
-					else
-						fourthArrival.setText("");
-				}
-
-				// Split up TreeMap for slidingDrawer view.
-				Drawable cellDrawable = null;
-				for (Map.Entry<Integer, Object> entry : predictionTreeMap.entrySet()) {
-					Integer key = entry.getKey();
-					Object route = entry.getValue();
-					if (route instanceof String) {
-						if (key >= 0) {
-							if (key == Integer.valueOf(1)) {
-								String arrival = key.toString() + " minute";
-								arrivalsList.add(arrival);
-							} else {
-								String arrival = key.toString() + " minutes";
-								arrivalsList.add(arrival);
-							}
-
-							if (route.equals("red")) {
-								cellDrawable = getResources().getDrawable(R.drawable.redcell);
-								// colorBandRed.getBackground().setAlpha(255);
-							} else if (route.equals("blue")) {
-								cellDrawable = getResources().getDrawable(R.drawable.bluecell);
-								// colorBandBlue.getBackground().setAlpha(255);
-							} else if (route.equals("trolley")) {
-								cellDrawable = getResources().getDrawable(R.drawable.yellowcell);
-								// colorBandYellow.getBackground().setAlpha(255);
-							} else if (route.equals("green")) {
-								cellDrawable = getResources().getDrawable(R.drawable.greencell);
-								// colorBandGreen.getBackground().setAlpha(255);
-							} else if (route.equals("night")) {
-								cellDrawable = getResources().getDrawable(R.drawable.nightcell);
-							}
-							arrivalRouteOrder.add((String) route);
-							drawableList.add(cellDrawable);
-						}
-					} else {
-						if (key != Integer.valueOf(-1)) {
-							String minutesString = (key == Integer.valueOf(1)) ? " minute" : " minutes";
-
-							LinkedList<String> routeLL = (LinkedList<String>) route;
-							ListIterator<String> itr = routeLL.listIterator();
-
-							while (itr.hasNext()) {
-								arrivalsList.add(key.toString() + minutesString);
-								String next = itr.next();
-								if (next.equals("red")) {
-									cellDrawable = getResources().getDrawable(R.drawable.redcell);
-								} else if (next.equals("blue")) {
-									cellDrawable = getResources().getDrawable(R.drawable.bluecell);
-								} else if (next.equals("trolley")) {
-									cellDrawable = getResources().getDrawable(R.drawable.yellowcell);
-								} else if (next.equals("green")) {
-									cellDrawable = getResources().getDrawable(R.drawable.greencell);
-								} else if (next.equals("night")) {
-									cellDrawable = getResources().getDrawable(R.drawable.nightcell);
-								}
-								arrivalRouteOrder.add(next);
-								drawableList.add(cellDrawable);
-
-							}
-
-						}
-					}
-
-				}
 
 			}
 
-			if (arrivalsList.size() == 0) {
-				Log.i("INFO", "DEAD CELL ONLY");
-				arrivalsList.add("No other arrivals");
-				arrivals = Data.convertToStringArray(arrivalsList);
-				drawableList.add(getResources().getDrawable(R.drawable.deadcell));
-				deadCellOnly = true;
 
-			} else {
-				arrivals = Data.convertToStringArray(arrivalsList);
-			}
-
-			arrivalList.setAdapter(new RainbowArrayAdapter(thisActivity, R.layout.customarrivallist, arrivals,
-					drawableList, deadCellOnly));
-
-			arrivalList.setOnItemClickListener(new OnItemClickListener() {
-
-				@Override
-				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-					if (!arrivals[0].equals("No other arrivals")) {
-						Intent intent = new Intent(thisActivity.getApplicationContext(), StopViewActivity.class);
-						intent.putExtra("stopid", stopid);
-						intent.putExtra("route", arrivalRouteOrder.get(position));
-						intent.putExtra("stop", stop);
-						startActivity(intent);
-					}
-				}
-
-			});
 
 		}
 

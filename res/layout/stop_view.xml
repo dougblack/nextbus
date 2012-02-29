@@ -169,7 +169,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="45dp"
                 android:gravity="center"
-                android:text="All Routes for this Stop"
+                android:text="All Routes For This Stop"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -180,6 +180,7 @@
                 android:layout_height="5dp"
                 android:orientation="horizontal" >
 
+                
                 <View
                     android:layout_width="45dp"
                     android:layout_height="fill_parent" />

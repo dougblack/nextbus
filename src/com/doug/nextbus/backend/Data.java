@@ -308,4 +308,29 @@ public class Data {
 
 	}
 
+	public static ArrayList<String> getAllRoutesForStop(String stoptag) {
+		
+		ArrayList<String> routesForThisStop = new ArrayList<String>();
+		
+		try {
+			JSONArray routes = data.getJSONArray("route");
+			for (int i = 0; i < routes.length() -1; i++) {
+				JSONObject route = routes.getJSONObject(i);
+				String routeName = route.getString("tag");
+				JSONArray stops = route.getJSONArray("stop");
+				for (int j = 0; j < stops.length() -1; j++) {
+					JSONObject stop = stops.getJSONObject(j);
+					if (stop.getString("tag").equals(stoptag)) {
+						Log.i("ARRIVAL", "FOUND ANOTHER ROUTE " + routeName);
+						routesForThisStop.add(routeName);
+					}
+				}
+			}
+		} catch (JSONException je) {
+			// Do nothing. Just don't add any routes...
+		}
+		return routesForThisStop;
+		
+	}
+
 }
