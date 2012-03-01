@@ -35,8 +35,8 @@
             android:layout_alignBottom="@+id/textView1"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:padding="5dp"
-            android:src="@drawable/ic_menu_mapmode" />
+            android:padding="10dp"
+            android:src="@drawable/ic_dialog_map" />
 
         <ImageView
             android:id="@+id/nearestStopsButton"
