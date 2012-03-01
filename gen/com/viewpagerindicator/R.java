@@ -357,7 +357,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int linearLayout1=0x7f06000c;
         public static final int mainlayout=0x7f060008;
         public static final int mapButton=0x7f06000f;
-        public static final int mapprogressbar=0x7f06000a;
+        public static final int mapRefreshButton=0x7f06000a;
         public static final int mapview=0x7f06000b;
         public static final int nearestStopsButton=0x7f060011;
         public static final int nearestStopsList=0x7f06000e;

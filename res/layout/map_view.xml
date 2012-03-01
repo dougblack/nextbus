@@ -29,13 +29,12 @@
             android:paddingLeft="5dp"
             android:text="MAP" />
 
-        <ProgressBar
-            android:id="@+id/mapprogressbar"
-            style="?android:attr/progressBarStyleLarge"
+        <ImageView
+            android:id="@+id/mapRefreshButton"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:gravity="center"
-            android:padding="10dp" />
+            android:padding="10dp"
+            android:src="@drawable/ic_menu_refresh" />
     </LinearLayout>
 
     <com.google.android.maps.MapView
