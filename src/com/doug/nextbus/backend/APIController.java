@@ -232,7 +232,8 @@ public class APIController {
 
 		for (int i = 0; i < busLocationsJSON.length(); i++) {
 			JSONObject busData = busLocationsJSON.getJSONObject(i);
-			String[] entry = { busData.getString("color"), busData.getString("id"), busData.getString("plat"),busData.getString("plng") };
+			String[] entry = { busData.getString("color"), busData.getString("id"), busData.getString("lat"),
+					busData.getString("lng"), busData.getString("plat"), busData.getString("plng") };
 			busLocations.add(entry);
 		}
 
