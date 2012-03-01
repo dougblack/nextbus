@@ -19,6 +19,8 @@ import com.doug.nextbus.location.LocationController;
 import com.doug.nextbus.location.LocationResult;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -131,6 +133,21 @@ public class NearbyStopListActivity extends Activity implements LocationResult {
 			Log.i("INFO", "StopIdOrder=" + stopidOrder.toString());
 
 		} else {
+			gpsProgressBar.setVisibility(View.INVISIBLE);
+			
+			final AlertDialog locationControllerFailedDialog = new AlertDialog.Builder(this).create();
+			locationControllerFailedDialog.setTitle("Location Error");
+			locationControllerFailedDialog.setMessage("No valid location providers! Either turn on GPS or connect to Wi-Fi so your location can be retrieved.");
+			locationControllerFailedDialog.setButton("OK", new DialogInterface.OnClickListener() {
+				
+				public void onClick(DialogInterface dialog, int which) {
+					
+					finish();
+					
+				}
+			});
+			
+			locationControllerFailedDialog.show();
 		}
 	}
 

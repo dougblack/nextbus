@@ -3,11 +3,9 @@ package com.doug.nextbus.activities;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -26,7 +24,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -37,10 +34,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.doug.nextbus.R;
-import com.doug.nextbus.R.color;
-import com.doug.nextbus.R.id;
-import com.doug.nextbus.R.layout;
-import com.doug.nextbus.R.menu;
 import com.doug.nextbus.backend.Data;
 import com.viewpagerindicator.TitlePageIndicator;
 import com.viewpagerindicator.TitlePageIndicator.IndicatorStyle;
@@ -233,7 +226,7 @@ public class RoutePickerActivity extends Activity implements OnSharedPreferenceC
 	 * This method returns the list of active routes by NextBus official schedule
 	 * @return active routes
 	 */
-	public Object[] getActiveRoutesList() {
+	public static Object[] getActiveRoutesList() {
 		ArrayList<String> activeRoutesList = new ArrayList<String>();
 		ArrayList<Integer> activeColorsList = new ArrayList<Integer>();
 		ArrayList<Boolean> activeRoutesHasDirectionsList = new ArrayList<Boolean>();
@@ -244,10 +237,10 @@ public class RoutePickerActivity extends Activity implements OnSharedPreferenceC
 		time.setToNow();
 		int hour = time.hour;
 		int day = time.weekDay - 1;
-		Log.i("INFO", "Current hour: " + hour);
-		Log.i("INFO", "Current weekday: " + day);
-		Log.i("INFO", "Current minutes: " + time.minute);
-		Log.i("INFO", "DST: " + time.isDst);
+//		Log.i("INFO", "Current hour: " + hour);
+//		Log.i("INFO", "Current weekday: " + day);
+//		Log.i("INFO", "Current minutes: " + time.minute);
+//		Log.i("INFO", "DST: " + time.isDst);
 		if (day < 5) {
 			// Monday - Friday
 			if ((hour >= 7) && (hour <= 19)) {
@@ -343,14 +336,12 @@ public class RoutePickerActivity extends Activity implements OnSharedPreferenceC
 			((ViewPager) container).removeView((ListView) view);
 
 		}
-
 		
 		public void finishUpdate(View arg0) {
 			// TODO Auto-generated method stub
 
 		}
 
-		
 		public int getCount() {
 			if (activeRoutesExist) {
 				return currentRoutes.length;
@@ -362,7 +353,6 @@ public class RoutePickerActivity extends Activity implements OnSharedPreferenceC
 		public int getItemPosition(Object object) {
 			return POSITION_NONE;
 		}
-		
 		
 		/**
 		 * For each page, make a list view of available stops. Or, if there are directions,

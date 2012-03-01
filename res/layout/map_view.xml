@@ -29,12 +29,6 @@
             android:paddingLeft="5dp"
             android:text="MAP" />
 
-        <ImageView
-            android:id="@+id/mapRefreshButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:padding="10dp"
-            android:src="@drawable/ic_menu_refresh" />
     </LinearLayout>
 
     <com.google.android.maps.MapView
@@ -43,7 +37,7 @@
         android:layout_height="fill_parent"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/titleBar"
-        android:apiKey="04Qw7Dy0-DFo5aXb2P1UdjQZBSij9MEyI3dWgOw"
+        android:apiKey="04Qw7Dy0-DFoTqFfjak8L4iq28pItb-BPzaxfJw"
         android:clickable="true" />
 
 </RelativeLayout>

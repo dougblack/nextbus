@@ -3,14 +3,10 @@ package com.doug.nextbus.activities;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnTouchListener;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.doug.nextbus.R;
@@ -26,70 +22,141 @@ import com.google.android.maps.OverlayItem;
 public class MapViewActivity extends MapActivity {
 
 	List<Overlay> mapOverlays;
-	Drawable drawable;
-	MapItemizedOverlay itemizedOverlay;
+	Drawable redDot;
+	Drawable blueDot;
+	Drawable greenDot;
+	Drawable yellowDot;
+	Drawable purpleDot;
+	MapItemizedOverlay redOverlay;
+	MapItemizedOverlay blueOverlay;
+	MapItemizedOverlay greenOverlay;
+	MapItemizedOverlay yellowOverlay;
+	MapItemizedOverlay purpleOverlay;
 	MapController mapController;
-	ImageView mapRefreshButton;
 	static ProgressBar pg;
 	MapView mapView;
+	Handler refreshHandler;
+	Runnable updateMapTask;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.map_view);
 
 		mapView = (MapView) findViewById(R.id.mapview);
-		// pg = (ProgressBar) findViewById(R.id.mapprogressbar);
-		// pg.setVisibility(View.INVISIBLE);
-		mapRefreshButton = (ImageView) findViewById(R.id.mapRefreshButton);
 
 		mapOverlays = mapView.getOverlays();
 		mapController = mapView.getController();
+		
+		// Set map zoom. 15 is too close, 17 is too far.
 		mapController.setZoom(16);
-		drawable = this.getResources().getDrawable(R.drawable.ic_menu_compass);
-		itemizedOverlay = new MapItemizedOverlay(drawable);
+		
+		// Grab all the drawables for the bus dots.
+		redDot = this.getResources().getDrawable(R.drawable.red_dot);
+		redOverlay = new MapItemizedOverlay(redDot);
+		blueDot = this.getResources().getDrawable(R.drawable.blue_dot);
+		blueOverlay = new MapItemizedOverlay(blueDot);
+		greenDot = this.getResources().getDrawable(R.drawable.green_dot);
+		greenOverlay = new MapItemizedOverlay(greenDot);
+		yellowDot = this.getResources().getDrawable(R.drawable.yellow_dot);
+		yellowOverlay = new MapItemizedOverlay(yellowDot);
+		purpleDot = this.getResources().getDrawable(R.drawable.purple_dot);
+		purpleOverlay = new MapItemizedOverlay(purpleDot);
 
+		// Center the map
 		GeoPoint centerPoint = new GeoPoint(33776381, -84399759);
 		mapController.animateTo(centerPoint);
-
-		mapRefreshButton.setOnTouchListener(new OnTouchListener() {
-
-			public boolean onTouch(View arg0, MotionEvent event) {
-				if (event.getAction() == MotionEvent.ACTION_DOWN) {
-					mapRefreshButton.setBackgroundColor(R.color.black);
-					return true;
-				} else if (event.getAction() == MotionEvent.ACTION_UP) {
-					mapRefreshButton.setBackgroundColor(0);
-					refreshMap();
-					return true;
-				}
-				return true;
-			}
-		});
 		
-		refreshMap();
+		refreshHandler = new Handler(); 
+		updateMapTask = new Runnable() { 
+
+			public void run() { // Refreshes map every two seconds
+				refreshMap();
+				refreshHandler.postDelayed(this, 2000);
+
+			}
+
+		};
+
+		refreshHandler.post(updateMapTask);
 
 	}
-	
-	public void refreshMap() {
-		ArrayList<String[]> busLocations = APIController.getBusLocations();
-		
-		for(String[] entry : busLocations) {
 
-			int latitude = (int)(Float.parseFloat(entry[2]) * 1e6);
-			int longitude = (int)(Float.parseFloat(entry[3])* 1e6);
-			GeoPoint busLocation = new GeoPoint(latitude, longitude);
-			Log.i("INFO", ""+busLocation.getLatitudeE6()+"," + busLocation.getLongitudeE6());
-			OverlayItem overlayItem = new OverlayItem(busLocation, "", "");
-			itemizedOverlay.addOverlay(overlayItem);
+	/**
+	 * This grabs the current bus locations from the m.gatech.edu URL and plots
+	 * the color-coded locations of the buses. As mentioned above, this gets called
+	 * every two seconds.
+	 */
+	public void refreshMap() {
+		
+		
+		ArrayList<String[]> busLocations = APIController.getBusLocations();
+
+		// clear all current overlays
+		redOverlay.clear(); 
+		blueOverlay.clear();
+		yellowOverlay.clear();
+		greenOverlay.clear();
+		purpleOverlay.clear();
+
+		for (String[] entry : busLocations) {
+
+			try { // TODO - parseFloat fails sometimes?
+				int latitude = (int) (Float.parseFloat(entry[2]) * 1e6);
+				int longitude = (int) (Float.parseFloat(entry[3]) * 1e6);
+				GeoPoint busLocation = new GeoPoint(latitude, longitude);
+				
+				OverlayItem overlayItem = new OverlayItem(busLocation, "", "");
+	
+				String route = entry[0];
+				String[] currentRoutes = (String[]) (RoutePickerActivity.getActiveRoutesList())[0];
+				
+				// Add to the correct overlay.
+				if (currentRoutes.length == 1 && currentRoutes[0].equals("night") && route.equals("red"))
+					purpleOverlay.addOverlay(overlayItem);
+				else if (route.equals("red"))
+					redOverlay.addOverlay(overlayItem);
+				else if (route.equals("blue"))
+					blueOverlay.addOverlay(overlayItem);
+				else if (route.equals("yellow"))
+					yellowOverlay.addOverlay(overlayItem);
+				else if (route.equals("green"))
+					greenOverlay.addOverlay(overlayItem);
+				
+			} catch (NumberFormatException nfe) {
+				Log.e("RefreshMap", "Couldn't parse coordinates");
+			}
 
 		}
-
-		mapOverlays.add(itemizedOverlay);
+		
+		// Add all the drawable lists to the map.
+		mapOverlays.add(redOverlay);
+		mapOverlays.add(blueOverlay);
+		mapOverlays.add(yellowOverlay);
+		mapOverlays.add(greenOverlay);
+		mapOverlays.add(purpleOverlay);
+		mapView.postInvalidate();
+		Log.v("RefreshMap", "Map refreshed");
 	}
 
 	@Override
 	protected boolean isRouteDisplayed() {
 		return false;
+	}
+	
+	/**
+	 * Stop updating location when paused.
+	 */
+	public void onPause() {
+		super.onPause();
+		refreshHandler.removeCallbacks(updateMapTask);
+	}
+	
+	/**
+	 * Resume updating location when resumed.
+	 */
+	public void onResume() {
+		super.onResume();
+		refreshHandler.post(updateMapTask);
 	}
 
 }

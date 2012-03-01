@@ -33,8 +33,7 @@ public class APIController {
 	 */
 	public static ArrayList<Integer> getPrediction(String route, String stoptag) {
 
-		Log.i("Info", "Getting prediction for stoptag=" + stoptag
-				+ " and route=" + route);
+		Log.i("Info", "Getting prediction for stoptag=" + stoptag + " and route=" + route);
 		String finalURL = createYQLUrl(route, stoptag);
 
 		JSONObject stopPredictionJSON = null;
@@ -67,18 +66,17 @@ public class APIController {
 	 * @throws JSONException
 	 *             if something fails while grabbing the values
 	 */
-	private static ArrayList<Integer> parseResults(JSONObject stopPredictionJSON)
-			throws JSONException {
+	private static ArrayList<Integer> parseResults(JSONObject stopPredictionJSON) throws JSONException {
 
 		ArrayList<Integer> predictions = new ArrayList<Integer>();
 
-		JSONArray predictionsJSON = stopPredictionJSON.getJSONObject("query")
-				.getJSONObject("results").getJSONArray("p");
+		JSONArray predictionsJSON = stopPredictionJSON.getJSONObject("query").getJSONObject("results")
+				.getJSONArray("p");
 
 		if (predictionsJSON.isNull(0)) {
 			return null;
 		} else {
-			for (int i = 0; i < predictionsJSON.length() - 1; i++) {
+			for (int i = 0; i < predictionsJSON.length(); i++) {
 				String element = predictionsJSON.getString(i);
 				String trimmedElement = element.trim();
 				Integer timestamp = null;
@@ -103,12 +101,10 @@ public class APIController {
 		return sb.toString();
 	}
 
-	private static JSONObject readJsonFromUrl(String url) throws IOException,
-			JSONException {
+	private static JSONObject readJsonFromUrl(String url) throws IOException, JSONException {
 		InputStream is = new URL(url).openStream();
 		try {
-			BufferedReader rd = new BufferedReader(new InputStreamReader(is,
-					Charset.forName("UTF-8")));
+			BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
 			String jsonText = readAll(rd);
 			JSONObject json = new JSONObject(jsonText);
 			return json;
@@ -120,11 +116,7 @@ public class APIController {
 	private static String createYQLUrl(String route, String stoptag) {
 		return "http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D%22http"
 				+ "%3A%2F%2Fwww.nextbus.com%2Fpredictor%2FfancyBookmarkablePredictionLayer.shtml%3Fa%3Dgeorgi"
-				+ "a-tech%26r%3D"
-				+ route
-				+ "%26d%3Dnull%26s%3D"
-				+ stoptag
-				+ "%26ts%3Dfitten%22%20and%20xpath"
+				+ "a-tech%26r%3D" + route + "%26d%3Dnull%26s%3D" + stoptag + "%26ts%3Dfitten%22%20and%20xpath"
 				+ "%3D%22%2F%2Ftd%5B%40class%3D'predictionNumberForFirstPred'%5D%2Fdiv%2Fp%7C%2F%2Ftd%5B%40cl"
 				+ "ass%3D'predictionNumberForOtherPreds'%5D%2Fdiv%2Fp%22&format=json";
 	}
@@ -152,12 +144,10 @@ public class APIController {
 					if (distance < 300) {
 						String title = stop.getString("title");
 						String stopid = stop.getString("stopid");
-						Log.i("INFO", "Close Stop Found -- Route: " + routeName
-								+ ", Title: " + title);
+						Log.i("INFO", "Close Stop Found -- Route: " + routeName + ", Title: " + title);
 
 						if (routesHash.containsKey(stopid)) {
-							((LinkedList<String>) routesHash.get(stopid))
-									.add(routeName);
+							((LinkedList<String>) routesHash.get(stopid)).add(routeName);
 						} else {
 							LinkedList<String> routeLL = new LinkedList<String>();
 							routeLL.add(routeName);
@@ -166,8 +156,7 @@ public class APIController {
 
 						if (distanceTM.containsKey(distance)) {
 							if (!distanceTM.get(distance).contains(stopid)) {
-								((LinkedList<String>) distanceTM.get(distance))
-										.add(stopid);
+								((LinkedList<String>) distanceTM.get(distance)).add(stopid);
 							}
 						} else {
 
@@ -225,12 +214,10 @@ public class APIController {
 
 	}
 
-	private static JSONArray readJsonArrayFromUrl(String url) throws IOException,
-			JSONException {
+	private static JSONArray readJsonArrayFromUrl(String url) throws IOException, JSONException {
 		InputStream is = new URL(url).openStream();
 		try {
-			BufferedReader rd = new BufferedReader(new InputStreamReader(is,
-					Charset.forName("UTF-8")));
+			BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
 			String jsonText = readAll(rd);
 			JSONArray json = new JSONArray(jsonText);
 			return json;
@@ -240,19 +227,17 @@ public class APIController {
 	}
 
 	private static ArrayList<String[]> parseLocationResults(JSONArray busLocationsJSON) throws JSONException {
-		
+
 		ArrayList<String[]> busLocations = new ArrayList<String[]>();
-		
-		for (int i=0; i<busLocationsJSON.length()-1;i++) {
+
+		for (int i = 0; i < busLocationsJSON.length(); i++) {
 			JSONObject busData = busLocationsJSON.getJSONObject(i);
-			if (busData.getInt("speed") >= 0) {
-				String[] entry = {busData.getString("color"), busData.getString("id"), busData.getString("plat"), busData.getString("plng")};
-				busLocations.add(entry);
-			}
+			String[] entry = { busData.getString("color"), busData.getString("id"), busData.getString("plat"),busData.getString("plng") };
+			busLocations.add(entry);
 		}
-		
+
 		return busLocations;
-		
+
 	}
 
 }
