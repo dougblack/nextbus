@@ -14,7 +14,7 @@ public class MapItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 	private ArrayList<OverlayItem> overlays = new ArrayList<OverlayItem>();
 
 	public MapItemizedOverlay(Drawable defaultMarker) {
-		super(boundCenterBottom(defaultMarker));
+		super(boundCenter(defaultMarker));
 		populate();
 	}
 
@@ -27,7 +27,7 @@ public class MapItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 		if (overlay instanceof BusOverlayItem) {
 			((BusOverlayItem) overlay).rotateDrawable();
 		}
-		overlay.setMarker(boundCenterBottom(overlay.getMarker(0)));
+		overlay.setMarker(boundCenter (overlay.getMarker(0)));
 		overlays.add(overlay);
 		populate();
 	}

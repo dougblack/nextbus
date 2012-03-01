@@ -56,7 +56,9 @@ public class BusOverlayItem extends OverlayItem {
 		Matrix rotateMatrix = new Matrix();
 		rotateMatrix.setRotate((float) Math.toDegrees(angle), tempCanvas.getWidth() / 2, tempCanvas.getHeight() / 2);
 		tempCanvas.drawBitmap(oldBmp, rotateMatrix, null);
-		marker = new BitmapDrawable(canvasBitmap);
+		BitmapDrawable tempBMD = new BitmapDrawable(canvasBitmap);
+		tempBMD.setAntiAlias(true);
+		marker = tempBMD;
 		marker.setBounds(0, 0, defaultDrawable.getIntrinsicWidth(), defaultDrawable.getIntrinsicHeight());
 
 	}

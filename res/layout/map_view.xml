@@ -40,4 +40,32 @@
         android:apiKey="04Qw7Dy0-DFoTqFfjak8L4iq28pItb-BPzaxfJw"
         android:clickable="true" />
 
+    <View
+        android:id="@+id/redButton"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true" />
+
+    <View
+        android:id="@+id/yellowButton"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/redButton" />
+
+    <View
+        android:id="@+id/blueButton"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_alignTop="@+id/yellowButton"
+        android:layout_toRightOf="@+id/yellowButton" />
+
+    <View
+        android:id="@+id/greenButton"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_alignTop="@+id/blueButton"
+        android:layout_toRightOf="@+id/blueButton" />
+
 </RelativeLayout>

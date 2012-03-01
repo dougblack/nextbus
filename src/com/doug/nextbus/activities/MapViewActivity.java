@@ -8,6 +8,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.widget.ProgressBar;
 
 import com.doug.nextbus.R;
@@ -39,6 +43,11 @@ public class MapViewActivity extends MapActivity {
 	MapView mapView;
 	Handler refreshHandler;
 	Runnable updateMapTask;
+	View redButton;
+	View blueButton;
+	View greenButton;
+	View yellowButton;
+	String displayRoute;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -52,40 +61,108 @@ public class MapViewActivity extends MapActivity {
 		// Set map zoom. 15 is too close, 17 is too far.
 		mapController.setZoom(16);
 
+		redButton = (View) findViewById(R.id.redButton);
+		blueButton = (View) findViewById(R.id.blueButton);
+		greenButton = (View) findViewById(R.id.greenButton);
+		yellowButton = (View) findViewById(R.id.yellowButton);
+
+		redButton.setBackgroundColor(getResources().getColor(R.color.red));
+		greenButton.setBackgroundColor(getResources().getColor(R.color.green));
+		blueButton.setBackgroundColor(getResources().getColor(R.color.blue));
+		yellowButton.setBackgroundColor(getResources().getColor(R.color.yellow));
+
+		resetButtonTransparencies();
+		displayRoute = "red";
+		redButton.getBackground().setAlpha(250);
+		redButton.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View arg0) {
+				resetButtonTransparencies();
+				redButton.getBackground().setAlpha(250);
+				displayRoute = "red";
+				refreshMap();
+			}
+		});
+		blueButton.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View arg0) {
+				resetButtonTransparencies();
+				blueButton.getBackground().setAlpha(250);
+				displayRoute = "blue";
+				refreshMap();
+			}
+		});
+		yellowButton.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View arg0) {
+				resetButtonTransparencies();
+				yellowButton.getBackground().setAlpha(250);
+				displayRoute = "yellow";
+				refreshMap();
+			}
+		});
+		greenButton.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View arg0) {
+				resetButtonTransparencies();
+				greenButton.getBackground().setAlpha(250);
+				displayRoute = "green";
+				refreshMap();
+			}
+		});
+
 		// Grab all the drawables for the bus dots.
 		redArrow = this.getResources().getDrawable(R.drawable.red_arrow);
-		redOverlay = new MapItemizedOverlay(redArrow);
-
 		blueArrow = this.getResources().getDrawable(R.drawable.blue_arrow);
-		blueOverlay = new MapItemizedOverlay(blueArrow);
 		greenArrow = this.getResources().getDrawable(R.drawable.green_arrow);
-		greenOverlay = new MapItemizedOverlay(greenArrow);
 		yellowArrow = this.getResources().getDrawable(R.drawable.yellow_arrow);
-		yellowOverlay = new MapItemizedOverlay(yellowArrow);
 		purpleArrow = this.getResources().getDrawable(R.drawable.purple_arrow);
+
 		purpleOverlay = new MapItemizedOverlay(purpleArrow);
+		redOverlay = new MapItemizedOverlay(redArrow);
+		blueOverlay = new MapItemizedOverlay(blueArrow);
+		greenOverlay = new MapItemizedOverlay(greenArrow);
+		yellowOverlay = new MapItemizedOverlay(yellowArrow);
 
 		// Center the map
 		GeoPoint centerPoint = new GeoPoint(33776499, -84398400);
 		mapController.animateTo(centerPoint);
-		while (mapView.getProjection() == null) {
-			Log.i(":LAKSJ", "STILL NULL");
-			mapView.postInvalidate();
-		}
+
 		refreshHandler = new Handler();
 		updateMapTask = new Runnable() {
 
 			public void run() { // Refreshes map every two seconds
-				Log.e("019823740192837401928374", "REFRESH CALLLEDDDDDDDD");
 				new refreshBusLocations().execute();
-				refreshHandler.postDelayed(this, 2000);
-
+				refreshHandler.postDelayed(this, 5000);
 			}
 
 		};
 
 		refreshHandler.post(updateMapTask);
 
+	}
+
+	public void resetButtonTransparencies() {
+		redButton.getBackground().setAlpha(100);
+		greenButton.getBackground().setAlpha(100);
+		blueButton.getBackground().setAlpha(100);
+		yellowButton.getBackground().setAlpha(100);
+	}
+
+	public void refreshMap() {
+		mapOverlays.clear();
+
+		if (displayRoute.equals("red")) {
+			mapOverlays.add(redOverlay);
+		} else if (displayRoute.equals("blue")) {
+			mapOverlays.add(blueOverlay);
+		} else if (displayRoute.equals("yellow")) {
+			mapOverlays.add(yellowOverlay);
+		} else if (displayRoute.equals("green")) {
+			mapOverlays.add(greenOverlay);
+		}
+
+		mapView.postInvalidate();
 	}
 
 	/**
@@ -129,6 +206,12 @@ public class MapViewActivity extends MapActivity {
 			MapItemizedOverlay backgroundGreenOverlay = new MapItemizedOverlay(greenArrow);
 			MapItemizedOverlay backgroundYellowOverlay = new MapItemizedOverlay(yellowArrow);
 			MapItemizedOverlay backgroundBlueOverlay = new MapItemizedOverlay(blueArrow);
+			
+			overlays.add(backgroundPurpleOverlay);
+			overlays.add(backgroundRedOverlay);
+			overlays.add(backgroundBlueOverlay);
+			overlays.add(backgroundYellowOverlay);
+			overlays.add(backgroundGreenOverlay);
 
 			for (String[] entry : busLocations) {
 
@@ -148,14 +231,10 @@ public class MapViewActivity extends MapActivity {
 					if (currentRoutes.length == 1 && currentRoutes[0].equals("night") && route.equals("red")) {
 						busOverlayItem = new BusOverlayItem(busLocation, "", "", pBusLocation, mapView, purpleArrow);
 						backgroundPurpleOverlay.addOverlay(busOverlayItem);
-					}
-
-					else if (route.equals("red")) {
+					} else if (route.equals("red")) {
 						busOverlayItem = new BusOverlayItem(busLocation, "", "", pBusLocation, mapView, redArrow);
 						backgroundRedOverlay.addOverlay(busOverlayItem);
-					}
-
-					else if (route.equals("blue")) {
+					} else if (route.equals("blue")) {
 						busOverlayItem = new BusOverlayItem(busLocation, "", "", pBusLocation, mapView, blueArrow);
 						backgroundBlueOverlay.addOverlay(busOverlayItem);
 					} else if (route.equals("yellow")) {
@@ -170,7 +249,7 @@ public class MapViewActivity extends MapActivity {
 					Log.e("RefreshMap", "Couldn't parse coordinates");
 				}
 			}
-			
+
 			overlays.add(backgroundPurpleOverlay);
 			overlays.add(backgroundRedOverlay);
 			overlays.add(backgroundBlueOverlay);
@@ -179,15 +258,16 @@ public class MapViewActivity extends MapActivity {
 
 			return overlays;
 		}
-		
+
 		public void onPostExecute(ArrayList<MapItemizedOverlay> overlays) {
-			mapOverlays.clear();
-			mapOverlays.add(overlays.get(0));
-			mapOverlays.add(overlays.get(1));
-			mapOverlays.add(overlays.get(2));
-			mapOverlays.add(overlays.get(3));
-			mapOverlays.add(overlays.get(4));
-			mapView.postInvalidate();
+
+			purpleOverlay = overlays.get(0);
+			redOverlay = overlays.get(1);
+			blueOverlay = overlays.get(2);
+			yellowOverlay = overlays.get(3);
+			greenOverlay = overlays.get(4);
+
+			refreshMap();
 			Log.v("RefreshMap", "Map refreshed");
 		}
 
