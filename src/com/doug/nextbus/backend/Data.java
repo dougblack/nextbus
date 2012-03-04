@@ -61,6 +61,46 @@ public class Data {
 
 	}
 
+	public static JSONArray getRoutePathData(String route) {
+		
+		InputStream is = null;
+		
+		if (route.equals("red")) {
+			is = (InputStream) context.getResources().openRawResource(R.raw.redroute);
+		} else if (route.equals("blue")) {
+			is = (InputStream) context.getResources().openRawResource(R.raw.blueroute);
+		} else if (route.equals("green")) {
+			is = (InputStream) context.getResources().openRawResource(R.raw.greenroute);
+		} else if (route.equals("trolley")) {
+			is = (InputStream) context.getResources().openRawResource(R.raw.trolleyroute);
+		}
+		BufferedReader br = new BufferedReader(new InputStreamReader(is));
+		StringBuffer lines = null;
+		JSONObject redRouteData = null;
+		JSONArray redRoutePathData = null;
+		try {
+			lines = new StringBuffer();
+			String line = br.readLine();
+			while (line != null) {
+				lines.append(line);
+				line = br.readLine();
+
+			}
+		} catch (IOException ie) {
+			Log.e("ERROR", "Failed to parse file.");
+		}
+
+		try {
+			redRouteData = new JSONObject(lines.toString());
+			redRoutePathData = redRouteData.getJSONObject("body").getJSONObject("route").getJSONArray("path");
+		} catch (JSONException e) {
+			Log.e("ERROR", "Failed to make into JSON.");
+		}
+		
+		return redRoutePathData;
+
+	}
+
 	public static JSONObject getData() {
 		return data;
 	}
@@ -309,16 +349,16 @@ public class Data {
 	}
 
 	public static ArrayList<String> getAllRoutesForStop(String stoptag) {
-		
+
 		ArrayList<String> routesForThisStop = new ArrayList<String>();
-		
+
 		try {
 			JSONArray routes = data.getJSONArray("route");
-			for (int i = 0; i < routes.length() -1; i++) {
+			for (int i = 0; i < routes.length() - 1; i++) {
 				JSONObject route = routes.getJSONObject(i);
 				String routeName = route.getString("tag");
 				JSONArray stops = route.getJSONArray("stop");
-				for (int j = 0; j < stops.length() -1; j++) {
+				for (int j = 0; j < stops.length() - 1; j++) {
 					JSONObject stop = stops.getJSONObject(j);
 					if (stop.getString("tag").equals(stoptag)) {
 						routesForThisStop.add(routeName);
@@ -329,7 +369,7 @@ public class Data {
 			// Do nothing. Just don't add any routes...
 		}
 		return routesForThisStop;
-		
+
 	}
 
 }

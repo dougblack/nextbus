@@ -65,17 +65,17 @@ public class RoutePickerActivity extends Activity implements OnSharedPreferenceC
 		super.onCreate(savedInstance);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.route_picker);
-		
+
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		prefs.registerOnSharedPreferenceChangeListener(this);
 		hideDeadRoutes = prefs.getBoolean("showActiveRoutes", true);
 		cxt = this;
 		Data.setConfigData(getApplicationContext());
 		data = new Data();
-		
+
 		nearestStopsButton = (ImageView) findViewById(R.id.nearestStopsButton);
 		mapButton = (ImageView) findViewById(R.id.mapButton);
-		
+
 		red = getResources().getColor(R.color.red);
 		blue = getResources().getColor(R.color.blue);
 		green = getResources().getColor(R.color.green);
@@ -84,15 +84,15 @@ public class RoutePickerActivity extends Activity implements OnSharedPreferenceC
 		JSONObject favStop = Data.readStopData();
 
 		// Has the user set a favorite stop yet?
-//		if (favStop != null) {
-//			try {
-//				Log.i("INFO", "Fav stop: " + favStop.toString(3));
-//			} catch (JSONException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		}
-		
+		// if (favStop != null) {
+		// try {
+		// Log.i("INFO", "Fav stop: " + favStop.toString(3));
+		// } catch (JSONException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		// }
+
 		shouldHideRoutes(hideDeadRoutes);
 
 		Log.i("INFO", "Current routes: " + Arrays.toString(currentRoutes));
@@ -118,53 +118,36 @@ public class RoutePickerActivity extends Activity implements OnSharedPreferenceC
 
 		titleIndicator.setOnPageChangeListener(new OnPageChangeListener() {
 
-			
 			public void onPageScrollStateChanged(int arg0) {
 				// TODO Auto-generated method stub
 
 			}
 
-			
 			public void onPageScrolled(int arg0, float arg1, int arg2) {
 				// TODO Auto-generated method stub
 
 			}
 
-			
 			public void onPageSelected(int position) {
-				if (position > 0 && position < colorOrder.length - 1) {
+				if (colorOrder.length > 0) {
 					titleIndicator.setSelectedColor(colorOrder[position]);
 					titleIndicator.setFooterColor(colorOrder[position]);
-//					titleIndicator.setLeftTextColor(colorOrder[position - 1]);
-//					titleIndicator.setRightTextColor(colorOrder[position + 1]);
-				} else if (position == 0) {
-					titleIndicator.setSelectedColor(colorOrder[position]);
-					titleIndicator.setFooterColor(colorOrder[position]);
-//					if (colorOrder.length != 1) {
-//						titleIndicator.setRightTextColor(colorOrder[position + 1]);
-//					}
-				} else if (position == colorOrder.length - 1) {
-					titleIndicator.setSelectedColor(colorOrder[position]);
-					titleIndicator.setFooterColor(colorOrder[position]);
-//					titleIndicator.setLeftTextColor(colorOrder[position - 1]);
 				}
 			}
 
 		});
 		if (activeRoutesExist && currentRoutes.length > 0) {
 			pager.setCurrentItem(1);
-//			titleIndicator.setFooterColor(colorOrder[titleIndicator.getCurrentItem()]);
-//			titleIndicator.setSelectedColor(colorOrder[titleIndicator.getCurrentItem()]);
+			// titleIndicator.setFooterColor(colorOrder[titleIndicator.getCurrentItem()]);
+			// titleIndicator.setSelectedColor(colorOrder[titleIndicator.getCurrentItem()]);
 		} else {
 			pager.setCurrentItem(0);
-//			titleIndicator.setFooterColor(getResources().getColor(R.color.white));
-//			titleIndicator.setSelectedColor(getResources().getColor(R.color.white));
+			// titleIndicator.setFooterColor(getResources().getColor(R.color.white));
+			// titleIndicator.setSelectedColor(getResources().getColor(R.color.white));
 		}
-		
-		
+
 		nearestStopsButton.setOnTouchListener(new OnTouchListener() {
 
-			
 			public boolean onTouch(View arg0, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_DOWN) {
 					nearestStopsButton.setBackgroundColor(R.color.black);
@@ -177,11 +160,11 @@ public class RoutePickerActivity extends Activity implements OnSharedPreferenceC
 				}
 				return true;
 			}
-			
+
 		});
-		
+
 		mapButton.setOnTouchListener(new OnTouchListener() {
-			
+
 			public boolean onTouch(View arg0, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_DOWN) {
 					mapButton.setBackgroundColor(R.color.black);
@@ -213,7 +196,7 @@ public class RoutePickerActivity extends Activity implements OnSharedPreferenceC
 			activeRouteList[2] = hasDirections;
 			setCurrentRoutes(activeRouteList);
 		}
-		
+
 	}
 
 	private void setCurrentRoutes(Object[] activeRoutesList) {
@@ -221,9 +204,11 @@ public class RoutePickerActivity extends Activity implements OnSharedPreferenceC
 		colorOrder = (int[]) activeRoutesList[1];
 		hasDirections = (boolean[]) activeRoutesList[2];
 	}
-	
+
 	/**
-	 * This method returns the list of active routes by NextBus official schedule
+	 * This method returns the list of active routes by NextBus official
+	 * schedule
+	 * 
 	 * @return active routes
 	 */
 	public static Object[] getActiveRoutesList() {
@@ -237,10 +222,10 @@ public class RoutePickerActivity extends Activity implements OnSharedPreferenceC
 		time.setToNow();
 		int hour = time.hour;
 		int day = time.weekDay - 1;
-//		Log.i("INFO", "Current hour: " + hour);
-//		Log.i("INFO", "Current weekday: " + day);
-//		Log.i("INFO", "Current minutes: " + time.minute);
-//		Log.i("INFO", "DST: " + time.isDst);
+		// Log.i("INFO", "Current hour: " + hour);
+		// Log.i("INFO", "Current weekday: " + day);
+		// Log.i("INFO", "Current minutes: " + time.minute);
+		// Log.i("INFO", "DST: " + time.isDst);
 		if (day < 5) {
 			// Monday - Friday
 			if ((hour >= 7) && (hour <= 19)) {
@@ -305,14 +290,12 @@ public class RoutePickerActivity extends Activity implements OnSharedPreferenceC
 
 	}
 
-	
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.stock_menu, menu);
 		return true;
 	}
 
-	
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
@@ -331,12 +314,15 @@ public class RoutePickerActivity extends Activity implements OnSharedPreferenceC
 
 	private class RoutePagerAdapter extends PagerAdapter implements TitleProvider {
 
-		
 		public void destroyItem(View container, int position, Object view) {
-			((ViewPager) container).removeView((ListView) view);
+			if (view instanceof ListView) {
+				((ViewPager) container).removeView((ListView) view);
+			} else {
+				((ViewPager) container).removeView((TextView) view);
+			}
 
 		}
-		
+
 		public void finishUpdate(View arg0) {
 			// TODO Auto-generated method stub
 
@@ -349,24 +335,25 @@ public class RoutePickerActivity extends Activity implements OnSharedPreferenceC
 				return 1;
 			}
 		}
-		
+
 		public int getItemPosition(Object object) {
 			return POSITION_NONE;
 		}
-		
+
 		/**
-		 * For each page, make a list view of available stops. Or, if there are directions,
-		 * make a list view of available directions. Then launch the correct activity based
-		 * on which item in the list view is selected.
+		 * For each page, make a list view of available stops. Or, if there are
+		 * directions, make a list view of available directions. Then launch the
+		 * correct activity based on which item in the list view is selected.
 		 */
 		public Object instantiateItem(View container, int position) {
 			if (activeRoutesExist) {
 				final boolean thisRouteHasDirection = hasDirections[position];
 				String[] itemListTemp = null;
 				String[] stopTagsTemp = null;
-				
+
 				if (thisRouteHasDirection) {
-					// If route has direction set list view to contain directions
+					// If route has direction set list view to contain
+					// directions
 					itemListTemp = data.getDirectionList(currentRoutes[position]);
 				} else {
 					// Route doesn't have direction so list view contains stops
@@ -382,17 +369,19 @@ public class RoutePickerActivity extends Activity implements OnSharedPreferenceC
 				ListView stopList = new ListView(cxt);
 				stopList.setAdapter(new ArrayAdapter<String>(cxt, android.R.layout.simple_list_item_1, itemList));
 				stopList.setOnItemClickListener(new OnItemClickListener() {
-					
+
 					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 						if (thisRouteHasDirection) {
-							// Route has direction so items have to point to StopListActivity with correct
+							// Route has direction so items have to point to
+							// StopListActivity with correct
 							// extras.
 							Intent intent = new Intent(getApplicationContext(), StopListActivity.class);
 							intent.putExtra("route", currentRoutes[listPosition]);
 							intent.putExtra("direction", itemList[position]);
 							startActivity(intent);
 						} else {
-							// Route doesn't have direction so items have to point to StopViewActivity with
+							// Route doesn't have direction so items have to
+							// point to StopViewActivity with
 							// correct extras.
 							Intent intent = new Intent(getApplicationContext(), StopViewActivity.class);
 							intent.putExtra("stoptag", stopTags[position]);
@@ -412,41 +401,36 @@ public class RoutePickerActivity extends Activity implements OnSharedPreferenceC
 				noRoutes.setText("No active routes");
 				noRoutes.setGravity(Gravity.CENTER);
 				noRoutes.setTextSize(40);
-				noRoutes.setTypeface(null,1);
+				noRoutes.setTypeface(null, 1);
 				noRoutes.setTextColor(getResources().getColor(R.color.white));
-				((ViewPager) container).addView(noRoutes,0);
+				((ViewPager) container).addView(noRoutes, 0);
 				return noRoutes;
 			}
 		}
 
-		
 		public boolean isViewFromObject(View view, Object object) {
-			if (object instanceof ListView)  {
+			if (object instanceof ListView) {
 				return view == ((ListView) object);
 			}
 			return view == ((TextView) object);
 		}
 
-		
 		public void restoreState(Parcelable arg0, ClassLoader arg1) {
 			// TODO Auto-generated method stub
 
 		}
 
-		
 		public Parcelable saveState() {
 			// TODO Auto-generated method stub
 			return null;
 		}
 
-		
 		public void startUpdate(View arg0) {
 
 			// TODO Auto-generated method stub
 
 		}
 
-		
 		public String getTitle(int position) {
 			if (activeRoutesExist) {
 				return Data.capitalize(currentRoutes[position]);
@@ -457,9 +441,8 @@ public class RoutePickerActivity extends Activity implements OnSharedPreferenceC
 
 	}
 
-	
 	public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-		
+
 		if (key.equals("showActiveRoutes")) {
 			hideDeadRoutes = prefs.getBoolean("showActiveRoutes", true);
 			if (hideDeadRoutes) {
@@ -473,18 +456,22 @@ public class RoutePickerActivity extends Activity implements OnSharedPreferenceC
 				activeRouteList[1] = colorOrder;
 				activeRouteList[2] = hasDirections;
 				setCurrentRoutes(activeRouteList);
+				activeRoutesExist = true;
 			}
-			pagerAdapter.notifyDataSetChanged();
+			RoutePagerAdapter pagerAdapter = new RoutePagerAdapter();
+			pager.setAdapter(pagerAdapter);
+			pager.setCurrentItem(1);
+			
 		}
-		
+
 	}
-	
+
 	public static ArrayList<String> getActiveRoutes() {
 		ArrayList<String> activeRoutes = new ArrayList<String>();
 		for (int i = 0; i < currentRoutes.length; i++) {
 			activeRoutes.add(currentRoutes[i]);
 		}
-		
+
 		return activeRoutes;
 	}
 

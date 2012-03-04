@@ -46,8 +46,6 @@ public class BusOverlayItem extends OverlayItem {
 		double dlon = currentPoint.x - oldPoint.x;
 		double dlat = currentPoint.y - oldPoint.y;
 		double angle = Math.atan2(dlat, dlon);
-
-		Log.i("BusOverlayItem", "Angle of rotation: " + (float) Math.toDegrees(angle));
 		Bitmap oldBmp = ((BitmapDrawable) defaultDrawable).getBitmap();
 		Bitmap canvasBitmap = oldBmp.copy(Bitmap.Config.ARGB_8888, true);
 		canvasBitmap.eraseColor(0x00000000);

@@ -405,7 +405,11 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int stock_menu=0x7f0e0001;
     }
     public static final class raw {
-        public static final int routeconfig=0x7f060000;
+        public static final int blueroute=0x7f060000;
+        public static final int greenroute=0x7f060001;
+        public static final int redroute=0x7f060002;
+        public static final int routeconfig=0x7f060003;
+        public static final int trolleyroute=0x7f060004;
     }
     public static final class string {
         public static final int app_name=0x7f0d0001;
