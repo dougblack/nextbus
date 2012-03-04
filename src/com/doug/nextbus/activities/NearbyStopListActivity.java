@@ -63,7 +63,7 @@ public class NearbyStopListActivity extends Activity implements LocationResult {
 	public void gotLocation(Location location) {
 
 		if (location != null) {
-			Log.i("INFO", "Got location.");
+			Log.i("INFO", "Got location: " + location.getLatitude() + "," + location.getLongitude());
 
 			gpsProgressBar.setVisibility(View.INVISIBLE);
 

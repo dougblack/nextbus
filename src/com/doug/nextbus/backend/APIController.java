@@ -145,9 +145,12 @@ public class APIController {
 						String title = stop.getString("title");
 						String stopid = stop.getString("stopid");
 						Log.i("INFO", "Close Stop Found -- Route: " + routeName + ", Title: " + title);
-
+						
 						if (routesHash.containsKey(stopid)) {
-							((LinkedList<String>) routesHash.get(stopid)).add(routeName);
+							if (!routesHash.get(stopid).contains(routeName)) {
+								((LinkedList<String>) routesHash.get(stopid)).add(routeName);
+								titlesHash.put(stopid, title);
+							}
 						} else {
 							LinkedList<String> routeLL = new LinkedList<String>();
 							routeLL.add(routeName);
@@ -159,15 +162,11 @@ public class APIController {
 								((LinkedList<String>) distanceTM.get(distance)).add(stopid);
 							}
 						} else {
-
 							LinkedList<String> stopLL = new LinkedList<String>();
 							stopLL.add(stopid);
 							distanceTM.put(distance, stopLL);
-
 						}
-
-						titlesHash.put(stopid, title);
-
+						
 					}
 				}
 			}
