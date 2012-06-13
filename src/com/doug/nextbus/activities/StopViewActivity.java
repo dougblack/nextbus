@@ -54,6 +54,7 @@ public class StopViewActivity extends Activity {
 	static TextView stopTextView;
 	static TextView titleBar;
 	static SlidingDrawer arrivalDrawer;
+	static ImageView backButton;
 
 	static View colorBar;
 	static View colorSeperator;
@@ -97,6 +98,7 @@ public class StopViewActivity extends Activity {
 		fourthArrival = (TextView) this.findViewById(R.id.fourthArrival);
 		// routeTextView = (TextView) this.findViewById(R.id.routeTextView);
 		stopTextView = (TextView) this.findViewById(R.id.stopTextView);
+		backButton = (ImageView) this.findViewById(R.id.backButton);
 
 		colorBar = (View) this.findViewById(R.id.colorbar);
 		colorSeperator = (View) this.findViewById(R.id.colorSeperator);
@@ -162,6 +164,20 @@ public class StopViewActivity extends Activity {
 			}
 
 		});
+		
+		backButton.setOnTouchListener(new OnTouchListener () {
+			public boolean onTouch(View arg0, MotionEvent event) {
+				if (event.getAction() == MotionEvent.ACTION_DOWN) {
+					backButton.setBackgroundColor(R.color.black);
+					return true;
+				} else if (event.getAction() == MotionEvent.ACTION_UP) {
+					backButton.setBackgroundColor(0);
+					finish();
+					return true;
+				}
+				return true;
+			}
+		});
 
 		// routeTextView.setText(route.toUpperCase());
 		stopTextView.setText(stop);
@@ -222,7 +238,7 @@ public class StopViewActivity extends Activity {
 
 			
 			public void onDrawerClosed() {
-				drawerHandleTextView.setText("All Routes for this Stop");
+				drawerHandleTextView.setText("OTHER ROUTES");
 			}
 
 		});

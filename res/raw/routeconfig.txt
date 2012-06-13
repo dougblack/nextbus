@@ -168,7 +168,7 @@
         "lonMax": "-84.39174",
         "stop": [
           {
-            "tag": "fitten",
+            "tag": "fitten_a",
             "title": "Fitten Hall",
             "lat": "33.7782737",
             "lon": "-84.4041907",

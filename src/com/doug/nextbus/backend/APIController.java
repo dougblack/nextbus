@@ -35,6 +35,7 @@ public class APIController {
 
 		Log.i("Info", "Getting prediction for stoptag=" + stoptag + " and route=" + route);
 		String finalURL = createYQLUrl(route, stoptag);
+		Log.i("APIController", "Final URL: "+ finalURL);
 
 		JSONObject stopPredictionJSON = null;
 		try {
@@ -114,11 +115,16 @@ public class APIController {
 	}
 
 	private static String createYQLUrl(String route, String stoptag) {
+//		return "http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D%22http"
+//				+ "%3A%2F%2Fwww.nextbus.com%2Fpredictor%2FfancyBookmarkablePredictionLayer.shtml%3Fa%3Dgeorgi"
+//				+ "a-tech%26r%3D" + route + "%26d%3Dnull%26s%3D" + stoptag + "%26ts%3Dfitten%22%20and%20xpath"
+//				+ "%3D%22%2F%2Ftd%5B%40class%3D'predictionNumberForFirstPred'%5D%2Fdiv%2Fp%7C%2F%2Ftd%5B%40cl"
+//				+ "ass%3D'predictionNumberForOtherPreds'%5D%2Fdiv%2Fp%22&format=json";
 		return "http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D%22http"
-				+ "%3A%2F%2Fwww.nextbus.com%2Fpredictor%2FfancyBookmarkablePredictionLayer.shtml%3Fa%3Dgeorgi"
-				+ "a-tech%26r%3D" + route + "%26d%3Dnull%26s%3D" + stoptag + "%26ts%3Dfitten%22%20and%20xpath"
-				+ "%3D%22%2F%2Ftd%5B%40class%3D'predictionNumberForFirstPred'%5D%2Fdiv%2Fp%7C%2F%2Ftd%5B%40cl"
-				+ "ass%3D'predictionNumberForOtherPreds'%5D%2Fdiv%2Fp%22&format=json";
+		+ "%3A%2F%2Fwww.nextbus.com%2Fpredictor%2FfancyBookmarkablePredictionLayer.shtml%3Fa%3Dgeorgi"
+		+ "a-tech%26r%3D" + route + "%26d%3DCounterclo%26s%3D" + stoptag + "%26ts%3Dnull%22%20and%20xpath"
+		+ "%3D%22%2F%2Ftd%5B%40class%3D'predictionNumberForFirstPred'%5D%2Fdiv%2Fp%7C%2F%2Ftd%5B%40cl"
+		+ "ass%3D'predictionNumberForOtherPreds'%5D%2Fdiv%2Fp%22&format=json";
 	}
 
 	public static Object[] findNearestStops(Location location) {
