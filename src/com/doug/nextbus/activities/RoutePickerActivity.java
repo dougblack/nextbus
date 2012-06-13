@@ -57,7 +57,6 @@ public class RoutePickerActivity extends Activity implements OnSharedPreferenceC
 	static boolean activeRoutesExist = true;
 	static RoutePagerAdapter pagerAdapter;
 	static ViewPager pager;
-	static ImageView nearestStopsButton;
 	static ImageView mapButton;
 
 	public void onCreate(Bundle savedInstance) {
@@ -72,8 +71,6 @@ public class RoutePickerActivity extends Activity implements OnSharedPreferenceC
 		cxt = this;
 		Data.setConfigData(getApplicationContext());
 		data = new Data();
-
-		nearestStopsButton = (ImageView) findViewById(R.id.nearestStopsButton);
 		mapButton = (ImageView) findViewById(R.id.mapButton);
 
 		red = getResources().getColor(R.color.red);
@@ -82,16 +79,6 @@ public class RoutePickerActivity extends Activity implements OnSharedPreferenceC
 		yellow = getResources().getColor(R.color.yellow);
 		night = getResources().getColor(R.color.night);
 		JSONObject favStop = Data.readStopData();
-
-		// Has the user set a favorite stop yet?
-		// if (favStop != null) {
-		// try {
-		// Log.i("INFO", "Fav stop: " + favStop.toString(3));
-		// } catch (JSONException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		// }
 
 		shouldHideRoutes(hideDeadRoutes);
 
@@ -145,23 +132,6 @@ public class RoutePickerActivity extends Activity implements OnSharedPreferenceC
 			// titleIndicator.setFooterColor(getResources().getColor(R.color.white));
 			// titleIndicator.setSelectedColor(getResources().getColor(R.color.white));
 		}
-
-		nearestStopsButton.setOnTouchListener(new OnTouchListener() {
-
-			public boolean onTouch(View arg0, MotionEvent event) {
-				if (event.getAction() == MotionEvent.ACTION_DOWN) {
-					nearestStopsButton.setBackgroundColor(R.color.black);
-					return true;
-				} else if (event.getAction() == MotionEvent.ACTION_UP) {
-					nearestStopsButton.setBackgroundColor(0);
-					Intent nearestStopsActivity = new Intent(getApplicationContext(), NearbyStopListActivity.class);
-					startActivity(nearestStopsActivity);
-					return true;
-				}
-				return true;
-			}
-
-		});
 
 		mapButton.setOnTouchListener(new OnTouchListener() {
 

@@ -20,6 +20,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.doug.nextbus.R;
@@ -49,6 +50,7 @@ public class MapViewActivity extends MapActivity {
 	MapItemizedOverlay purpleOverlay;
 	MapController mapController;
 	static ProgressBar pg;
+	static ImageView backButton;
 	MapView mapView;
 	Handler refreshHandler;
 	Runnable updateMapTask;
@@ -78,6 +80,7 @@ public class MapViewActivity extends MapActivity {
 		blueButton = (View) findViewById(R.id.blueButton);
 		greenButton = (View) findViewById(R.id.greenButton);
 		yellowButton = (View) findViewById(R.id.yellowButton);
+		backButton = (ImageView) findViewById(R.id.mapBackButton);
 
 		redButton.setBackgroundColor(getResources().getColor(R.color.red));
 		greenButton.setBackgroundColor(getResources().getColor(R.color.green));
@@ -127,6 +130,20 @@ public class MapViewActivity extends MapActivity {
 				greenButton.getBackground().setAlpha(250);
 				displayRoute = "green";
 				refreshMap();
+			}
+		});
+		
+		backButton.setOnTouchListener(new OnTouchListener () {
+			public boolean onTouch(View arg0, MotionEvent event) {
+				if (event.getAction() == MotionEvent.ACTION_DOWN) {
+					backButton.setBackgroundColor(R.color.black);
+					return true;
+				} else if (event.getAction() == MotionEvent.ACTION_UP) {
+					backButton.setBackgroundColor(0);
+					finish();
+					return true;
+				}
+				return true;
 			}
 		});
 
