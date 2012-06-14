@@ -22,6 +22,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.doug.nextbus.R;
 import com.doug.nextbus.backend.APIController;
@@ -54,19 +55,28 @@ public class MapViewActivity extends MapActivity {
 	MapView mapView;
 	Handler refreshHandler;
 	Runnable updateMapTask;
-	View redButton;
-	View blueButton;
-	View greenButton;
-	View yellowButton;
+	TextView redButton;
+	TextView blueButton;
+	TextView greenButton;
+	TextView yellowButton;
 	String displayRoute;
 	List<Overlay> redPath;
 	List<Overlay> bluePath;
 	List<Overlay> greenPath;
 	List<Overlay> yellowPath;
-	boolean routesAreSet; 
+	boolean routesAreSet;
+	int whiteColor, redColor, blueColor, greenColor, yellowColor;
+
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.map_view);
+
+		redColor = this.getResources().getColor(R.color.red);
+		blueColor = this.getResources().getColor(R.color.blue);
+		greenColor = this.getResources().getColor(R.color.green);
+		yellowColor = this.getResources().getColor(R.color.yellow);
+		whiteColor = this.getResources().getColor(R.color.white);
+		
 
 		mapView = (MapView) findViewById(R.id.mapview);
 
@@ -76,16 +86,11 @@ public class MapViewActivity extends MapActivity {
 		// Set map zoom. 17 is too close, 15 is too far.
 		mapController.setZoom(16);
 
-		redButton = (View) findViewById(R.id.redButton);
-		blueButton = (View) findViewById(R.id.blueButton);
-		greenButton = (View) findViewById(R.id.greenButton);
-		yellowButton = (View) findViewById(R.id.yellowButton);
+		redButton = (TextView) findViewById(R.id.redButton);
+		blueButton = (TextView) findViewById(R.id.blueButton);
+		greenButton = (TextView) findViewById(R.id.greenButton);
+		yellowButton = (TextView) findViewById(R.id.yellowButton);
 		backButton = (ImageView) findViewById(R.id.mapBackButton);
-
-		redButton.setBackgroundColor(getResources().getColor(R.color.red));
-		greenButton.setBackgroundColor(getResources().getColor(R.color.green));
-		blueButton.setBackgroundColor(getResources().getColor(R.color.blue));
-		yellowButton.setBackgroundColor(getResources().getColor(R.color.yellow));
 
 		redPath = new LinkedList<Overlay>();
 		bluePath = new LinkedList<Overlay>();
@@ -95,12 +100,14 @@ public class MapViewActivity extends MapActivity {
 
 		resetButtonTransparencies();
 		displayRoute = "red";
-		redButton.getBackground().setAlpha(250);
+		redButton.setBackgroundColor(R.color.black);
+		redButton.setTextColor(redColor);
 		redButton.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View arg0) {
 				resetButtonTransparencies();
-				redButton.getBackground().setAlpha(250);
+				redButton.setBackgroundColor(R.color.black);
+				redButton.setTextColor(redColor);
 				displayRoute = "red";
 				refreshMap();
 			}
@@ -109,7 +116,8 @@ public class MapViewActivity extends MapActivity {
 
 			public void onClick(View arg0) {
 				resetButtonTransparencies();
-				blueButton.getBackground().setAlpha(250);
+				blueButton.setBackgroundColor(R.color.black);
+				blueButton.setTextColor(blueColor);
 				displayRoute = "blue";
 				refreshMap();
 			}
@@ -118,7 +126,8 @@ public class MapViewActivity extends MapActivity {
 
 			public void onClick(View arg0) {
 				resetButtonTransparencies();
-				yellowButton.getBackground().setAlpha(250);
+				yellowButton.setBackgroundColor(R.color.black);
+				yellowButton.setTextColor(yellowColor);
 				displayRoute = "yellow";
 				refreshMap();
 			}
@@ -127,13 +136,14 @@ public class MapViewActivity extends MapActivity {
 
 			public void onClick(View arg0) {
 				resetButtonTransparencies();
-				greenButton.getBackground().setAlpha(250);
+				greenButton.setBackgroundColor(R.color.black);
+				greenButton.setTextColor(greenColor);
 				displayRoute = "green";
 				refreshMap();
 			}
 		});
-		
-		backButton.setOnTouchListener(new OnTouchListener () {
+
+		backButton.setOnTouchListener(new OnTouchListener() {
 			public boolean onTouch(View arg0, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_DOWN) {
 					backButton.setBackgroundColor(R.color.black);
@@ -168,13 +178,11 @@ public class MapViewActivity extends MapActivity {
 		updateMapTask = new Runnable() {
 
 			public void run() { // Refreshes map every two seconds
-				Log.i("POSTED", "POSTED");
 				new refreshBusLocations().execute();
 				refreshHandler.postDelayed(this, 5000);
 			}
 
 		};
-		Log.i("FINISHED", "FINISHED");
 
 	}
 
@@ -242,10 +250,14 @@ public class MapViewActivity extends MapActivity {
 	}
 
 	public void resetButtonTransparencies() {
-		redButton.getBackground().setAlpha(100);
-		greenButton.getBackground().setAlpha(100);
-		blueButton.getBackground().setAlpha(100);
-		yellowButton.getBackground().setAlpha(100);
+		redButton.setBackgroundColor(0);
+		redButton.setTextColor(whiteColor);
+		greenButton.setBackgroundColor(0);
+		greenButton.setTextColor(whiteColor);
+		blueButton.setBackgroundColor(0);
+		blueButton.setTextColor(whiteColor);
+		yellowButton.setBackgroundColor(0);
+		yellowButton.setTextColor(whiteColor);
 	}
 
 	public void refreshMap() {

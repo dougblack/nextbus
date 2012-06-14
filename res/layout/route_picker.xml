@@ -28,6 +28,12 @@
             android:textSize="22sp"
             android:textStyle="bold" />
 
+        <View
+            android:id="@+id/divider"
+            android:layout_width="1dp"
+            android:layout_height="fill_parent"
+            android:background="@color/dividercolor" />
+
         <ImageView
             android:id="@+id/mapButton"
             android:layout_width="50dp"

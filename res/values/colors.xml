@@ -18,6 +18,7 @@
     <color name="fade2">#989797</color>
     <color name="fade3">#616161</color>
     <color name="orange">#f8db16</color>
+    <color name="dividercolor">#00000F</color>
 
     
 </resources>

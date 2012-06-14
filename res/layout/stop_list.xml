@@ -26,13 +26,19 @@
             android:padding="10dp"
             android:src="@drawable/back_arrow" />
 
+        <View
+            android:id="@+id/divider"
+            android:layout_width="1dp"
+            android:layout_height="fill_parent"
+            android:background="@color/dividercolor" />
+
         <TextView
             android:id="@+id/titleText"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1.10"
             android:gravity="center_vertical"
-            android:paddingLeft="5dp"
+            android:paddingLeft="10dp"
             android:text="DIRECTION"
             android:textColor="@color/white"
             android:textSize="22sp"
