@@ -26,9 +26,9 @@ import android.widget.TextView;
 
 import com.doug.nextbus.R;
 import com.doug.nextbus.backend.APIController;
-import com.doug.nextbus.backend.BusOverlayItem;
-import com.doug.nextbus.backend.MapItemizedOverlay;
-import com.doug.nextbus.backend.RouteOverlay;
+import com.doug.nextbus.custom.BusOverlayItem;
+import com.doug.nextbus.custom.MapItemizedOverlay;
+import com.doug.nextbus.custom.RouteOverlay;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
@@ -66,6 +66,8 @@ public class MapViewActivity extends MapActivity {
 	List<Overlay> yellowPath;
 	boolean routesAreSet;
 	int whiteColor, redColor, blueColor, greenColor, yellowColor;
+	GeoPoint centerPoint;
+	GeoPoint yellowCenterPoint;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -76,7 +78,6 @@ public class MapViewActivity extends MapActivity {
 		greenColor = this.getResources().getColor(R.color.green);
 		yellowColor = this.getResources().getColor(R.color.yellow);
 		whiteColor = this.getResources().getColor(R.color.white);
-		
 
 		mapView = (MapView) findViewById(R.id.mapview);
 
@@ -97,6 +98,8 @@ public class MapViewActivity extends MapActivity {
 		greenPath = new LinkedList<Overlay>();
 		yellowPath = new LinkedList<Overlay>();
 		routesAreSet = false;
+		centerPoint = new GeoPoint(33776499, -84398400);
+		yellowCenterPoint = new GeoPoint(33777390,-84393024);
 
 		resetButtonTransparencies();
 		displayRoute = "red";
@@ -108,6 +111,7 @@ public class MapViewActivity extends MapActivity {
 				resetButtonTransparencies();
 				redButton.setBackgroundColor(R.color.black);
 				redButton.setTextColor(redColor);
+				mapController.animateTo(centerPoint);
 				displayRoute = "red";
 				refreshMap();
 			}
@@ -118,6 +122,7 @@ public class MapViewActivity extends MapActivity {
 				resetButtonTransparencies();
 				blueButton.setBackgroundColor(R.color.black);
 				blueButton.setTextColor(blueColor);
+				mapController.animateTo(centerPoint);
 				displayRoute = "blue";
 				refreshMap();
 			}
@@ -128,6 +133,7 @@ public class MapViewActivity extends MapActivity {
 				resetButtonTransparencies();
 				yellowButton.setBackgroundColor(R.color.black);
 				yellowButton.setTextColor(yellowColor);
+				mapController.animateTo(yellowCenterPoint);
 				displayRoute = "yellow";
 				refreshMap();
 			}
@@ -138,6 +144,7 @@ public class MapViewActivity extends MapActivity {
 				resetButtonTransparencies();
 				greenButton.setBackgroundColor(R.color.black);
 				greenButton.setTextColor(greenColor);
+				mapController.animateTo(centerPoint);
 				displayRoute = "green";
 				refreshMap();
 			}
@@ -170,8 +177,6 @@ public class MapViewActivity extends MapActivity {
 		greenOverlay = new MapItemizedOverlay(greenArrow);
 		yellowOverlay = new MapItemizedOverlay(yellowArrow);
 
-		// Center the map
-		GeoPoint centerPoint = new GeoPoint(33776499, -84398400);
 		mapController.animateTo(centerPoint);
 
 		refreshHandler = new Handler();
@@ -346,17 +351,7 @@ public class MapViewActivity extends MapActivity {
 					BusOverlayItem busOverlayItem;
 
 					String route = entry[0];
-					// String[] currentRoutes = (String[])
-					// (RoutePickerActivity.getActiveRoutesList())[0];
-					//
-					// // Add to the correct overlay.
-					// if (currentRoutes.length == 1 &&
-					// currentRoutes[0].equals("night") && route.equals("red"))
-					// {
-					// busOverlayItem = new BusOverlayItem(busLocation, "", "",
-					// pBusLocation, mapView, purpleArrow);
-					// backgroundPurpleOverlay.addOverlay(busOverlayItem);
-					// } else
+
 					if (route.equals("red")) {
 						busOverlayItem = new BusOverlayItem(busLocation, "", "", pBusLocation, mapView, redArrow);
 						backgroundRedOverlay.addOverlay(busOverlayItem);

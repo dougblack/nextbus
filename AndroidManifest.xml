@@ -48,15 +48,13 @@
         </activity>
         <activity
             android:name=".activities.PreferencesActivity"
-            android:label="Preferences" >
-        </activity>
-        <activity
-            android:name=".activities.NearbyStopListActivity"
-            android:label="Nearest Stops" >
+            android:label="Preferences"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".activities.MapViewActivity"
-            android:label="Map Activity" >
+            android:label="Map Activity"
+            android:screenOrientation="portrait" >
         </activity>
     </application>
 

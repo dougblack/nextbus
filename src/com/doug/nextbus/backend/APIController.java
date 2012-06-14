@@ -16,7 +16,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.doug.nextbus.R;
+
+import android.content.Context;
 import android.location.Location;
+import android.text.format.Time;
 import android.util.Log;
 
 public class APIController {
@@ -35,7 +39,7 @@ public class APIController {
 
 		Log.i("Info", "Getting prediction for stoptag=" + stoptag + " and route=" + route);
 		String finalURL = createYQLUrl(route, stoptag);
-		Log.i("APIController", "Final URL: "+ finalURL);
+		Log.i("APIController", "Final URL: " + finalURL);
 
 		JSONObject stopPredictionJSON = null;
 		try {
@@ -115,84 +119,12 @@ public class APIController {
 	}
 
 	private static String createYQLUrl(String route, String stoptag) {
-//		return "http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D%22http"
-//				+ "%3A%2F%2Fwww.nextbus.com%2Fpredictor%2FfancyBookmarkablePredictionLayer.shtml%3Fa%3Dgeorgi"
-//				+ "a-tech%26r%3D" + route + "%26d%3Dnull%26s%3D" + stoptag + "%26ts%3Dfitten%22%20and%20xpath"
-//				+ "%3D%22%2F%2Ftd%5B%40class%3D'predictionNumberForFirstPred'%5D%2Fdiv%2Fp%7C%2F%2Ftd%5B%40cl"
-//				+ "ass%3D'predictionNumberForOtherPreds'%5D%2Fdiv%2Fp%22&format=json";
+
 		return "http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D%22http"
-		+ "%3A%2F%2Fwww.nextbus.com%2Fpredictor%2FfancyBookmarkablePredictionLayer.shtml%3Fa%3Dgeorgi"
-		+ "a-tech%26r%3D" + route + "%26d%3DCounterclo%26s%3D" + stoptag + "%26ts%3Dnull%22%20and%20xpath"
-		+ "%3D%22%2F%2Ftd%5B%40class%3D'predictionNumberForFirstPred'%5D%2Fdiv%2Fp%7C%2F%2Ftd%5B%40cl"
-		+ "ass%3D'predictionNumberForOtherPreds'%5D%2Fdiv%2Fp%22&format=json";
-	}
-
-	public static Object[] findNearestStops(Location location) {
-
-		HashMap<String, String> titlesHash = new HashMap<String, String>();
-		HashMap<String, LinkedList<String>> routesHash = new HashMap<String, LinkedList<String>>();
-		TreeMap<Double, LinkedList<String>> distanceTM = new TreeMap<Double, LinkedList<String>>();
-
-		try {
-
-			JSONObject data = Data.getData();
-			JSONArray routes = data.getJSONArray("route");
-			for (int i = 0; i < routes.length(); i++) {
-				JSONObject route = routes.getJSONObject(i);
-				String routeName = route.getString("tag");
-				JSONArray stops = route.getJSONArray("stop");
-				for (int j = 0; j < stops.length(); j++) {
-					JSONObject stop = stops.getJSONObject(j);
-					Location stopLocation = new Location("GPS");
-					stopLocation.setLatitude(stop.getDouble("lat"));
-					stopLocation.setLongitude(stop.getDouble("lon"));
-					double distance = location.distanceTo(stopLocation);
-					if (distance < 300) {
-						String title = stop.getString("title");
-						String stopid = stop.getString("stopid");
-						Log.i("INFO", "Close Stop Found -- Route: " + routeName + ", Title: " + title);
-						
-						if (routesHash.containsKey(stopid)) {
-							if (!routesHash.get(stopid).contains(routeName)) {
-								((LinkedList<String>) routesHash.get(stopid)).add(routeName);
-								titlesHash.put(stopid, title);
-							}
-						} else {
-							LinkedList<String> routeLL = new LinkedList<String>();
-							routeLL.add(routeName);
-							routesHash.put(stopid, routeLL);
-						}
-
-						if (distanceTM.containsKey(distance)) {
-							if (!distanceTM.get(distance).contains(stopid)) {
-								((LinkedList<String>) distanceTM.get(distance)).add(stopid);
-							}
-						} else {
-							LinkedList<String> stopLL = new LinkedList<String>();
-							stopLL.add(stopid);
-							distanceTM.put(distance, stopLL);
-						}
-						
-					}
-				}
-			}
-
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		Object[] ret = new Object[3];
-		ret[0] = titlesHash;
-		ret[1] = distanceTM;
-		ret[2] = routesHash;
-
-		Log.i("INFO", "TitlesHash=" + titlesHash.toString());
-		Log.i("INFO", "DistanceTree=" + distanceTM.toString());
-		Log.i("INFO", "RoutesHash=" + routesHash.toString());
-
-		return ret;
-
+				+ "%3A%2F%2Fwww.nextbus.com%2Fpredictor%2FfancyBookmarkablePredictionLayer.shtml%3Fa%3Dgeorgi"
+				+ "a-tech%26r%3D" + route + "%26d%3DCounterclo%26s%3D" + stoptag + "%26ts%3Dnull%22%20and%20xpath"
+				+ "%3D%22%2F%2Ftd%5B%40class%3D'predictionNumberForFirstPred'%5D%2Fdiv%2Fp%7C%2F%2Ftd%5B%40cl"
+				+ "ass%3D'predictionNumberForOtherPreds'%5D%2Fdiv%2Fp%22&format=json";
 	}
 
 	public static ArrayList<String[]> getBusLocations() {
@@ -243,6 +175,96 @@ public class APIController {
 		}
 
 		return busLocations;
+
+	}
+
+	/**
+	 * This method returns the list of active routes by NextBus official
+	 * schedule
+	 * 
+	 * @return active routes
+	 */
+	public static Object[] getActiveRoutesList(Context context) {
+		
+		
+		int red = context.getResources().getColor(R.color.red);
+		int blue = context.getResources().getColor(R.color.blue);
+		int green = context.getResources().getColor(R.color.green);
+		int yellow = context.getResources().getColor(R.color.yellow);
+		int night = context.getResources().getColor(R.color.night);
+		boolean activeRoutesExist = true;
+		
+		ArrayList<String> activeRoutesList = new ArrayList<String>();
+		ArrayList<Integer> activeColorsList = new ArrayList<Integer>();
+		ArrayList<Boolean> activeRoutesHasDirectionsList = new ArrayList<Boolean>();
+
+		Time time = new Time();
+		time.switchTimezone("EST");
+
+		time.setToNow();
+		int hour = time.hour;
+		int day = time.weekDay - 1;
+		if (day < 5) {
+			// Monday - Friday
+			if ((hour >= 7) && (hour <= 19)) {
+				// 6:45am - 10:45pm
+				activeRoutesList.add("red");
+				activeColorsList.add(red);
+				activeRoutesHasDirectionsList.add(false);
+				activeRoutesList.add("blue");
+				activeColorsList.add(blue);
+				activeRoutesHasDirectionsList.add(false);
+			}
+			if ((hour >= 7) && (hour <= 18)) {
+				// 6:15am - 9:45pm
+				activeRoutesList.add("green");
+				activeColorsList.add(green);
+				activeRoutesHasDirectionsList.add(true);
+			}
+			if ((hour >= 5) && (hour <= 21)) {
+				// 5:15am - 11:00pm
+				activeRoutesList.add("trolley");
+				activeColorsList.add(yellow);
+				activeRoutesHasDirectionsList.add(true);
+			}
+			if ((day != 4) && (hour >= 21) || (hour <= 2)) {
+				// 8:45pm - 3:30am
+				activeRoutesList.add("night");
+				activeColorsList.add(night);
+				activeRoutesHasDirectionsList.add(true);
+			}
+		} else if (day == 5) {
+			// Saturday
+			if ((hour >= 10) && (hour <= 17)) {
+				// 9:30am - 7:00pm
+				activeRoutesList.add("trolley");
+				activeColorsList.add(yellow);
+				activeRoutesHasDirectionsList.add(true);
+			}
+		} else if (day == 6) {
+			// Sunday
+			if ((hour >= 15) && (hour <= 20)) {
+				// 2:30pm - 6:30pm
+				activeRoutesList.add("trolley");
+				activeColorsList.add(yellow);
+				activeRoutesHasDirectionsList.add(true);
+			}
+			if ((hour >= 20 && time.minute >= 45) || (hour <= 3 && time.minute <= 30)) {
+				// 8:45pm - 3:30am
+				activeRoutesList.add("night");
+				activeColorsList.add(night);
+				activeRoutesHasDirectionsList.add(true);
+			}
+		}
+
+		if (activeRoutesList.size() == 0) {
+			activeRoutesExist = false;
+		}
+
+		Object[] returnData = { Data.convertToStringArray(activeRoutesList), Data.convertIntegers(activeColorsList),
+				Data.convertToBooleanArray(activeRoutesHasDirectionsList), activeRoutesExist };
+
+		return returnData;
 
 	}
 

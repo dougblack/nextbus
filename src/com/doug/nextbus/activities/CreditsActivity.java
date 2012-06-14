@@ -12,10 +12,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 public class CreditsActivity extends Activity {
@@ -23,14 +26,31 @@ public class CreditsActivity extends Activity {
 	static ListView contactList;
 	static String[] contactItemStrings = { "@DougBlackGT", "dblackgt@gmail.com", "itsdoug.com", "Google+",
 			"All data copyright Georgia Tech Campus 2011" };
+	static ImageView backButton;
 
 	public void onCreate(Bundle savedInstance) {
 		super.onCreate(savedInstance);
 		setContentView(R.layout.credits);
 
 		contactList = (ListView) findViewById(R.id.contactList);
-
+		backButton = (ImageView) findViewById(R.id.creditsBackButton);
+		
+		
 		contactList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, contactItemStrings));
+
+		backButton.setOnTouchListener(new OnTouchListener() {
+			public boolean onTouch(View arg0, MotionEvent event) {
+				if (event.getAction() == MotionEvent.ACTION_DOWN) {
+					backButton.setBackgroundColor(R.color.black);
+					return true;
+				} else if (event.getAction() == MotionEvent.ACTION_UP) {
+					backButton.setBackgroundColor(0);
+					finish();
+					return true;
+				}
+				return true;
+			}
+		});
 
 		contactList.setOnItemClickListener(new OnItemClickListener() {
 
