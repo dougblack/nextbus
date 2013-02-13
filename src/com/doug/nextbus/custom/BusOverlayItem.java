@@ -13,6 +13,7 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
 import com.google.android.maps.Projection;
 
+/* The custom overaly corresponding to a bus arrow icon. */
 public class BusOverlayItem extends OverlayItem {
 
 	GeoPoint currentGeoPoint;

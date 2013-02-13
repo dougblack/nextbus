@@ -36,45 +36,59 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 
+/*
+ * The map activity. Shows routes and bus locations overlaid on a google map. 
+ */
 public class MapViewActivity extends MapActivity {
 
-	List<Overlay> mapOverlays;
+
+  /* Bus icon arrow things */
 	Drawable redArrow;
 	Drawable blueArrow;
 	Drawable greenArrow;
 	Drawable yellowArrow;
 	Drawable purpleArrow;
+
+  /* Bus icon arrow things in as map overlays */
+	List<Overlay> mapOverlays;
 	MapItemizedOverlay redOverlay;
 	MapItemizedOverlay blueOverlay;
 	MapItemizedOverlay greenOverlay;
 	MapItemizedOverlay yellowOverlay;
 	MapItemizedOverlay purpleOverlay;
-	MapController mapController;
-	static ProgressBar pg;
-	static ImageView backButton;
-	MapView mapView;
-	Handler refreshHandler;
-	Runnable updateMapTask;
+
+  /* The buttons to control currently display route */
 	TextView redButton;
 	TextView blueButton;
 	TextView greenButton;
 	TextView yellowButton;
-	String displayRoute;
+
+  /* The path segments for each bus route */
 	List<Overlay> redPath;
 	List<Overlay> bluePath;
 	List<Overlay> greenPath;
 	List<Overlay> yellowPath;
 
-	boolean routesAreSet;
-	int whiteColor, redColor, blueColor, greenColor, yellowColor;
+  /* Points used to move center the map view */
 	GeoPoint centerPoint;
 	GeoPoint yellowCenterPoint;
 
->>>>>>> fe7bdd42faa1a36ee22bd353c2bc774817a2cc81
+	MapController mapController;
+	MapView mapView;
+
+	static ProgressBar pg;
+	static ImageView backButton;
+	Handler refreshHandler;
+	Runnable updateMapTask;
+	String displayRoute;
+	boolean routesAreSet;
+	int whiteColor, redColor, blueColor, greenColor, yellowColor;
+
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.map_view);
 
+    /* Initialize tons of shit */
 		redColor = this.getResources().getColor(R.color.red);
 		blueColor = this.getResources().getColor(R.color.blue);
 		greenColor = this.getResources().getColor(R.color.green);
@@ -107,6 +121,8 @@ public class MapViewActivity extends MapActivity {
 		displayRoute = "red";
 		redButton.setBackgroundColor(R.color.black);
 		redButton.setTextColor(redColor);
+
+    /* Set listeners for each button to change the displayed route */
 		redButton.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View arg0) {
@@ -166,39 +182,43 @@ public class MapViewActivity extends MapActivity {
 			}
 		});
 
-		// Grab all the drawables for the bus dots.
+		/* Grab all the drawables for the bus dots. */
 		redArrow = this.getResources().getDrawable(R.drawable.red_arrow);
 		blueArrow = this.getResources().getDrawable(R.drawable.blue_arrow);
 		greenArrow = this.getResources().getDrawable(R.drawable.green_arrow);
 		yellowArrow = this.getResources().getDrawable(R.drawable.yellow_arrow);
 		purpleArrow = this.getResources().getDrawable(R.drawable.purple_arrow);
 
+    /* The map bus icons */
 		purpleOverlay = new MapItemizedOverlay(purpleArrow);
 		redOverlay = new MapItemizedOverlay(redArrow);
 		blueOverlay = new MapItemizedOverlay(blueArrow);
 		greenOverlay = new MapItemizedOverlay(greenArrow);
 		yellowOverlay = new MapItemizedOverlay(yellowArrow);
 
+    /* Center the map on Tech's campus */
 		mapController.animateTo(centerPoint);
 
 		refreshHandler = new Handler();
-		updateMapTask = new Runnable() {
 
+    /* Refresh bus locations every two seconds */
+		updateMapTask = new Runnable() {
 			public void run() { // Refreshes map every two seconds
 				new refreshBusLocations().execute();
 				refreshHandler.postDelayed(this, 5000);
 			}
-
 		};
-
 	}
 
+  /* Draw route lines. Only called once. */
 	public void setRoutes() {
 
 		Log.i("MapViewActivity", "Setting routes...");
 		try {
 			for (int x = 0; x < 4; x++) {
 				JSONArray routePathData = null;
+
+        /* Get path data for each route */
 				switch (x) {
 				case 0:
 					routePathData = Data.getRoutePathData("red");
@@ -216,7 +236,8 @@ public class MapViewActivity extends MapActivity {
 
 				GeoPoint oldPoint = null;
 				GeoPoint newPoint = null;
-
+        
+        /* Draw route */
 				for (int i = 0; i < routePathData.length(); i++) {
 
 					JSONObject path = routePathData.getJSONObject(i);
@@ -250,7 +271,7 @@ public class MapViewActivity extends MapActivity {
 				}
 			}
 		} catch (JSONException je) {
-
+      /* Should never, ever happen. We control the JSON data so we know it's valid. */
 		}
 		routesAreSet = true;
 		Log.i("MapViewActivity", "Routes set.");
@@ -267,6 +288,7 @@ public class MapViewActivity extends MapActivity {
 		yellowButton.setTextColor(whiteColor);
 	}
 
+  /* Refreshes/redraws a route path */
 	public void refreshMap() {
 		mapOverlays.clear();
 
@@ -287,7 +309,7 @@ public class MapViewActivity extends MapActivity {
 		mapView.postInvalidate();
 	}
 
-	/**
+	/*
 	 * This grabs the current bus locations from the m.gatech.edu URL and plots
 	 * the color-coded locations of the buses. As mentioned above, this gets
 	 * called every two seconds.
@@ -298,7 +320,7 @@ public class MapViewActivity extends MapActivity {
 		return false;
 	}
 
-	/**
+	/*
 	 * Stop updating location when paused.
 	 */
 	@Override
@@ -307,7 +329,7 @@ public class MapViewActivity extends MapActivity {
 		refreshHandler.removeCallbacks(updateMapTask);
 	}
 
-	/**
+	/*
 	 * Resume updating location when resumed.
 	 */
 	@Override
@@ -316,6 +338,7 @@ public class MapViewActivity extends MapActivity {
 		refreshHandler.post(updateMapTask);
 	}
 
+  /* Refresh bus locations. Implemented as AsyncTask so UI thread is free. */
 	private class refreshBusLocations extends AsyncTask<Void, Void, ArrayList<MapItemizedOverlay>> {
 
 		protected ArrayList<MapItemizedOverlay> doInBackground(Void... voids) {
@@ -324,11 +347,13 @@ public class MapViewActivity extends MapActivity {
 				setRoutes();
 			}
 
+      /* Here's where the actual location request happens. */
 			ArrayList<String[]> busLocations = APIController.getBusLocations();
 
-			// clear all current overlays
 			ArrayList<MapItemizedOverlay> overlays = new ArrayList<MapItemizedOverlay>();
 
+      /* We create overlays for every route, so that the user can switch to new routes instantaneously
+       * without having to wait for an api request to return */
 			MapItemizedOverlay backgroundPurpleOverlay = new MapItemizedOverlay(purpleArrow);
 			MapItemizedOverlay backgroundRedOverlay = new MapItemizedOverlay(redArrow);
 			MapItemizedOverlay backgroundGreenOverlay = new MapItemizedOverlay(greenArrow);
@@ -381,7 +406,7 @@ public class MapViewActivity extends MapActivity {
 
 			return overlays;
 		}
-
+    /* Return to UI thread */
 		public void onPostExecute(ArrayList<MapItemizedOverlay> overlays) {
 
 			purpleOverlay = overlays.get(0);

@@ -23,6 +23,7 @@ import android.util.Log;
 
 import com.doug.nextbus.R;
 
+/* This class controls reading and writing local files as well as persisting current state data. */
 public class Data {
 
 	static JSONObject data;
@@ -60,7 +61,8 @@ public class Data {
 		}
 
 	}
-
+  
+  /* Reads the path data for a given route */
 	public static JSONArray getRoutePathData(String route) {
 		
 		InputStream is = null;
@@ -114,8 +116,7 @@ public class Data {
 	 * 
 	 * @param route
 	 *            the route to get the JSONObject from
-	 * @return the JSONObject for the given route.
-	 */
+	 * @return the JSONObject for the given route.  */
 	public JSONObject getRoute(String route) {
 
 		JSONObject thisroute = new JSONObject();
@@ -243,6 +244,7 @@ public class Data {
 
 	}
 
+  /* Capitalize a string */
 	public static String capitalize(String route) {
 
 		char[] chars = route.toLowerCase().toCharArray();
@@ -262,6 +264,7 @@ public class Data {
 		return String.valueOf(chars);
 	}
 
+  /* Make ArrayList of integers into an int array */
 	public static int[] convertIntegers(List<Integer> integers) {
 		int[] ret = new int[integers.size()];
 		Iterator<Integer> iterator = integers.iterator();
@@ -291,28 +294,6 @@ public class Data {
 		return ret;
 	}
 
-	// TODO - Favorite stops :(
-
-	// public static void setFavoriteStop (String route, String stopid, String
-	// stop) {
-	// JSONObject newSavedStopData = null;
-	// try {
-	// newSavedStopData = new JSONObject();
-	// newSavedStopData.put("hasSavedStop", true);
-	// newSavedStopData.put("routeTag", route);
-	// newSavedStopData.put("stopId", stopid);
-	// newSavedStopData.put("stopTitle", stop);
-	//
-	// data.put("savedStopInfo", newSavedStopData);
-	//
-	// } catch (JSONException je) {
-	// je.printStackTrace();
-	// }
-	//
-	// Data.writeStopData(newSavedStopData);
-	//
-	// }
-
 	public static JSONObject readStopData() {
 		JSONObject stopData = null;
 		try {
@@ -330,9 +311,7 @@ public class Data {
 			Log.i("Data.load()", "Error parsing Properties.txt.");
 			e.printStackTrace();
 		}
-
 		return stopData;
-
 	}
 
 	private static void writeStopData(JSONObject settings) {

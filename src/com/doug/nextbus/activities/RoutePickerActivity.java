@@ -41,6 +41,9 @@ import com.viewpagerindicator.TitlePageIndicator;
 import com.viewpagerindicator.TitlePageIndicator.IndicatorStyle;
 import com.viewpagerindicator.TitleProvider;
 
+/*
+ * The top level, main activity. It lets the users switch between routes.
+ */
 public class RoutePickerActivity extends Activity implements OnSharedPreferenceChangeListener {
 
 	private Context cxt;
@@ -83,12 +86,12 @@ public class RoutePickerActivity extends Activity implements OnSharedPreferenceC
 
 		shouldHideRoutes(hideDeadRoutes);
 
-		// Set up ViewGroup
+    /* Setup ViewGroup */
 		pagerAdapter = new RoutePagerAdapter(activeRoutesExist, currentRoutes, hasDirections, data, cxt);
 		pager = (ViewPager) findViewById(R.id.routepagerviewpager);
 		pager.setAdapter(pagerAdapter);
 
-		// Set up ViewGroup indicator.
+    /* Setup ViewGroup Indicator */
 		final TitlePageIndicator titleIndicator = (TitlePageIndicator) findViewById(R.id.routes);
 		titleIndicator.setFooterIndicatorStyle(IndicatorStyle.Underline);
 		titleIndicator.setBackgroundColor(getResources().getColor(R.color.subtitlecolor));
@@ -102,17 +105,12 @@ public class RoutePickerActivity extends Activity implements OnSharedPreferenceC
 		titleIndicator.setTextSize(pixels);
 		titleIndicator.setViewPager(pager);
 
+    /* Listener for PageChanging. Basically the left and right swiping */
 		titleIndicator.setOnPageChangeListener(new OnPageChangeListener() {
 
-			public void onPageScrollStateChanged(int arg0) {
-				// TODO Auto-generated method stub
+			public void onPageScrollStateChanged(int arg0) { }
 
-			}
-
-			public void onPageScrolled(int arg0, float arg1, int arg2) {
-				// TODO Auto-generated method stub
-
-			}
+			public void onPageScrolled(int arg0, float arg1, int arg2) { }
 
 			public void onPageSelected(int position) {
 				if (colorOrder.length > 0) {
@@ -120,14 +118,16 @@ public class RoutePickerActivity extends Activity implements OnSharedPreferenceC
 					titleIndicator.setFooterColor(colorOrder[position]);
 				}
 			}
-
 		});
+
 		if (activeRoutesExist && currentRoutes.length > 0) {
 			pager.setCurrentItem(1);
 		} else {
+      /* If only one route, show it */ 
 			pager.setCurrentItem(0);
 		}
 
+    /* Button for switching to MapView */
 		mapButton.setOnTouchListener(new OnTouchListener() {
 
 			public boolean onTouch(View arg0, MotionEvent event) {
@@ -146,16 +146,18 @@ public class RoutePickerActivity extends Activity implements OnSharedPreferenceC
 
 	}
 
+  /* Checks hideRoutes preference. */
 	private void shouldHideRoutes(boolean hideDeadRoutes) {
 
-		// Should all routes be shown?
 		if (hideDeadRoutes) {
 			setCurrentRoutes(APIController.getActiveRoutesList(cxt));
 		} else {
 			Object[] activeRouteList = new Object[4];
 			String[] activeRoutes = { "red", "blue", "trolley", "green", "night" };
 			boolean[] hasDirections = { false, false, true, true, true };
+
 			int[] colorOrder = { red, blue, yellow, green, night };
+
 			activeRouteList[0] = activeRoutes;
 			activeRouteList[1] = colorOrder;
 			activeRouteList[2] = hasDirections;
@@ -172,14 +174,13 @@ public class RoutePickerActivity extends Activity implements OnSharedPreferenceC
 		activeRoutesExist = (Boolean) activeRoutesList[3];
 	}
 
-
-
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.stock_menu, menu);
 		return true;
 	}
 
+  /* Options menu handler. */
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
@@ -196,6 +197,7 @@ public class RoutePickerActivity extends Activity implements OnSharedPreferenceC
 		}
 	}
 
+  /* Listener for changed preferences */
 	public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
 
 		if (key.equals("showActiveRoutes")) {
@@ -223,12 +225,12 @@ public class RoutePickerActivity extends Activity implements OnSharedPreferenceC
 
 	}
 
+  /* Helper method to convert static array to array list */
 	public static ArrayList<String> getActiveRoutes() {
 		ArrayList<String> activeRoutes = new ArrayList<String>();
 		for (int i = 0; i < currentRoutes.length; i++) {
 			activeRoutes.add(currentRoutes[i]);
 		}
-
 		return activeRoutes;
 	}
 

@@ -9,6 +9,7 @@ import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
 
+/* A bus icon arrow overlay thing */
 public class MapItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 
 	private ArrayList<OverlayItem> overlays = new ArrayList<OverlayItem>();

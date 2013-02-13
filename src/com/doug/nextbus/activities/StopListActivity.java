@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+/* This activity shows a list of stops. */
 public class StopListActivity extends Activity {
 
 	Data data;
@@ -54,21 +55,11 @@ public class StopListActivity extends Activity {
 
 		colorBar = (View) findViewById(R.id.colorbar);
 
-//		routeTitle.setOnClickListener(new OnClickListener() {
-//
-//			
-//			public void onClick(View v) {
-//
-//				Intent intent = new Intent(getApplicationContext(), RoutePager.class);
-//				intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-//				startActivity(intent);
-//			}
-//
-//		});
-
 		if (extras != null) {
+      /* Pull route and direction for extras */
 			route = extras.getString("route");
 			direction = extras.getString("direction");
+
 			directionTextView.setText(Data.capitalize(direction));
 			Object[] stopInfo = data.getListForRoute(route, direction);
 			stops = (String[]) stopInfo[0];
@@ -78,6 +69,7 @@ public class StopListActivity extends Activity {
 
 			stopList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, stops));
 
+      /* Handler for a stop cell. */
 			stopList.setOnItemClickListener(new OnItemClickListener() {
 				
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -104,19 +96,16 @@ public class StopListActivity extends Activity {
 				return true;
 			}
 		});
-
 	}
-
 	
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.stock_menu, menu);
 		return true;
 	}
-
 	
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle item selection
+    /* Handle item selection */
 		switch (item.getItemId()) {
 		case R.id.aboutmenusitem:
 			Intent aboutActivity = new Intent(getApplicationContext(), CreditsActivity.class);
@@ -131,6 +120,7 @@ public class StopListActivity extends Activity {
 		}
 	}
 
+  /* Sets color of label at top of view */
 	public void setDirectionTextViewColor(String route) {
 
 		int color = 0;
@@ -140,10 +130,8 @@ public class StopListActivity extends Activity {
 			color = R.color.blue;
 		} else if (route.equals("green")) {
 			color = R.color.green;
-			// directionTextView.setTextColor(Color.BLACK);
 		} else if (route.equals("trolley")) {
 			color = R.color.yellow;
-			// directionTextView.setTextColor(Color.BLACK);
 		} else if (route.equals("night")) {
 			color = R.color.night;
 		}

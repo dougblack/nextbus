@@ -19,6 +19,7 @@ import com.doug.nextbus.activities.StopViewActivity;
 import com.doug.nextbus.backend.Data;
 import com.viewpagerindicator.TitleProvider;
 
+/* The adapter for the swiping between route pages for the RoutePickerActivity */
 public class RoutePagerAdapter extends PagerAdapter implements TitleProvider {
 
 	boolean activeRoutesExist;
@@ -26,7 +27,6 @@ public class RoutePagerAdapter extends PagerAdapter implements TitleProvider {
 	boolean[] hasDirections;
 	Data data;
 	Context cxt;
-	
 	
 	public RoutePagerAdapter(boolean activeRoutesExist, String[] currentRoutes, boolean[] hasDirections, Data data,
 			Context cxt) {
@@ -39,7 +39,6 @@ public class RoutePagerAdapter extends PagerAdapter implements TitleProvider {
 		
 	}
 
-
 	public void destroyItem(View container, int position, Object view) {
 		if (view instanceof ListView) {
 			((ViewPager) container).removeView((ListView) view);
@@ -51,7 +50,6 @@ public class RoutePagerAdapter extends PagerAdapter implements TitleProvider {
 
 	public void finishUpdate(View arg0) {
 		// TODO Auto-generated method stub
-
 	}
 
 	public int getCount() {
@@ -66,7 +64,7 @@ public class RoutePagerAdapter extends PagerAdapter implements TitleProvider {
 		return POSITION_NONE;
 	}
 
-	/**
+	/*
 	 * For each page, make a list view of available stops. Or, if there are
 	 * directions, make a list view of available directions. Then launch the
 	 * correct activity based on which item in the list view is selected.

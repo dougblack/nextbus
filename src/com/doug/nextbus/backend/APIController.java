@@ -23,6 +23,8 @@ import android.location.Location;
 import android.text.format.Time;
 import android.util.Log;
 
+/* This class handles all request to the NextBus API.
+ * It curates the returned data for easy consumption by other objects in the app. */
 public class APIController {
 
 	/**
@@ -45,10 +47,8 @@ public class APIController {
 		try {
 			stopPredictionJSON = readJsonFromUrl(finalURL);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -118,6 +118,9 @@ public class APIController {
 		}
 	}
 
+  /* Okay. So here's where stuff gets tricky. There isn't actually a public-facing API for grabbing
+   * NextBus data for Georgia Tech, so we actually use the Yahoo Query Language (YQL) to strip the
+   * relevant data out of NextBus site and consume it as JSON. It works. For now. */
 	private static String createYQLUrl(String route, String stoptag) {
 
 		return "http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D%22http"
@@ -127,6 +130,7 @@ public class APIController {
 				+ "ass%3D'predictionNumberForOtherPreds'%5D%2Fdiv%2Fp%22&format=json";
 	}
 
+  /* Gets bus locations from the Georgia Tech mobile app. */
 	public static ArrayList<String[]> getBusLocations() {
 
 		String busLocUrl = "http://m.gatech.edu/proxy/walkpath.cip.gatech.edu/bus_position.php";
@@ -144,13 +148,13 @@ public class APIController {
 		try {
 			return parseLocationResults(busLocationsJSON);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return new ArrayList<String[]>();
 		}
 
 	}
 
+  /* Gets JSON from URL array */
 	private static JSONArray readJsonArrayFromUrl(String url) throws IOException, JSONException {
 		InputStream is = new URL(url).openStream();
 		try {
@@ -163,6 +167,7 @@ public class APIController {
 		}
 	}
 
+  /* Curate JSON location results */
 	private static ArrayList<String[]> parseLocationResults(JSONArray busLocationsJSON) throws JSONException {
 
 		ArrayList<String[]> busLocations = new ArrayList<String[]>();
@@ -180,7 +185,7 @@ public class APIController {
 
 	/**
 	 * This method returns the list of active routes by NextBus official
-	 * schedule
+	 * schedule.
 	 * 
 	 * @return active routes
 	 */
@@ -213,8 +218,7 @@ public class APIController {
 				activeRoutesHasDirectionsList.add(false);
 				activeRoutesList.add("blue");
 				activeColorsList.add(blue);
-				activeRoutesHasDirectionsList.add(false);
-			}
+				activeRoutesHasDirectionsList.add(false); }
 			if ((hour >= 7) && (hour <= 18)) {
 				// 6:15am - 9:45pm
 				activeRoutesList.add("green");

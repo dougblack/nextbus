@@ -11,8 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-
-
+/* Array adapter for multicolored cells */
 public class RainbowArrayAdapter extends ArrayAdapter<String> {
 
 	String[] data;
@@ -29,7 +28,6 @@ public class RainbowArrayAdapter extends ArrayAdapter<String> {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		TextView view = (TextView) super.getView(position, convertView, parent);
-//		view.setBackgroundColor(colors[position]);
 		view.setBackgroundDrawable(drawableList.get(position));
 		if (deadCellOnly) {
 			Log.i("INFO", "DEAD CELL ONLY.");
