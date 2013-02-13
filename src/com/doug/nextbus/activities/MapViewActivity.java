@@ -61,8 +61,7 @@ public class MapViewActivity extends MapActivity {
 	List<Overlay> bluePath;
 	List<Overlay> greenPath;
 	List<Overlay> yellowPath;
-	boolean routesAreSet;
-
+	boolean routesAreSet; 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.map_view);

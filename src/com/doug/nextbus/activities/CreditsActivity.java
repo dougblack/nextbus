@@ -21,7 +21,8 @@ import android.widget.ListView;
 public class CreditsActivity extends Activity {
 
 	static ListView contactList;
-	static String[] contactItemStrings = { "@DougBlackGT", "dblackgt@gmail.com", "itsdoug.com", "Google+", "All data copyright Georgia Tech Campus 2011" };
+	static String[] contactItemStrings = { "@DougBlackGT", "dblackgt@gmail.com", "itsdoug.com", "Google+",
+			"All data copyright Georgia Tech Campus 2011" };
 
 	public void onCreate(Bundle savedInstance) {
 		super.onCreate(savedInstance);
@@ -33,7 +34,6 @@ public class CreditsActivity extends Activity {
 
 		contactList.setOnItemClickListener(new OnItemClickListener() {
 
-			
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
 				switch (position) {
@@ -67,14 +67,12 @@ public class CreditsActivity extends Activity {
 		});
 	}
 
-	
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.about_menu, menu);
 		return true;
 	}
 
-	
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {

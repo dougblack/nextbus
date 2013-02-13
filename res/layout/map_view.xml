@@ -37,7 +37,7 @@
         android:layout_height="fill_parent"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/titleBar"
-        android:apiKey="04Qw7Dy0-DFoTqFfjak8L4iq28pItb-BPzaxfJw"
+        android:apiKey="04Qw7Dy0-DFoNhqQqSnO8Glg7x9bwkd9Q_yFtPw"
         android:clickable="true" />
 
     <View
