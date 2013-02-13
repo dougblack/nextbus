@@ -25,9 +25,15 @@
             android:paddingLeft="5dp"
             android:text="GT NEXTBUS"
             android:textColor="@color/white"
-            android:textSize="25sp"
+            android:textSize="22sp"
             android:textStyle="bold" />
-        
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="1dp"
+            android:layout_height="fill_parent"
+            android:background="@color/dividercolor" />
+
         <ImageView
             android:id="@+id/mapButton"
             android:layout_width="50dp"
@@ -35,18 +41,8 @@
             android:layout_alignBottom="@+id/textView1"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:padding="10dp"
+            android:padding="12dp"
             android:src="@drawable/ic_dialog_map" />
-
-        <ImageView
-            android:id="@+id/nearestStopsButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignBottom="@+id/textView1"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:padding="5dp"
-            android:src="@drawable/ic_menu_mylocation" />
     </LinearLayout>
 
     <com.viewpagerindicator.TitlePageIndicator

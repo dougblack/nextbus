@@ -16,17 +16,32 @@
         android:textSize="25sp"
         android:textStyle="bold" >
 
+        <ImageView
+            android:id="@+id/backButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:padding="10dp"
+            android:src="@drawable/back_arrow" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="1dp"
+            android:layout_height="fill_parent"
+            android:background="@color/dividercolor" />
+
         <TextView
             android:id="@+id/titleText"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1.10"
             android:gravity="center_vertical"
-            android:textSize="25sp"
-            android:textStyle="bold"
+            android:paddingLeft="10dp"
+            android:text="STOP"
             android:textColor="@color/white"
-            android:paddingLeft="5dp"
-            android:text="STOP" />
+            android:textSize="22sp"
+            android:textStyle="bold" />
 
         <ProgressBar
             android:id="@+id/routeviewprogressbar"
@@ -162,7 +177,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="45dp"
                 android:gravity="center"
-                android:text="All Routes For This Stop"
+                android:text="OTHER ROUTES"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -173,7 +188,6 @@
                 android:layout_height="5dp"
                 android:orientation="horizontal" >
 
-                
                 <View
                     android:layout_width="45dp"
                     android:layout_height="fill_parent" />

@@ -1,4 +1,4 @@
-package com.doug.nextbus.backend;
+package com.doug.nextbus.custom;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -91,7 +91,6 @@ public boolean draw (Canvas canvas, MapView mapView, boolean shadow, long when) 
             Point point2 = new Point();
             projection.toPixels(gp2, point2);
             paint.setStrokeWidth(5);
-            paint.setAlpha(defaultColor==Color.parseColor("#6C8715")?220:120);
             canvas.drawLine(point.x, point.y, point2.x,point2.y, paint);
             RectF oval=new RectF(point2.x - mRadius,point2.y - mRadius,
             point2.x + mRadius,point2.y + mRadius);
