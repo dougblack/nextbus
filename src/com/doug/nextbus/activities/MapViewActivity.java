@@ -1,7 +1,5 @@
 package com.doug.nextbus.activities;
 
-import com.doug.nextbus.backend.Data;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,6 +24,7 @@ import android.widget.TextView;
 
 import com.doug.nextbus.R;
 import com.doug.nextbus.backend.APIController;
+import com.doug.nextbus.backend.Data;
 import com.doug.nextbus.custom.BusOverlayItem;
 import com.doug.nextbus.custom.MapItemizedOverlay;
 import com.doug.nextbus.custom.RouteOverlay;
@@ -34,22 +33,20 @@ import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
-import com.google.android.maps.OverlayItem;
 
 /*
  * The map activity. Shows routes and bus locations overlaid on a google map. 
  */
 public class MapViewActivity extends MapActivity {
 
-
-  /* Bus icon arrow things */
+	/* Bus icon arrow things */
 	Drawable redArrow;
 	Drawable blueArrow;
 	Drawable greenArrow;
 	Drawable yellowArrow;
 	Drawable purpleArrow;
 
-  /* Bus icon arrow things in as map overlays */
+	/* Bus icon arrow things in as map overlays */
 	List<Overlay> mapOverlays;
 	MapItemizedOverlay redOverlay;
 	MapItemizedOverlay blueOverlay;
@@ -57,19 +54,19 @@ public class MapViewActivity extends MapActivity {
 	MapItemizedOverlay yellowOverlay;
 	MapItemizedOverlay purpleOverlay;
 
-  /* The buttons to control currently display route */
+	/* The buttons to control currently display route */
 	TextView redButton;
 	TextView blueButton;
 	TextView greenButton;
 	TextView yellowButton;
 
-  /* The path segments for each bus route */
+	/* The path segments for each bus route */
 	List<Overlay> redPath;
 	List<Overlay> bluePath;
 	List<Overlay> greenPath;
 	List<Overlay> yellowPath;
 
-  /* Points used to move center the map view */
+	/* Points used to move center the map view */
 	GeoPoint centerPoint;
 	GeoPoint yellowCenterPoint;
 
@@ -88,7 +85,7 @@ public class MapViewActivity extends MapActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.map_view);
 
-    /* Initialize tons of shit */
+		/* Initialize tons of shit */
 		redColor = this.getResources().getColor(R.color.red);
 		blueColor = this.getResources().getColor(R.color.blue);
 		greenColor = this.getResources().getColor(R.color.green);
@@ -115,19 +112,20 @@ public class MapViewActivity extends MapActivity {
 		yellowPath = new LinkedList<Overlay>();
 		routesAreSet = false;
 		centerPoint = new GeoPoint(33776499, -84398400);
-		yellowCenterPoint = new GeoPoint(33777390,-84393024);
+		yellowCenterPoint = new GeoPoint(33777390, -84393024);
 
 		resetButtonTransparencies();
 		displayRoute = "red";
-		redButton.setBackgroundColor(R.color.black);
+		redButton.setBackgroundColor(getResources().getColor(R.color.black));
 		redButton.setTextColor(redColor);
 
-    /* Set listeners for each button to change the displayed route */
+		/* Set listeners for each button to change the displayed route */
 		redButton.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View arg0) {
 				resetButtonTransparencies();
-				redButton.setBackgroundColor(R.color.black);
+				redButton.setBackgroundColor(getResources().getColor(
+						R.color.black));
 				redButton.setTextColor(redColor);
 				mapController.animateTo(centerPoint);
 				displayRoute = "red";
@@ -138,7 +136,8 @@ public class MapViewActivity extends MapActivity {
 
 			public void onClick(View arg0) {
 				resetButtonTransparencies();
-				blueButton.setBackgroundColor(R.color.black);
+				blueButton.setBackgroundColor(getResources().getColor(
+						R.color.black));
 				blueButton.setTextColor(blueColor);
 				mapController.animateTo(centerPoint);
 				displayRoute = "blue";
@@ -149,7 +148,8 @@ public class MapViewActivity extends MapActivity {
 
 			public void onClick(View arg0) {
 				resetButtonTransparencies();
-				yellowButton.setBackgroundColor(R.color.black);
+				yellowButton.setBackgroundColor(getResources().getColor(
+						R.color.black));
 				yellowButton.setTextColor(yellowColor);
 				mapController.animateTo(yellowCenterPoint);
 				displayRoute = "yellow";
@@ -160,7 +160,8 @@ public class MapViewActivity extends MapActivity {
 
 			public void onClick(View arg0) {
 				resetButtonTransparencies();
-				greenButton.setBackgroundColor(R.color.black);
+				greenButton.setBackgroundColor(getResources().getColor(
+						R.color.black));
 				greenButton.setTextColor(greenColor);
 				mapController.animateTo(centerPoint);
 				displayRoute = "green";
@@ -171,7 +172,8 @@ public class MapViewActivity extends MapActivity {
 		backButton.setOnTouchListener(new OnTouchListener() {
 			public boolean onTouch(View arg0, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_DOWN) {
-					backButton.setBackgroundColor(R.color.black);
+					backButton.setBackgroundColor(getResources().getColor(
+							R.color.black));
 					return true;
 				} else if (event.getAction() == MotionEvent.ACTION_UP) {
 					backButton.setBackgroundColor(0);
@@ -189,19 +191,19 @@ public class MapViewActivity extends MapActivity {
 		yellowArrow = this.getResources().getDrawable(R.drawable.yellow_arrow);
 		purpleArrow = this.getResources().getDrawable(R.drawable.purple_arrow);
 
-    /* The map bus icons */
+		/* The map bus icons */
 		purpleOverlay = new MapItemizedOverlay(purpleArrow);
 		redOverlay = new MapItemizedOverlay(redArrow);
 		blueOverlay = new MapItemizedOverlay(blueArrow);
 		greenOverlay = new MapItemizedOverlay(greenArrow);
 		yellowOverlay = new MapItemizedOverlay(yellowArrow);
 
-    /* Center the map on Tech's campus */
+		/* Center the map on Tech's campus */
 		mapController.animateTo(centerPoint);
 
 		refreshHandler = new Handler();
 
-    /* Refresh bus locations every two seconds */
+		/* Refresh bus locations every two seconds */
 		updateMapTask = new Runnable() {
 			public void run() { // Refreshes map every two seconds
 				new refreshBusLocations().execute();
@@ -210,7 +212,7 @@ public class MapViewActivity extends MapActivity {
 		};
 	}
 
-  /* Draw route lines. Only called once. */
+	/* Draw route lines. Only called once. */
 	public void setRoutes() {
 
 		Log.i("MapViewActivity", "Setting routes...");
@@ -218,7 +220,7 @@ public class MapViewActivity extends MapActivity {
 			for (int x = 0; x < 4; x++) {
 				JSONArray routePathData = null;
 
-        /* Get path data for each route */
+				/* Get path data for each route */
 				switch (x) {
 				case 0:
 					routePathData = Data.getRoutePathData("red");
@@ -236,8 +238,8 @@ public class MapViewActivity extends MapActivity {
 
 				GeoPoint oldPoint = null;
 				GeoPoint newPoint = null;
-        
-        /* Draw route */
+
+				/* Draw route */
 				for (int i = 0; i < routePathData.length(); i++) {
 
 					JSONObject path = routePathData.getJSONObject(i);
@@ -245,22 +247,32 @@ public class MapViewActivity extends MapActivity {
 					for (int j = 0; j < points.length(); j++) {
 
 						JSONObject coords = points.getJSONObject(j);
-						int latitude = (int) (Float.parseFloat(coords.getString("lat")) * 1e6);
-						int longitude = (int) (Float.parseFloat(coords.getString("lon")) * 1e6);
+						int latitude = (int) (Float.parseFloat(coords
+								.getString("lat")) * 1e6);
+						int longitude = (int) (Float.parseFloat(coords
+								.getString("lon")) * 1e6);
 						newPoint = new GeoPoint(latitude, longitude);
 						if (oldPoint != null) {
 							switch (x) {
 							case 0:
-								redPath.add(new RouteOverlay(oldPoint, newPoint, 2, Color.parseColor("#e63f3f")));
+								redPath.add(new RouteOverlay(oldPoint,
+										newPoint, 2, Color
+												.parseColor("#e63f3f")));
 								break;
 							case 1:
-								bluePath.add(new RouteOverlay(oldPoint, newPoint, 2, Color.parseColor("#0078ff")));
+								bluePath.add(new RouteOverlay(oldPoint,
+										newPoint, 2, Color
+												.parseColor("#0078ff")));
 								break;
 							case 2:
-								yellowPath.add(new RouteOverlay(oldPoint, newPoint, 2, Color.parseColor("#ffd200")));
+								yellowPath.add(new RouteOverlay(oldPoint,
+										newPoint, 2, Color
+												.parseColor("#ffd200")));
 								break;
 							case 3:
-								greenPath.add(new RouteOverlay(oldPoint, newPoint, 2, Color.parseColor("#02d038")));
+								greenPath.add(new RouteOverlay(oldPoint,
+										newPoint, 2, Color
+												.parseColor("#02d038")));
 								break;
 							}
 
@@ -271,7 +283,10 @@ public class MapViewActivity extends MapActivity {
 				}
 			}
 		} catch (JSONException je) {
-      /* Should never, ever happen. We control the JSON data so we know it's valid. */
+			/*
+			 * Should never, ever happen. We control the JSON data so we know
+			 * it's valid.
+			 */
 		}
 		routesAreSet = true;
 		Log.i("MapViewActivity", "Routes set.");
@@ -288,7 +303,7 @@ public class MapViewActivity extends MapActivity {
 		yellowButton.setTextColor(whiteColor);
 	}
 
-  /* Refreshes/redraws a route path */
+	/* Refreshes/redraws a route path */
 	public void refreshMap() {
 		mapOverlays.clear();
 
@@ -338,8 +353,9 @@ public class MapViewActivity extends MapActivity {
 		refreshHandler.post(updateMapTask);
 	}
 
-  /* Refresh bus locations. Implemented as AsyncTask so UI thread is free. */
-	private class refreshBusLocations extends AsyncTask<Void, Void, ArrayList<MapItemizedOverlay>> {
+	/* Refresh bus locations. Implemented as AsyncTask so UI thread is free. */
+	private class refreshBusLocations extends
+			AsyncTask<Void, Void, ArrayList<MapItemizedOverlay>> {
 
 		protected ArrayList<MapItemizedOverlay> doInBackground(Void... voids) {
 
@@ -347,18 +363,26 @@ public class MapViewActivity extends MapActivity {
 				setRoutes();
 			}
 
-      /* Here's where the actual location request happens. */
+			/* Here's where the actual location request happens. */
 			ArrayList<String[]> busLocations = APIController.getBusLocations();
 
 			ArrayList<MapItemizedOverlay> overlays = new ArrayList<MapItemizedOverlay>();
 
-      /* We create overlays for every route, so that the user can switch to new routes instantaneously
-       * without having to wait for an api request to return */
-			MapItemizedOverlay backgroundPurpleOverlay = new MapItemizedOverlay(purpleArrow);
-			MapItemizedOverlay backgroundRedOverlay = new MapItemizedOverlay(redArrow);
-			MapItemizedOverlay backgroundGreenOverlay = new MapItemizedOverlay(greenArrow);
-			MapItemizedOverlay backgroundYellowOverlay = new MapItemizedOverlay(yellowArrow);
-			MapItemizedOverlay backgroundBlueOverlay = new MapItemizedOverlay(blueArrow);
+			/*
+			 * We create overlays for every route, so that the user can switch
+			 * to new routes instantaneously without having to wait for an api
+			 * request to return
+			 */
+			MapItemizedOverlay backgroundPurpleOverlay = new MapItemizedOverlay(
+					purpleArrow);
+			MapItemizedOverlay backgroundRedOverlay = new MapItemizedOverlay(
+					redArrow);
+			MapItemizedOverlay backgroundGreenOverlay = new MapItemizedOverlay(
+					greenArrow);
+			MapItemizedOverlay backgroundYellowOverlay = new MapItemizedOverlay(
+					yellowArrow);
+			MapItemizedOverlay backgroundBlueOverlay = new MapItemizedOverlay(
+					blueArrow);
 
 			overlays.add(backgroundPurpleOverlay);
 			overlays.add(backgroundRedOverlay);
@@ -380,16 +404,20 @@ public class MapViewActivity extends MapActivity {
 					String route = entry[0];
 
 					if (route.equals("red")) {
-						busOverlayItem = new BusOverlayItem(busLocation, "", "", pBusLocation, mapView, redArrow);
+						busOverlayItem = new BusOverlayItem(busLocation, "",
+								"", pBusLocation, mapView, redArrow);
 						backgroundRedOverlay.addOverlay(busOverlayItem);
 					} else if (route.equals("blue")) {
-						busOverlayItem = new BusOverlayItem(busLocation, "", "", pBusLocation, mapView, blueArrow);
+						busOverlayItem = new BusOverlayItem(busLocation, "",
+								"", pBusLocation, mapView, blueArrow);
 						backgroundBlueOverlay.addOverlay(busOverlayItem);
 					} else if (route.equals("yellow")) {
-						busOverlayItem = new BusOverlayItem(busLocation, "", "", pBusLocation, mapView, yellowArrow);
+						busOverlayItem = new BusOverlayItem(busLocation, "",
+								"", pBusLocation, mapView, yellowArrow);
 						backgroundYellowOverlay.addOverlay(busOverlayItem);
 					} else if (route.equals("green")) {
-						busOverlayItem = new BusOverlayItem(busLocation, "", "", pBusLocation, mapView, greenArrow);
+						busOverlayItem = new BusOverlayItem(busLocation, "",
+								"", pBusLocation, mapView, greenArrow);
 						backgroundGreenOverlay.addOverlay(busOverlayItem);
 					}
 
@@ -406,7 +434,8 @@ public class MapViewActivity extends MapActivity {
 
 			return overlays;
 		}
-    /* Return to UI thread */
+
+		/* Return to UI thread */
 		public void onPostExecute(ArrayList<MapItemizedOverlay> overlays) {
 
 			purpleOverlay = overlays.get(0);

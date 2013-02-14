@@ -39,7 +39,8 @@ public class Data {
 
 		setContext(context);
 
-		InputStream is = (InputStream) context.getResources().openRawResource(R.raw.routeconfig);
+		InputStream is = (InputStream) context.getResources().openRawResource(
+				R.raw.routeconfig);
 		BufferedReader br = new BufferedReader(new InputStreamReader(is));
 		StringBuffer lines = null;
 		try {
@@ -61,20 +62,24 @@ public class Data {
 		}
 
 	}
-  
-  /* Reads the path data for a given route */
+
+	/* Reads the path data for a given route */
 	public static JSONArray getRoutePathData(String route) {
-		
+
 		InputStream is = null;
-		
+
 		if (route.equals("red")) {
-			is = (InputStream) context.getResources().openRawResource(R.raw.redroute);
+			is = (InputStream) context.getResources().openRawResource(
+					R.raw.redroute);
 		} else if (route.equals("blue")) {
-			is = (InputStream) context.getResources().openRawResource(R.raw.blueroute);
+			is = (InputStream) context.getResources().openRawResource(
+					R.raw.blueroute);
 		} else if (route.equals("green")) {
-			is = (InputStream) context.getResources().openRawResource(R.raw.greenroute);
+			is = (InputStream) context.getResources().openRawResource(
+					R.raw.greenroute);
 		} else if (route.equals("trolley")) {
-			is = (InputStream) context.getResources().openRawResource(R.raw.trolleyroute);
+			is = (InputStream) context.getResources().openRawResource(
+					R.raw.trolleyroute);
 		}
 		BufferedReader br = new BufferedReader(new InputStreamReader(is));
 		StringBuffer lines = null;
@@ -94,11 +99,12 @@ public class Data {
 
 		try {
 			redRouteData = new JSONObject(lines.toString());
-			redRoutePathData = redRouteData.getJSONObject("body").getJSONObject("route").getJSONArray("path");
+			redRoutePathData = redRouteData.getJSONObject("body")
+					.getJSONObject("route").getJSONArray("path");
 		} catch (JSONException e) {
 			Log.e("ERROR", "Failed to make into JSON.");
 		}
-		
+
 		return redRoutePathData;
 
 	}
@@ -116,7 +122,8 @@ public class Data {
 	 * 
 	 * @param route
 	 *            the route to get the JSONObject from
-	 * @return the JSONObject for the given route.  */
+	 * @return the JSONObject for the given route.
+	 */
 	public JSONObject getRoute(String route) {
 
 		JSONObject thisroute = new JSONObject();
@@ -187,7 +194,8 @@ public class Data {
 		try {
 			directions = getRoute(routeStr).getJSONArray("direction");
 			for (int i = 0; i < directions.length(); i++) {
-				directionList.add(directions.getJSONObject(i).getString("title"));
+				directionList.add(directions.getJSONObject(i)
+						.getString("title"));
 			}
 		} catch (JSONException e) {
 			Log.e("ERROR", "Couldn't parse directions.");
@@ -220,18 +228,21 @@ public class Data {
 		try {
 			directions = getRoute(route).getJSONArray("direction");
 			for (int i = 0; i < directions.length(); i++) {
-				if (directions.getJSONObject(i).getString("title").equals(direction)) {
+				if (directions.getJSONObject(i).getString("title")
+						.equals(direction)) {
 					directionObj = directions.getJSONObject(i);
 				}
 			}
 			JSONArray directionObjStops = directionObj.getJSONArray("stop");
 			for (int i = 0; i < directionObjStops.length(); i++) {
-				stopHash.put(directionObjStops.getJSONObject(i).getString("tag"), "Hi");
+				stopHash.put(directionObjStops.getJSONObject(i)
+						.getString("tag"), "Hi");
 			}
 
 			JSONArray allStops = getRoute(route).getJSONArray("stop");
 			for (int i = 0; i < allStops.length(); i++) {
-				if (stopHash.containsKey(allStops.getJSONObject(i).getString("tag")))
+				if (stopHash.containsKey(allStops.getJSONObject(i).getString(
+						"tag")))
 					stopList.add(allStops.getJSONObject(i).getString("title"));
 				stopListTags.add(allStops.getJSONObject(i).getString("tag"));
 			}
@@ -244,7 +255,7 @@ public class Data {
 
 	}
 
-  /* Capitalize a string */
+	/* Capitalize a string */
 	public static String capitalize(String route) {
 
 		char[] chars = route.toLowerCase().toCharArray();
@@ -257,14 +268,15 @@ public class Data {
 					chars[i] = Character.toUpperCase(chars[i]);
 					found = true;
 				}
-			} else if (Character.isWhitespace(chars[i]) || chars[i] == '.' || chars[i] == '\'') {
+			} else if (Character.isWhitespace(chars[i]) || chars[i] == '.'
+					|| chars[i] == '\'') {
 				found = false;
 			}
 		}
 		return String.valueOf(chars);
 	}
 
-  /* Make ArrayList of integers into an int array */
+	/* Make ArrayList of integers into an int array */
 	public static int[] convertIntegers(List<Integer> integers) {
 		int[] ret = new int[integers.size()];
 		Iterator<Integer> iterator = integers.iterator();
@@ -297,8 +309,8 @@ public class Data {
 	public static JSONObject readStopData() {
 		JSONObject stopData = null;
 		try {
-			BufferedReader input = new BufferedReader(new FileReader(context.getFilesDir().toString()
-					+ "/favoritestop.txt"));
+			BufferedReader input = new BufferedReader(new FileReader(context
+					.getFilesDir().toString() + "/favoritestop.txt"));
 			stopData = new JSONObject(input.readLine());
 
 		} catch (FileNotFoundException e) {
@@ -317,7 +329,8 @@ public class Data {
 	private static void writeStopData(JSONObject settings) {
 
 		try {
-			Writer output = new BufferedWriter(new FileWriter(context.getFilesDir().toString() + "/favoritestop.txt"));
+			Writer output = new BufferedWriter(new FileWriter(context
+					.getFilesDir().toString() + "/favoritestop.txt"));
 			output.write(settings.toString());
 			output.close();
 		} catch (IOException e) {

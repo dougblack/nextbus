@@ -8,35 +8,34 @@ import android.support.v4.view.ViewPager;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
 
 import com.doug.nextbus.R;
 import com.doug.nextbus.activities.StopListActivity;
 import com.doug.nextbus.activities.StopViewActivity;
 import com.doug.nextbus.backend.Data;
-import com.viewpagerindicator.TitleProvider;
 
 /* The adapter for the swiping between route pages for the RoutePickerActivity */
-public class RoutePagerAdapter extends PagerAdapter implements TitleProvider {
+public class RoutePagerAdapter extends PagerAdapter {
 
 	boolean activeRoutesExist;
 	String[] currentRoutes;
 	boolean[] hasDirections;
 	Data data;
 	Context cxt;
-	
-	public RoutePagerAdapter(boolean activeRoutesExist, String[] currentRoutes, boolean[] hasDirections, Data data,
-			Context cxt) {
+
+	public RoutePagerAdapter(boolean activeRoutesExist, String[] currentRoutes,
+			boolean[] hasDirections, Data data, Context cxt) {
 		super();
 		this.activeRoutesExist = activeRoutesExist;
 		this.currentRoutes = currentRoutes;
 		this.hasDirections = hasDirections;
 		this.data = data;
 		this.cxt = cxt;
-		
+
 	}
 
 	public void destroyItem(View container, int position, Object view) {
@@ -81,7 +80,8 @@ public class RoutePagerAdapter extends PagerAdapter implements TitleProvider {
 				itemListTemp = data.getDirectionList(currentRoutes[position]);
 			} else {
 				// Route doesn't have direction so list view contains stops
-				Object[] stopsAndTags = data.getStopList(currentRoutes[position]);
+				Object[] stopsAndTags = data
+						.getStopList(currentRoutes[position]);
 				itemListTemp = (String[]) stopsAndTags[0];
 				stopTagsTemp = (String[]) stopsAndTags[1];
 			}
@@ -91,15 +91,18 @@ public class RoutePagerAdapter extends PagerAdapter implements TitleProvider {
 
 			final int listPosition = position;
 			ListView stopList = new ListView(cxt);
-			stopList.setAdapter(new ArrayAdapter<String>(cxt, android.R.layout.simple_list_item_1, itemList));
+			stopList.setAdapter(new ArrayAdapter<String>(cxt,
+					android.R.layout.simple_list_item_1, itemList));
 			stopList.setOnItemClickListener(new OnItemClickListener() {
 
-				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				public void onItemClick(AdapterView<?> parent, View view,
+						int position, long id) {
 					if (thisRouteHasDirection) {
 						// Route has direction so items have to point to
 						// StopListActivity with correct
 						// extras.
-						Intent intent = new Intent(cxt.getApplicationContext(), StopListActivity.class);
+						Intent intent = new Intent(cxt.getApplicationContext(),
+								StopListActivity.class);
 						intent.putExtra("route", currentRoutes[listPosition]);
 						intent.putExtra("direction", itemList[position]);
 						cxt.startActivity(intent);
@@ -107,7 +110,8 @@ public class RoutePagerAdapter extends PagerAdapter implements TitleProvider {
 						// Route doesn't have direction so items have to
 						// point to StopViewActivity with
 						// correct extras.
-						Intent intent = new Intent(cxt.getApplicationContext(), StopViewActivity.class);
+						Intent intent = new Intent(cxt.getApplicationContext(),
+								StopViewActivity.class);
 						intent.putExtra("stoptag", stopTags[position]);
 						intent.putExtra("route", currentRoutes[listPosition]);
 						intent.putExtra("stop", itemList[position]);

@@ -1,10 +1,9 @@
 package com.doug.nextbus.activities;
 
-import com.doug.nextbus.R;
-import com.doug.nextbus.R.xml;
-
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
+
+import com.doug.nextbus.R;
 
 /* This activity is useless since no preferences actually work. TODO? */
 public class PreferencesActivity extends PreferenceActivity {
