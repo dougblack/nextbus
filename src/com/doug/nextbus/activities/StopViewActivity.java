@@ -35,34 +35,34 @@ import com.doug.nextbus.custom.RainbowArrayAdapter;
 /* This activity displays the predictions for a the current stop */
 public class StopViewActivity extends Activity {
 
-	static TextView firstArrival;
-	static TextView secondArrival;
-	static TextView thirdArrival;
-	static TextView fourthArrival;
-	static TextView stopTextView;
-	static TextView titleBar;
-	static SlidingDrawer arrivalDrawer;
-	static ImageView backButton;
+	private TextView firstArrival;
+	private TextView secondArrival;
+	private TextView thirdArrival;
+	private TextView fourthArrival;
+	private TextView stopTextView;
+	private TextView titleBar;
+	private SlidingDrawer arrivalDrawer;
+	private ImageView backButton;
 
-	static View colorBar;
-	static View colorSeperator;
+	private View colorBar;
+	private View colorSeperator;
 
-	static ProgressBar routeViewProgressBar;
-	static ImageView refreshButton;
-	static ImageView starButton;
-	static String route;
-	static String stoptag;
-	static String stop;
-	static TextView drawerHandleTextView;
-	static ListView arrivalList;
-	static ArrayList<Drawable> drawableList;
-	static ArrayList<String> arrivalsList;
-	static String[] arrivals;
-	static Drawable[] colorInts;
-	static StopViewActivity thisActivity;
-	static Resources resources;
-	static long start;
-	boolean deadCellOnly;
+	private ProgressBar routeViewProgressBar;
+	private ImageView refreshButton;
+	private ImageView starButton;
+	private String route;
+	private String stoptag;
+	private String stop;
+	private TextView drawerHandleTextView;
+	private ListView arrivalList;
+	private ArrayList<Drawable> drawableList;
+	private ArrayList<String> arrivalsList;
+	private String[] arrivals;
+	private Drawable[] colorInts;
+	private StopViewActivity thisActivity;
+	private Resources resources;
+	private long start;
+	private boolean deadCellOnly;
 
 	public void onCreate(Bundle savedInstance) {
 
@@ -190,6 +190,7 @@ public class StopViewActivity extends Activity {
 		arrivalDrawer.setOnDrawerCloseListener(new OnDrawerCloseListener() {
 			public void onDrawerClosed() {
 				drawerHandleTextView.setText("OTHER ROUTES");
+				drawerHandleTextView.postInvalidate();
 			}
 		});
 

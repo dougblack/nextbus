@@ -36,11 +36,11 @@ public class RoutePickerActivity extends Activity implements
 	private Context cxt;
 
 	private Data data;
-	static boolean[] hasDirections;
-	static TitlePageIndicator titleIndicator;
+	private boolean[] hasDirections;
+	private TitlePageIndicator titleIndicator;
 	static String[] currentRoutes;
-	static int[] colorOrder;
-	static boolean hideDeadRoutes;
+	private int[] colorOrder;
+	private boolean hideDeadRoutes;
 	private boolean activeRoutesExist = true;
 	private RoutePagerAdapter pagerAdapter;
 	private ViewPager pager;

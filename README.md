@@ -1,6 +1,14 @@
 GT NextBus
 ==========
 
+Vidhur's Planned Changes
+
+- Fix support for blue/red Fitten Route [Done]
+- Fix times for buses [Done, Need verification]
+- Change static modifiers to private [Done]
+- Removed same route for "other route" popup. [Done]
+
+==========
 An Android client for the Georgia Tech Nextbus stop service.
 
 Link:
