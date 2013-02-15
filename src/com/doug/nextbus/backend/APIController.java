@@ -222,7 +222,7 @@ public class APIController {
 		int day = time.weekDay - 1;
 		if (day < 5) {
 			// Monday - Friday
-			if ((hour >= 7) && (hour <= 19)) {
+			if ((hour >= 7) && (hour <= 22)) {
 				// 6:45am - 10:45pm
 				activeRoutesList.add("red");
 				activeColorsList.add(red);
@@ -231,19 +231,19 @@ public class APIController {
 				activeColorsList.add(blue);
 				activeRoutesHasDirectionsList.add(false);
 			}
-			if ((hour >= 7) && (hour <= 18)) {
+			if ((hour >= 7) && (hour <= 21)) {
 				// 6:15am - 9:45pm
 				activeRoutesList.add("green");
 				activeColorsList.add(green);
 				activeRoutesHasDirectionsList.add(true);
 			}
-			if ((hour >= 5) && (hour <= 21)) {
+			if ((hour >= 5) && (hour <= 22)) {
 				// 5:15am - 11:00pm
 				activeRoutesList.add("trolley");
 				activeColorsList.add(yellow);
 				activeRoutesHasDirectionsList.add(true);
 			}
-			if ((day != 4) && (hour >= 21) || (hour <= 2)) {
+			if ((day != 4) && (hour >= 21) || (hour <= 3)) {
 				// 8:45pm - 3:30am
 				activeRoutesList.add("night");
 				activeColorsList.add(night);
@@ -251,7 +251,7 @@ public class APIController {
 			}
 		} else if (day == 5) {
 			// Saturday
-			if ((hour >= 10) && (hour <= 17)) {
+			if ((hour >= 10) && (hour <= 18)) {
 				// 9:30am - 7:00pm
 				activeRoutesList.add("trolley");
 				activeColorsList.add(yellow);
@@ -259,7 +259,7 @@ public class APIController {
 			}
 		} else if (day == 6) {
 			// Sunday
-			if ((hour >= 15) && (hour <= 20)) {
+			if ((hour >= 15) && (hour <= 21)) {
 				// 2:30pm - 6:30pm
 				activeRoutesList.add("trolley");
 				activeColorsList.add(yellow);

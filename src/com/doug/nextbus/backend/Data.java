@@ -364,4 +364,43 @@ public class Data {
 
 	}
 
+	public static ArrayList<String> getAllRoutesForStop(String stoptag,
+			String excludeRoute) {
+
+		ArrayList<String> routesForThisStop = new ArrayList<String>();
+
+		try {
+			JSONArray routes = data.getJSONArray("route");
+			for (int i = 0; i < routes.length() - 1; i++) {
+				JSONObject route = routes.getJSONObject(i);
+				String routeName = route.getString("tag");
+				JSONArray stops = route.getJSONArray("stop");
+				for (int j = 0; j < stops.length() - 1; j++) {
+					JSONObject stop = stops.getJSONObject(j);
+					if (!routeName.equals(excludeRoute)) {
+						/*
+						 * "fitten" for red and "fitten_a" for blue, need to
+						 * account for both
+						 */
+
+						if ((stoptag.equals("fitten") || stoptag
+								.equals("fitten_a"))
+								&& (stop.getString("tag").equals("fitten") || stop
+										.getString("tag").equals("fitten_a"))) {
+							routesForThisStop.add(routeName);
+
+						} else if (stop.getString("tag").equals(stoptag)) {
+							routesForThisStop.add(routeName);
+						}
+					}
+
+				}
+			}
+		} catch (JSONException je) {
+			// Do nothing. Just don't add any routes...
+		}
+
+		return routesForThisStop;
+
+	}
 }

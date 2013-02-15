@@ -95,7 +95,7 @@ public class StopViewActivity extends Activity {
 		arrivalList = (ListView) this.findViewById(R.id.arrivalList);
 		arrivalList.setBackgroundColor(getResources().getColor(R.color.black));
 
-		arrivalsList = Data.getAllRoutesForStop(stoptag);
+		arrivalsList = Data.getAllRoutesForStop(stoptag, route);
 		ArrayList<String> arrivalsTextList = new ArrayList<String>();
 
 		for (String route : arrivalsList) {
@@ -111,6 +111,7 @@ public class StopViewActivity extends Activity {
 
 			for (String route : arrivalsList) {
 				Drawable cellDrawable = null;
+
 				if (route.equals("red")) {
 					cellDrawable = getResources().getDrawable(
 							R.drawable.redcell);
@@ -247,6 +248,14 @@ public class StopViewActivity extends Activity {
 	}
 
 	public void refresh(String route, String stoptag) {
+		if (route.equals("red")
+				&& (stoptag.equals("fitten_a") || stoptag.equals("fitten"))) {
+			stoptag = "fitten";
+
+		} else if (route.equals("blue")
+				&& (stoptag.equals("fitten_a") || stoptag.equals("fitten"))) {
+			stoptag = "fitten_a";
+		}
 		new loadPredictionData().execute(route, stoptag);
 	}
 
