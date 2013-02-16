@@ -1,16 +1,13 @@
 package com.doug.nextbus.backend;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Writer;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 
@@ -22,12 +19,22 @@ import android.content.Context;
 import android.util.Log;
 
 import com.doug.nextbus.R;
+import com.doug.nextbus.backend.DataResult.Route;
+import com.doug.nextbus.backend.DataResult.Route.Direction;
+import com.doug.nextbus.backend.DataResult.Route.PathStop;
+import com.doug.nextbus.backend.DataResult.Route.Stop;
+import com.google.gson.Gson;
 
 /* This class controls reading and writing local files as well as persisting current state data. */
 public class Data {
 
-	static JSONObject data;
 	static Context context;
+	public static DataResult dataResult;
+	public static HashMap<String, Route> hm;
+
+	static {
+		hm = new HashMap<String, Route>();
+	}
 
 	/**
 	 * This read the text file and instantiates it as a static JSONObject, data.
@@ -39,26 +46,28 @@ public class Data {
 
 		setContext(context);
 
+		ReadData();
+
+	}
+
+	public static void ReadData() {
 		InputStream is = (InputStream) context.getResources().openRawResource(
 				R.raw.routeconfig);
-		BufferedReader br = new BufferedReader(new InputStreamReader(is));
-		StringBuffer lines = null;
+		Reader reader = new InputStreamReader(is);
 		try {
-			lines = new StringBuffer();
-			String line = br.readLine();
-			while (line != null) {
-				lines.append(line);
-				line = br.readLine();
-
-			}
-		} catch (IOException ie) {
-			Log.e("ERROR", "Failed to parse file.");
+			dataResult = new Gson().fromJson(reader, DataResult.class);
+		} catch (Exception e) {
+			System.out.println(e);
 		}
+		for (int i = 0; i < dataResult.route.size(); i++) {
+			for (int j = 0; j < dataResult.route.get(i).stop.size(); j++) {
+				Stop stop = dataResult.route.get(i).stop.get(j);
+				if (dataResult.route.get(i).stopTable == null)
+					dataResult.route.get(i).stopTable = new Hashtable<String, DataResult.Route.Stop>();
+				dataResult.route.get(i).stopTable.put(stop.tag, stop);
+			}
 
-		try {
-			data = new JSONObject(lines.toString());
-		} catch (JSONException e) {
-			Log.e("ERROR", "Failed to make into JSON.");
+			hm.put(dataResult.route.get(i).tag, dataResult.route.get(i));
 		}
 
 	}
@@ -83,8 +92,8 @@ public class Data {
 		}
 		BufferedReader br = new BufferedReader(new InputStreamReader(is));
 		StringBuffer lines = null;
-		JSONObject redRouteData = null;
-		JSONArray redRoutePathData = null;
+		JSONObject routeData = null;
+		JSONArray routePathData = null;
 		try {
 			lines = new StringBuffer();
 			String line = br.readLine();
@@ -98,161 +107,58 @@ public class Data {
 		}
 
 		try {
-			redRouteData = new JSONObject(lines.toString());
-			redRoutePathData = redRouteData.getJSONObject("body")
+			routeData = new JSONObject(lines.toString());
+			routePathData = routeData.getJSONObject("body")
 					.getJSONObject("route").getJSONArray("path");
 		} catch (JSONException e) {
 			Log.e("ERROR", "Failed to make into JSON.");
 		}
 
-		return redRoutePathData;
+		return routePathData;
 
 	}
 
-	public static JSONObject getData() {
-		return data;
+	private static void setContext(Context ctx) {
+		Data.context = ctx;
 	}
 
-	private static void setContext(Context context2) {
-		context = context2;
-	}
-
-	/**
-	 * This returns the JSONObject for the specified route.
-	 * 
-	 * @param route
-	 *            the route to get the JSONObject from
-	 * @return the JSONObject for the given route.
-	 */
-	public JSONObject getRoute(String route) {
-
-		JSONObject thisroute = new JSONObject();
-
-		try {
-			JSONArray routes = data.getJSONArray("route");
-			for (int i = 0; i < routes.length(); i++) {
-				thisroute = routes.getJSONObject(i);
-				if (route.equals(thisroute.getString("tag")))
-					return thisroute;
-			}
-
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-
-		return new JSONObject();
-	}
-
-	/**
-	 * This returns a 2D array of both the stop titles and stopids for the given
-	 * route.
-	 * 
-	 * @param routeStr
-	 *            the route to check
-	 * @return the 2D array
-	 */
-	public Object[] getStopList(String routeStr) {
-		Object[] finalList = { "", "" };
+	public static String[] getDirList(String route) {
+		ArrayList<String> dirList = new ArrayList<String>();
+		for (int i = 0; i < hm.get(route).direction.size(); i++)
+			dirList.add(hm.get(route).direction.get(i).title);
 		String[] strings = {};
-		String[] integers = {};
-		ArrayList<String> stopList = new ArrayList<String>();
-		ArrayList<String> stopListTags = new ArrayList<String>();
 
-		JSONArray stops;
-		try {
-			stops = getRoute(routeStr).getJSONArray("stop");
-			for (int i = 0; i < stops.length(); i++) {
-				String title = stops.getJSONObject(i).getString("title");
-				String stoptag = stops.getJSONObject(i).getString("tag");
-				if (title != null && stoptag != null) {
-					stopList.add(title);
-					stopListTags.add(stoptag);
+		return dirList.toArray(strings);
+	}
+
+	public static String[] getPath(String route, String dir) {
+		Route curr_route = hm.get(route);
+		ArrayList<String> al = new ArrayList<String>();
+		for (int i = 0; i < curr_route.direction.size(); i++) {
+			if (curr_route.direction.get(i).title.equals(dir)) {
+				Direction currDirection = curr_route.direction.get(i);
+
+				for (int j = 0; j < currDirection.stop.size(); j++) {
+					PathStop pStop = currDirection.stop.get(j);
+					Stop stop = curr_route.stopTable.get(pStop.tag);
+					al.add(stop.title);
+
 				}
+
 			}
-		} catch (JSONException e) {
-			e.printStackTrace();
 		}
-		finalList[0] = stopList.toArray(strings);
-		finalList[1] = stopListTags.toArray(integers);
-		return finalList;
-	}
-
-	/**
-	 * This returns an array of all the given directions for a specified stop
-	 * 
-	 * @param routeStr
-	 *            the stop to get directions for
-	 * @return the String[] with directions
-	 */
-	public String[] getDirectionList(String routeStr) {
-
-		String[] finalList = { "" };
-		ArrayList<String> directionList = new ArrayList<String>();
-
-		JSONArray directions;
-
-		try {
-			directions = getRoute(routeStr).getJSONArray("direction");
-			for (int i = 0; i < directions.length(); i++) {
-				directionList.add(directions.getJSONObject(i)
-						.getString("title"));
-			}
-		} catch (JSONException e) {
-			Log.e("ERROR", "Couldn't parse directions.");
-		}
-
-		return directionList.toArray(finalList);
-	}
-
-	/**
-	 * Returns the a dual list of stop titles and stop ids for a given route and
-	 * direction
-	 * 
-	 * @param route
-	 *            the given route
-	 * @param direction
-	 *            the given direction
-	 * @return the stop titles and stop ids in one array
-	 */
-	public Object[] getListForRoute(String route, String direction) {
-
-		Object[] finalList = { "", "" };
 		String[] strings = {};
-		String[] integers = {};
-		ArrayList<String> stopList = new ArrayList<String>();
-		ArrayList<String> stopListTags = new ArrayList<String>();
-		HashMap<String, String> stopHash = new HashMap<String, String>();
 
-		JSONArray directions;
-		JSONObject directionObj = null;
-		try {
-			directions = getRoute(route).getJSONArray("direction");
-			for (int i = 0; i < directions.length(); i++) {
-				if (directions.getJSONObject(i).getString("title")
-						.equals(direction)) {
-					directionObj = directions.getJSONObject(i);
-				}
-			}
-			JSONArray directionObjStops = directionObj.getJSONArray("stop");
-			for (int i = 0; i < directionObjStops.length(); i++) {
-				stopHash.put(directionObjStops.getJSONObject(i)
-						.getString("tag"), "Hi");
-			}
+		return al.toArray(strings);
+	}
 
-			JSONArray allStops = getRoute(route).getJSONArray("stop");
-			for (int i = 0; i < allStops.length(); i++) {
-				if (stopHash.containsKey(allStops.getJSONObject(i).getString(
-						"tag")))
-					stopList.add(allStops.getJSONObject(i).getString("title"));
-				stopListTags.add(allStops.getJSONObject(i).getString("tag"));
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
+	public static String getDirectionTag(String route, String direction) {
+		Route currRoute = hm.get(route);
+		for (Direction dir : currRoute.direction) {
+			if (dir.title.equals(direction))
+				return dir.tag;
 		}
-		finalList[0] = stopList.toArray(strings);
-		finalList[1] = stopListTags.toArray(integers);
-		return finalList;
-
+		return "Not Found";
 	}
 
 	/* Capitalize a string */
@@ -306,101 +212,4 @@ public class Data {
 		return ret;
 	}
 
-	public static JSONObject readStopData() {
-		JSONObject stopData = null;
-		try {
-			BufferedReader input = new BufferedReader(new FileReader(context
-					.getFilesDir().toString() + "/favoritestop.txt"));
-			stopData = new JSONObject(input.readLine());
-
-		} catch (FileNotFoundException e) {
-			Log.i("Data.load()", "Properties.txt not found.");
-			e.printStackTrace();
-		} catch (JSONException e) {
-			Log.i("Data.load()", "Error converting workingData to JSONObject.");
-			e.printStackTrace();
-		} catch (IOException e) {
-			Log.i("Data.load()", "Error parsing Properties.txt.");
-			e.printStackTrace();
-		}
-		return stopData;
-	}
-
-	private static void writeStopData(JSONObject settings) {
-
-		try {
-			Writer output = new BufferedWriter(new FileWriter(context
-					.getFilesDir().toString() + "/favoritestop.txt"));
-			output.write(settings.toString());
-			output.close();
-		} catch (IOException e) {
-			Log.i("Data.save()", "Error loading file.");
-			e.printStackTrace();
-		}
-
-	}
-
-	public static ArrayList<String> getAllRoutesForStop(String stoptag) {
-
-		ArrayList<String> routesForThisStop = new ArrayList<String>();
-
-		try {
-			JSONArray routes = data.getJSONArray("route");
-			for (int i = 0; i < routes.length() - 1; i++) {
-				JSONObject route = routes.getJSONObject(i);
-				String routeName = route.getString("tag");
-				JSONArray stops = route.getJSONArray("stop");
-				for (int j = 0; j < stops.length() - 1; j++) {
-					JSONObject stop = stops.getJSONObject(j);
-					if (stop.getString("tag").equals(stoptag)) {
-						routesForThisStop.add(routeName);
-					}
-				}
-			}
-		} catch (JSONException je) {
-			// Do nothing. Just don't add any routes...
-		}
-		return routesForThisStop;
-
-	}
-
-	public static ArrayList<String> getAllRoutesForStop(String stoptag,
-			String excludeRoute) {
-
-		ArrayList<String> routesForThisStop = new ArrayList<String>();
-
-		try {
-			JSONArray routes = data.getJSONArray("route");
-			for (int i = 0; i < routes.length() - 1; i++) {
-				JSONObject route = routes.getJSONObject(i);
-				String routeName = route.getString("tag");
-				JSONArray stops = route.getJSONArray("stop");
-				for (int j = 0; j < stops.length() - 1; j++) {
-					JSONObject stop = stops.getJSONObject(j);
-					if (!routeName.equals(excludeRoute)) {
-						/*
-						 * "fitten" for red and "fitten_a" for blue, need to
-						 * account for both
-						 */
-
-						if ((stoptag.equals("fitten") || stoptag
-								.equals("fitten_a"))
-								&& (stop.getString("tag").equals("fitten") || stop
-										.getString("tag").equals("fitten_a"))) {
-							routesForThisStop.add(routeName);
-
-						} else if (stop.getString("tag").equals(stoptag)) {
-							routesForThisStop.add(routeName);
-						}
-					}
-
-				}
-			}
-		} catch (JSONException je) {
-			// Do nothing. Just don't add any routes...
-		}
-
-		return routesForThisStop;
-
-	}
 }

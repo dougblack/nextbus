@@ -2,7 +2,6 @@ package com.doug.nextbus.custom;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Gravity;
@@ -17,22 +16,21 @@ import com.doug.nextbus.R;
 import com.doug.nextbus.activities.StopListActivity;
 import com.doug.nextbus.activities.StopViewActivity;
 import com.doug.nextbus.backend.Data;
+import com.doug.nextbus.backend.DataResult.Route;
 
 /* The adapter for the swiping between route pages for the RoutePickerActivity */
 public class RoutePagerAdapter extends PagerAdapter {
 
 	boolean activeRoutesExist;
 	String[] currentRoutes;
-	boolean[] hasDirections;
 	Data data;
 	Context cxt;
 
 	public RoutePagerAdapter(boolean activeRoutesExist, String[] currentRoutes,
-			boolean[] hasDirections, Data data, Context cxt) {
+			Data data, Context cxt) {
 		super();
 		this.activeRoutesExist = activeRoutesExist;
 		this.currentRoutes = currentRoutes;
-		this.hasDirections = hasDirections;
 		this.data = data;
 		this.cxt = cxt;
 
@@ -45,10 +43,6 @@ public class RoutePagerAdapter extends PagerAdapter {
 			((ViewPager) container).removeView((TextView) view);
 		}
 
-	}
-
-	public void finishUpdate(View arg0) {
-		// TODO Auto-generated method stub
 	}
 
 	public int getCount() {
@@ -69,25 +63,21 @@ public class RoutePagerAdapter extends PagerAdapter {
 	 * correct activity based on which item in the list view is selected.
 	 */
 	public Object instantiateItem(View container, int position) {
+		final Route currRoute = Data.hm.get(currentRoutes[position]);
 		if (activeRoutesExist) {
-			final boolean thisRouteHasDirection = hasDirections[position];
-			String[] itemListTemp = null;
-			String[] stopTagsTemp = null;
-
+			final boolean thisRouteHasDirection = currRoute.direction.size() != 1;
+			String[] itemListTemp = new String[] {};
 			if (thisRouteHasDirection) {
 				// If route has direction set list view to contain
 				// directions
-				itemListTemp = data.getDirectionList(currentRoutes[position]);
+				itemListTemp = Data.getDirList(currentRoutes[position]);
 			} else {
 				// Route doesn't have direction so list view contains stops
-				Object[] stopsAndTags = data
-						.getStopList(currentRoutes[position]);
-				itemListTemp = (String[]) stopsAndTags[0];
-				stopTagsTemp = (String[]) stopsAndTags[1];
+				itemListTemp = Data.getPath(currentRoutes[position],
+						currRoute.direction.get(0).title);
 			}
 
 			final String[] itemList = itemListTemp;
-			final String[] stopTags = stopTagsTemp;
 
 			final int listPosition = position;
 			ListView stopList = new ListView(cxt);
@@ -112,7 +102,10 @@ public class RoutePagerAdapter extends PagerAdapter {
 						// correct extras.
 						Intent intent = new Intent(cxt.getApplicationContext(),
 								StopViewActivity.class);
-						intent.putExtra("stoptag", stopTags[position]);
+						intent.putExtra("stoptag",
+								currRoute.stop.get(position).tag);
+						intent.putExtra("direction",
+								currRoute.direction.get(0).tag);
 						intent.putExtra("route", currentRoutes[listPosition]);
 						intent.putExtra("stop", itemList[position]);
 						cxt.startActivity(intent);
@@ -143,23 +136,7 @@ public class RoutePagerAdapter extends PagerAdapter {
 		return view == ((TextView) object);
 	}
 
-	public void restoreState(Parcelable arg0, ClassLoader arg1) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public Parcelable saveState() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public void startUpdate(View arg0) {
-
-		// TODO Auto-generated method stub
-
-	}
-
-	public String getTitle(int position) {
+	public String getPageTitle(int position) {
 		if (activeRoutesExist) {
 			return Data.capitalize(currentRoutes[position]);
 		} else {

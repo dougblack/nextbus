@@ -88,7 +88,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="25dp"
             android:gravity="center"
-            android:text="4"
+            android:text="Dep."
             android:textColor="@color/white"
             android:textSize="150sp" />
 

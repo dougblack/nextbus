@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 
@@ -18,10 +19,39 @@ import android.text.format.Time;
 import android.util.Log;
 
 import com.doug.nextbus.R;
+import com.google.gson.Gson;
 
 /* This class handles all request to the NextBus API.
  * It curates the returned data for easy consumption by other objects in the app. */
 public class APIController {
+
+	private static String createURL(String route, String direction, String stop) {
+		final String host = "http://10.0.2.2:3000/bus/";
+		String url = String.format("%sget?route=%s&direction=%s&stop=%s", host,
+				route, direction, stop);
+
+		return url;
+
+	}
+
+	public static ArrayList<String> getPrediction(String route,
+			String direction, String stop) {
+
+		String target = createURL(route, direction, stop);
+		try {
+			Reader reader = getReaderFromURL(target);
+
+			PredictionResult result = new Gson().fromJson(reader,
+					PredictionResult.class);
+			return result.predictions;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			Log.d("error", e.getClass().toString());
+		}
+		return new ArrayList<String>();
+
+	}
 
 	/**
 	 * This grabs the prediction data for a given stop and returns it in an
@@ -285,6 +315,23 @@ public class APIController {
 
 		return returnData;
 
+	}
+
+	public static Reader getReaderFromURL(String target) throws Exception {
+		URL url = new URL(target);
+
+		URLConnection urlConnection = url.openConnection();
+
+		urlConnection.setRequestProperty("Accept", "application/json");
+
+		InputStream input = urlConnection.getInputStream();
+
+		Reader reader = new InputStreamReader(input, "UTF-8");
+		return reader;
+	}
+
+	private class PredictionResult {
+		ArrayList<String> predictions;
 	}
 
 }

@@ -36,8 +36,6 @@ public class RoutePickerActivity extends Activity implements
 	private Context cxt;
 
 	private Data data;
-	private boolean[] hasDirections;
-	private TitlePageIndicator titleIndicator;
 	static String[] currentRoutes;
 	private int[] colorOrder;
 	private boolean hideDeadRoutes;
@@ -79,7 +77,7 @@ public class RoutePickerActivity extends Activity implements
 
 		/* Setup ViewGroup */
 		pagerAdapter = new RoutePagerAdapter(activeRoutesExist, currentRoutes,
-				hasDirections, data, cxt);
+				data, cxt);
 		pager = (ViewPager) findViewById(R.id.routepagerviewpager);
 		pager.setAdapter(pagerAdapter);
 
@@ -167,7 +165,6 @@ public class RoutePickerActivity extends Activity implements
 	private void setCurrentRoutes(Object[] activeRoutesList) {
 		currentRoutes = (String[]) activeRoutesList[0];
 		colorOrder = (int[]) activeRoutesList[1];
-		hasDirections = (boolean[]) activeRoutesList[2];
 		activeRoutesExist = (Boolean) activeRoutesList[3];
 	}
 
@@ -218,7 +215,7 @@ public class RoutePickerActivity extends Activity implements
 			}
 			pagerAdapter.notifyDataSetChanged();
 			RoutePagerAdapter pagerAdapter = new RoutePagerAdapter(
-					activeRoutesExist, currentRoutes, hasDirections, data, cxt);
+					activeRoutesExist, currentRoutes, data, cxt);
 			pager.setAdapter(pagerAdapter);
 			pager.setCurrentItem(1);
 

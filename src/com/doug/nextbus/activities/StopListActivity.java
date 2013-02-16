@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.doug.nextbus.R;
 import com.doug.nextbus.backend.Data;
+import com.doug.nextbus.backend.DataResult.Route.PathStop;
 
 /* This activity shows a list of stops. */
 public class StopListActivity extends Activity {
@@ -55,9 +56,7 @@ public class StopListActivity extends Activity {
 			direction = extras.getString("direction");
 
 			directionTextView.setText(Data.capitalize(direction));
-			Object[] stopInfo = data.getListForRoute(route, direction);
-			stops = (String[]) stopInfo[0];
-			stoptags = (String[]) stopInfo[1];
+			stops = Data.getPath(route, direction);
 			setDirectionTextViewColor(route);
 			Log.i("Info", "Showing list for route=" + route + " and direction="
 					+ direction);
@@ -70,11 +69,18 @@ public class StopListActivity extends Activity {
 
 				public void onItemClick(AdapterView<?> parent, View view,
 						int position, long id) {
+					PathStop pStop = Data.hm.get(route)
+							.getPathStopForDirandIndex(direction, position);
 					Intent intent = new Intent(getApplicationContext(),
 							StopViewActivity.class);
-					intent.putExtra("stoptag", ((String[]) stoptags)[position]);
+					intent.putExtra("direction", direction);
+					intent.putExtra("directionTag",
+							Data.getDirectionTag(route, direction));
+
+					intent.putExtra("stoptag", pStop.tag);
 					intent.putExtra("route", route);
-					intent.putExtra("stop", ((String[]) stops)[position]);
+					intent.putExtra("stop",
+							Data.hm.get(route).stopTable.get(pStop.tag).title);
 					startActivity(intent);
 				}
 

@@ -51,6 +51,8 @@ public class StopViewActivity extends Activity {
 	private ImageView refreshButton;
 	private ImageView starButton;
 	private String route;
+	private String direction;
+	private String directionTag;
 	private String stoptag;
 	private String stop;
 	private TextView drawerHandleTextView;
@@ -71,6 +73,8 @@ public class StopViewActivity extends Activity {
 		setContentView(R.layout.stop_view);
 		Bundle extras = getIntent().getExtras();
 		route = extras.getString("route");
+		direction = extras.getString("direction");
+		directionTag = extras.getString("directionTag");
 		stoptag = extras.getString("stoptag");
 		stop = extras.getString("stop");
 		deadCellOnly = false;
@@ -95,7 +99,8 @@ public class StopViewActivity extends Activity {
 		arrivalList = (ListView) this.findViewById(R.id.arrivalList);
 		arrivalList.setBackgroundColor(getResources().getColor(R.color.black));
 
-		arrivalsList = Data.getAllRoutesForStop(stoptag, route);
+		arrivalsList = new ArrayList<String>();
+		// Data.getAllRoutesForStop(stoptag, route);
 		ArrayList<String> arrivalsTextList = new ArrayList<String>();
 
 		for (String route : arrivalsList) {
@@ -176,7 +181,7 @@ public class StopViewActivity extends Activity {
 		refreshButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				routeViewProgressBar.setVisibility(View.VISIBLE);
-				refresh(route, stoptag);
+				refresh(route, direction, stoptag);
 			}
 		});
 
@@ -201,7 +206,7 @@ public class StopViewActivity extends Activity {
 		thirdArrival.setText("");
 		fourthArrival.setText("");
 
-		refresh(route, stoptag);
+		refresh(route, directionTag, stoptag);
 
 	}
 
@@ -248,7 +253,7 @@ public class StopViewActivity extends Activity {
 		colorSeperator.setBackgroundColor(getResources().getColor(color));
 	}
 
-	public void refresh(String route, String stoptag) {
+	public void refresh(String route, String direction, String stoptag) {
 		if (route.equals("red")
 				&& (stoptag.equals("fitten_a") || stoptag.equals("fitten"))) {
 			stoptag = "fitten";
@@ -257,30 +262,30 @@ public class StopViewActivity extends Activity {
 				&& (stoptag.equals("fitten_a") || stoptag.equals("fitten"))) {
 			stoptag = "fitten_a";
 		}
-		new loadPredictionData().execute(route, stoptag);
+		new loadPredictionData().execute(route, direction, stoptag);
 	}
 
 	/* Load prediction data asynchronously. */
 	private class loadPredictionData extends
-			AsyncTask<String, Void, ArrayList<Integer>> {
+			AsyncTask<String, Void, ArrayList<String>> {
 
 		/* Get the data. */
-		protected ArrayList<Integer> doInBackground(String... values) {
+		protected ArrayList<String> doInBackground(String... values) {
 			start = System.currentTimeMillis();
-			ArrayList<Integer> predictions = APIController.getPrediction(
-					values[0], values[1]);
+			ArrayList<String> predictions = APIController.getPrediction(
+					values[0], values[1], values[2]);
 			return predictions;
 		}
 
 		/* Update the UI */
-		public void onPostExecute(ArrayList<Integer> predictions) {
+		public void onPostExecute(ArrayList<String> predictions) {
 
 			long end = System.currentTimeMillis() - start;
 			Log.i("TIME", "Received and processed prediction in: " + end + "ms");
 
 			routeViewProgressBar.setVisibility(View.INVISIBLE);
 			drawableList = new ArrayList<Drawable>();
-			if (predictions.get(0).intValue() == Integer.valueOf(-1)) {
+			if (predictions.size() == 0 || predictions.get(0).equals("error")) {
 				firstArrival.setText("--");
 				secondArrival.setText("");
 				thirdArrival.setText("");
