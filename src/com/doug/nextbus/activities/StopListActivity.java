@@ -27,7 +27,7 @@ public class StopListActivity extends Activity {
 
 	Data data;
 	String[] stops;
-	String[] stoptags;
+	String[] stopTags;
 
 	private ListView stopList;
 	private TextView directionTextView;
@@ -56,7 +56,7 @@ public class StopListActivity extends Activity {
 			direction = extras.getString("direction");
 
 			directionTextView.setText(Data.capitalize(direction));
-			stops = Data.getPath(route, direction);
+			stops = Data.getStopTitlesForRouteAndDir(route, direction);
 			setDirectionTextViewColor(route);
 			Log.i("Info", "Showing list for route=" + route + " and direction="
 					+ direction);
@@ -77,7 +77,7 @@ public class StopListActivity extends Activity {
 					intent.putExtra("directionTag",
 							Data.getDirectionTag(route, direction));
 
-					intent.putExtra("stoptag", pStop.tag);
+					intent.putExtra("stopTag", pStop.tag);
 					intent.putExtra("route", route);
 					intent.putExtra("stop",
 							Data.hm.get(route).stopTable.get(pStop.tag).title);
@@ -141,6 +141,8 @@ public class StopListActivity extends Activity {
 			color = R.color.yellow;
 		} else if (route.equals("night")) {
 			color = R.color.night;
+		} else if (route.equals("emory")) {
+			color = R.color.pink;
 		}
 
 		colorBar.setBackgroundColor(getResources().getColor(color));

@@ -3,29 +3,8 @@ package com.doug.nextbus.backend;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-import com.doug.nextbus.backend.DataResult.Route.Direction;
-import com.doug.nextbus.backend.DataResult.Route.PathStop;
-
 public class DataResult {
 	public ArrayList<Route> route;
-
-	public String[] findRoutesWithStopTag(String stopTag) {
-		ArrayList<String> al = new ArrayList<String>();
-
-		for (Route currRoute : route) {
-			for (Direction currDirection : currRoute.direction) {
-				for (PathStop currStop : currDirection.stop) {
-					if (currStop.tag.equals(stopTag))
-						al.add(currRoute.title);
-
-				}
-			}
-		}
-
-		String[] strings = {};
-		return al.toArray(strings);
-
-	}
 
 	public class Route {
 		public String tag;

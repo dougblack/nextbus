@@ -73,7 +73,8 @@ public class RoutePagerAdapter extends PagerAdapter {
 				itemListTemp = Data.getDirList(currentRoutes[position]);
 			} else {
 				// Route doesn't have direction so list view contains stops
-				itemListTemp = Data.getPath(currentRoutes[position],
+				itemListTemp = Data.getStopTitlesForRouteAndDir(
+						currentRoutes[position],
 						currRoute.direction.get(0).title);
 			}
 
@@ -88,18 +89,20 @@ public class RoutePagerAdapter extends PagerAdapter {
 				public void onItemClick(AdapterView<?> parent, View view,
 						int position, long id) {
 					if (thisRouteHasDirection) {
-						// Route has direction so items have to point to
-						// StopListActivity with correct
-						// extras.
+						/*
+						 * Route has direction so items have to point to
+						 * StopListActivity with correct extras.
+						 */
 						Intent intent = new Intent(cxt.getApplicationContext(),
 								StopListActivity.class);
 						intent.putExtra("route", currentRoutes[listPosition]);
 						intent.putExtra("direction", itemList[position]);
 						cxt.startActivity(intent);
 					} else {
-						// Route doesn't have direction so items have to
-						// point to StopViewActivity with
-						// correct extras.
+						/*
+						 * Route doesn't have direction so items have to point
+						 * to StopViewActivity with correct extras.
+						 */
 						Intent intent = new Intent(cxt.getApplicationContext(),
 								StopViewActivity.class);
 						intent.putExtra("stoptag",

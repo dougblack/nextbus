@@ -1,7 +1,5 @@
 package com.doug.nextbus.activities;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -48,6 +46,7 @@ public class RoutePickerActivity extends Activity implements
 	private int green;
 	private int yellow;
 	private int night;
+	private int pink;
 
 	public void onCreate(Bundle savedInstance) {
 
@@ -58,6 +57,7 @@ public class RoutePickerActivity extends Activity implements
 		green = getResources().getColor(R.color.green);
 		yellow = getResources().getColor(R.color.yellow);
 		night = getResources().getColor(R.color.night);
+		pink = getResources().getColor(R.color.pink);
 		cxt = this;
 
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -148,10 +148,10 @@ public class RoutePickerActivity extends Activity implements
 		} else {
 			Object[] activeRouteList = new Object[4];
 			String[] activeRoutes = { "red", "blue", "trolley", "green",
-					"night" };
+					"night", "emory" };
 			boolean[] hasDirections = { false, false, true, true, true };
 
-			int[] colorOrder = { red, blue, yellow, green, night };
+			int[] colorOrder = { red, blue, yellow, green, night, pink };
 
 			activeRouteList[0] = activeRoutes;
 			activeRouteList[1] = colorOrder;
@@ -221,15 +221,6 @@ public class RoutePickerActivity extends Activity implements
 
 		}
 
-	}
-
-	/* Helper method to convert static array to array list */
-	public static ArrayList<String> getActiveRoutes() {
-		ArrayList<String> activeRoutes = new ArrayList<String>();
-		for (int i = 0; i < currentRoutes.length; i++) {
-			activeRoutes.add(currentRoutes[i]);
-		}
-		return activeRoutes;
 	}
 
 }

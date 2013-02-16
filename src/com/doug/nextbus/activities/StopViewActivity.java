@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -40,7 +39,6 @@ public class StopViewActivity extends Activity {
 	private TextView thirdArrival;
 	private TextView fourthArrival;
 	private TextView stopTextView;
-	private TextView titleBar;
 	private SlidingDrawer arrivalDrawer;
 	private ImageView backButton;
 
@@ -49,20 +47,16 @@ public class StopViewActivity extends Activity {
 
 	private ProgressBar routeViewProgressBar;
 	private ImageView refreshButton;
-	private ImageView starButton;
 	private String route;
 	private String direction;
 	private String directionTag;
-	private String stoptag;
 	private String stop;
+	private String stopTag;
 	private TextView drawerHandleTextView;
 	private ListView arrivalList;
 	private ArrayList<Drawable> drawableList;
 	private ArrayList<String> arrivalsList;
 	private String[] arrivals;
-	private Drawable[] colorInts;
-	private StopViewActivity thisActivity;
-	private Resources resources;
 	private long start;
 	private boolean deadCellOnly;
 
@@ -75,14 +69,12 @@ public class StopViewActivity extends Activity {
 		route = extras.getString("route");
 		direction = extras.getString("direction");
 		directionTag = extras.getString("directionTag");
-		stoptag = extras.getString("stoptag");
 		stop = extras.getString("stop");
+		stopTag = extras.getString("stopTag");
 		deadCellOnly = false;
 		routeViewProgressBar = (ProgressBar) this
 				.findViewById(R.id.routeviewprogressbar);
 
-		thisActivity = this;
-		resources = getResources();
 		refreshButton = (ImageView) this.findViewById(R.id.refreshButton);
 		firstArrival = (TextView) this.findViewById(R.id.firstArrival);
 		secondArrival = (TextView) this.findViewById(R.id.secondArrival);
@@ -139,7 +131,7 @@ public class StopViewActivity extends Activity {
 
 		arrivals = Data.convertToStringArray(arrivalsTextList);
 
-		arrivalList.setAdapter(new RainbowArrayAdapter(thisActivity,
+		arrivalList.setAdapter(new RainbowArrayAdapter(getApplicationContext(),
 				R.layout.customarrivallist, arrivals, drawableList,
 				deadCellOnly));
 
@@ -151,9 +143,9 @@ public class StopViewActivity extends Activity {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				if (!arrivals[0].equals("No other arrivals")) {
-					Intent intent = new Intent(thisActivity
-							.getApplicationContext(), StopViewActivity.class);
-					intent.putExtra("stoptag", stoptag);
+					Intent intent = new Intent(getApplicationContext(),
+							StopViewActivity.class);
+					intent.putExtra("stopTag", stopTag);
 					intent.putExtra("route", arrivalsList.get(position));
 					intent.putExtra("stop", stop);
 					startActivity(intent);
@@ -181,7 +173,7 @@ public class StopViewActivity extends Activity {
 		refreshButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				routeViewProgressBar.setVisibility(View.VISIBLE);
-				refresh(route, direction, stoptag);
+				refresh(route, direction, stopTag);
 			}
 		});
 
@@ -206,7 +198,7 @@ public class StopViewActivity extends Activity {
 		thirdArrival.setText("");
 		fourthArrival.setText("");
 
-		refresh(route, directionTag, stoptag);
+		refresh(route, directionTag, stopTag);
 
 	}
 
@@ -253,16 +245,16 @@ public class StopViewActivity extends Activity {
 		colorSeperator.setBackgroundColor(getResources().getColor(color));
 	}
 
-	public void refresh(String route, String direction, String stoptag) {
+	public void refresh(String route, String direction, String stopTag) {
 		if (route.equals("red")
-				&& (stoptag.equals("fitten_a") || stoptag.equals("fitten"))) {
-			stoptag = "fitten";
+				&& (stopTag.equals("fitten_a") || stopTag.equals("fitten"))) {
+			stopTag = "fitten";
 
 		} else if (route.equals("blue")
-				&& (stoptag.equals("fitten_a") || stoptag.equals("fitten"))) {
-			stoptag = "fitten_a";
+				&& (stopTag.equals("fitten_a") || stopTag.equals("fitten"))) {
+			stopTag = "fitten_a";
 		}
-		new loadPredictionData().execute(route, direction, stoptag);
+		new loadPredictionData().execute(route, direction, stopTag);
 	}
 
 	/* Load prediction data asynchronously. */

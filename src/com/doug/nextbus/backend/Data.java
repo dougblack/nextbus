@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,24 +31,18 @@ public class Data {
 
 	static Context context;
 	public static DataResult dataResult;
-	public static HashMap<String, Route> hm;
+	final public static HashMap<String, Route> hm;
+	final static String[] stringReturnType = {};
 
 	static {
 		hm = new HashMap<String, Route>();
+
 	}
 
-	/**
-	 * This read the text file and instantiates it as a static JSONObject, data.
-	 * 
-	 * @param context
-	 *            application context
-	 */
+	/** Reads the data into memory */
 	public static void setConfigData(Context context) {
-
 		setContext(context);
-
 		ReadData();
-
 	}
 
 	public static void ReadData() {
@@ -118,20 +113,37 @@ public class Data {
 
 	}
 
+	public static String[] findRoutesWithStopTag(String stopTag) {
+		ArrayList<String> al = new ArrayList<String>();
+
+		for (Route currRoute : dataResult.route) {
+			for (Direction currDirection : currRoute.direction) {
+				for (PathStop currStop : currDirection.stop) {
+					if (currStop.tag.equals(stopTag))
+						al.add(currRoute.title);
+
+				}
+			}
+		}
+
+		return al.toArray(stringReturnType);
+
+	}
+
 	private static void setContext(Context ctx) {
 		Data.context = ctx;
 	}
 
+	/** Returns the directions titles for a route */
 	public static String[] getDirList(String route) {
 		ArrayList<String> dirList = new ArrayList<String>();
 		for (int i = 0; i < hm.get(route).direction.size(); i++)
 			dirList.add(hm.get(route).direction.get(i).title);
-		String[] strings = {};
 
-		return dirList.toArray(strings);
+		return dirList.toArray(stringReturnType);
 	}
 
-	public static String[] getPath(String route, String dir) {
+	public static String[] getStopTitlesForRouteAndDir(String route, String dir) {
 		Route curr_route = hm.get(route);
 		ArrayList<String> al = new ArrayList<String>();
 		for (int i = 0; i < curr_route.direction.size(); i++) {
@@ -142,16 +154,14 @@ public class Data {
 					PathStop pStop = currDirection.stop.get(j);
 					Stop stop = curr_route.stopTable.get(pStop.tag);
 					al.add(stop.title);
-
 				}
-
 			}
 		}
-		String[] strings = {};
 
-		return al.toArray(strings);
+		return al.toArray(stringReturnType);
 	}
 
+	/** Gets direction tag from route and direction title */
 	public static String getDirectionTag(String route, String direction) {
 		Route currRoute = hm.get(route);
 		for (Direction dir : currRoute.direction) {
@@ -164,7 +174,7 @@ public class Data {
 	/* Capitalize a string */
 	public static String capitalize(String route) {
 
-		char[] chars = route.toLowerCase().toCharArray();
+		char[] chars = route.toLowerCase(Locale.getDefault()).toCharArray();
 		boolean found = false;
 		for (int i = 0; i < chars.length; i++) {
 			if (!found && Character.isLetter(chars[i])) {
