@@ -22,6 +22,7 @@ import com.doug.nextbus.R;
 import com.doug.nextbus.backend.APIController;
 import com.doug.nextbus.backend.Data;
 import com.doug.nextbus.custom.RoutePagerAdapter;
+import com.doug.nextbus.custom.WakeupAsyncTask;
 import com.viewpagerindicator.TitlePageIndicator;
 import com.viewpagerindicator.TitlePageIndicator.IndicatorStyle;
 
@@ -38,7 +39,8 @@ public class RoutePickerActivity extends Activity implements
 	private RoutePagerAdapter pagerAdapter;
 	private ImageView mapButton;
 	private Context cxt;
-
+	private TitlePageIndicator titleIndicator;
+	private int position = 0;
 	static {
 		allRoutes = new String[] { "red", "blue", "trolley", "green", "night",
 				"emory" };
@@ -48,6 +50,8 @@ public class RoutePickerActivity extends Activity implements
 		super.onCreate(savedInstance);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.route_picker);
+
+		new WakeupAsyncTask().execute();
 
 		cxt = this;
 		Data.setConfigData(cxt);
@@ -67,7 +71,7 @@ public class RoutePickerActivity extends Activity implements
 		pager.setAdapter(pagerAdapter);
 
 		/* Setup ViewGroup Indicator */
-		final TitlePageIndicator titleIndicator = (TitlePageIndicator) findViewById(R.id.routes);
+		titleIndicator = (TitlePageIndicator) findViewById(R.id.routes);
 		titleIndicator.setFooterIndicatorStyle(IndicatorStyle.Underline);
 		titleIndicator.setBackgroundColor(getResources().getColor(
 				R.color.subtitlecolor));
@@ -79,15 +83,7 @@ public class RoutePickerActivity extends Activity implements
 		float pixels = textSize * scale;
 		titleIndicator.setTextSize(pixels);
 		titleIndicator.setViewPager(pager);
-		/*
-		 * The color needs to be set on the first time this is viewed, the page
-		 * change listener takes care of subsequent changes.
-		 */
-		int color = R.color.orange; // default color
-		if (currentRoutes.length > 0) // if there are active routes
-			color = Data.getColorFromRouteTag(currentRoutes[0]);
-		titleIndicator.setSelectedColor(getResources().getColor(color));
-		titleIndicator.setFooterColor(getResources().getColor(color));
+		updateColor(0);
 
 		/* Listener for PageChanging. Basically the left and right swiping */
 		titleIndicator.setOnPageChangeListener(new OnPageChangeListener() {
@@ -99,13 +95,8 @@ public class RoutePickerActivity extends Activity implements
 			}
 
 			public void onPageSelected(int position) {
-				int color = R.color.orange; // default color
-				if (currentRoutes.length > 0) // if there are active routes
-					color = Data.getColorFromRouteTag(currentRoutes[position]);
 
-				titleIndicator.setSelectedColor(getResources().getColor(color));
-				titleIndicator.setFooterColor(getResources().getColor(color));
-
+				updateColor(position);
 			}
 		});
 
@@ -145,6 +136,15 @@ public class RoutePickerActivity extends Activity implements
 		return true;
 	}
 
+	private void updateColor(int position) {
+		int color = R.color.orange; // default color
+		if (currentRoutes.length > 0) // if there are active routess
+			color = Data.getColorFromRouteTag(currentRoutes[position]);
+
+		titleIndicator.setSelectedColor(getResources().getColor(color));
+		titleIndicator.setFooterColor(getResources().getColor(color));
+	}
+
 	/* Options menu handler. */
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
@@ -173,8 +173,7 @@ public class RoutePickerActivity extends Activity implements
 
 			pagerAdapter.updateCurrentRoutes(this.currentRoutes);
 			pagerAdapter.notifyDataSetChanged();
-			pager.setCurrentItem(1);
-
+			updateColor(0);
 		}
 
 	}

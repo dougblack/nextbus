@@ -136,8 +136,8 @@ public class APIController {
 
 		time.setToNow();
 		int hour = time.hour;
-		int day = time.weekDay - 1;
-		if (day < 5) {
+		int day = time.weekDay;
+		if (1 <= day && day <= 5) {
 			// Monday - Friday
 			if ((hour >= 7) && (hour <= 22)) {
 				// 6:45am - 10:45pm
@@ -156,13 +156,13 @@ public class APIController {
 				// 8:45pm - 3:30am
 				activeRoutesList.add("night");
 			}
-		} else if (day == 5) {
+		} else if (day == 6) {
 			// Saturday
 			if ((hour >= 10) && (hour <= 18)) {
 				// 9:30am - 7:00pm
 				activeRoutesList.add("trolley");
 			}
-		} else if (day == 6) {
+		} else if (day == 0) {
 			// Sunday
 			if ((hour >= 15) && (hour <= 21)) {
 				// 2:30pm - 6:30pm
@@ -185,6 +185,7 @@ public class APIController {
 		URL url = new URL(target);
 
 		URLConnection urlConnection = url.openConnection();
+		urlConnection.setConnectTimeout(3000);
 
 		urlConnection.setRequestProperty("Accept", "application/json");
 

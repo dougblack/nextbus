@@ -73,6 +73,8 @@ public class StopViewActivity extends Activity {
 		intent.putExtra("directionTag", direction.tag);
 		intent.putExtra("stop", stop.title);
 		intent.putExtra("stopTag", stop.tag);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
 		return intent;
 
 	}
@@ -192,7 +194,7 @@ public class StopViewActivity extends Activity {
 		refreshButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				routeViewProgressBar.setVisibility(View.VISIBLE);
-				refresh(route, direction, stopTag);
+				refresh(route, directionTag, stopTag);
 			}
 		});
 
@@ -221,11 +223,11 @@ public class StopViewActivity extends Activity {
 
 	}
 
-	public ArrayList<String> formatArrivals(RouteAndDirection[] rADs) {
-		ArrayList<String> al = new ArrayList<String>();
-		for (RouteAndDirection rad : rADs)
-			al.add(rad.toString());
-		return al;
+	public ArrayList<String> formatArrivals(RouteAndDirection[] rads) {
+		ArrayList<String> radsList = new ArrayList<String>();
+		for (RouteAndDirection rad : rads)
+			radsList.add(rad.toString());
+		return radsList;
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) {

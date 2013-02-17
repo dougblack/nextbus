@@ -25,10 +25,12 @@ public class RoutePagerAdapter extends PagerAdapter {
 
 	private String[] currentRoutes;
 	private Context ctx;
+	private int currPosition;
 
 	public RoutePagerAdapter(String[] currentRoutes, Context cxt) {
 		this.currentRoutes = currentRoutes;
 		this.ctx = cxt;
+		currPosition = 0;
 	}
 
 	public void destroyItem(View container, int position, Object view) {
@@ -48,8 +50,8 @@ public class RoutePagerAdapter extends PagerAdapter {
 		}
 	}
 
-	public int getItemPosition(Object object) {
-		return POSITION_NONE;
+	public int getItemPosition() {
+		return currPosition;
 	}
 
 	/*
@@ -58,6 +60,7 @@ public class RoutePagerAdapter extends PagerAdapter {
 	 * correct activity based on which item in the list view is selected.
 	 */
 	public Object instantiateItem(View container, int position) {
+		currPosition = position;
 
 		if (currentRoutes.length > 0) {
 			final int listPosition = position;
