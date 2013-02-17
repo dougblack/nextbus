@@ -145,7 +145,7 @@ public class Data {
 		} else if (routeTag.equals("night")) {
 			color = R.color.night;
 		} else if (routeTag.equals("emory")) {
-			color = R.color.pink;
+			color = R.color.white;
 		}
 		return color;
 	}

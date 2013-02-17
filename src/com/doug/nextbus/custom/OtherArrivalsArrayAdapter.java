@@ -47,7 +47,8 @@ public class OtherArrivalsArrayAdapter extends ArrayAdapter<String> {
 	}
 
 	private String htmlFormatted(RouteAndDirection rad) {
-		return rad.route.title + " <small> (" + rad.direction.title
-				+ ") </small>";
+
+		return rad.route.title + " <small> <font color='#A0A0A0'> ("
+				+ rad.direction.title + ") </font> </small>";
 	}
 }
