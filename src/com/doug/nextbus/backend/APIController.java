@@ -18,7 +18,6 @@ import android.content.Context;
 import android.text.format.Time;
 import android.util.Log;
 
-import com.doug.nextbus.R;
 import com.google.gson.Gson;
 
 /* This class handles all request to the NextBus API.
@@ -26,7 +25,7 @@ import com.google.gson.Gson;
 public class APIController {
 
 	private static String createURL(String route, String direction, String stop) {
-		final String localHost = "http://10.0.2.2:3000/bus/";
+		// final String localHost = "http://10.0.2.2:3000/bus/";
 		final String remoteHost = "http://desolate-escarpment-6039.herokuapp.com/bus/";
 		String url = String.format("%sget?route=%s&direction=%s&stop=%s",
 				remoteHost, route, direction, stop);

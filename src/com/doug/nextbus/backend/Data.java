@@ -29,9 +29,9 @@ import com.google.gson.Gson;
 /* This class controls reading and writing local files as well as persisting current state data. */
 public class Data {
 
-	static Context context;
-	public static DataResult dataResult;
-	final public static HashMap<String, Route> hm;
+	private static Context context;
+	private static DataResult dataResult;
+	final private static HashMap<String, Route> hm;
 	final static String[] stringReturnType = {};
 
 	static {
@@ -42,6 +42,10 @@ public class Data {
 	public static void setConfigData(Context context) {
 		setContext(context);
 		ReadData();
+	}
+
+	public static Route getRoute(String str) {
+		return hm.get(str);
 	}
 
 	public static PathStop getPathStopForDirandIndex(String route, String dir,

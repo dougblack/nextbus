@@ -22,15 +22,12 @@ import com.doug.nextbus.backend.DataResult.Route;
 public class RoutePagerAdapter extends PagerAdapter {
 
 	String[] currentRoutes;
-	Data data;
 	Context cxt;
 
-	public RoutePagerAdapter(String[] currentRoutes, Data data, Context cxt) {
+	public RoutePagerAdapter(String[] currentRoutes, Context cxt) {
 		super();
 		this.currentRoutes = currentRoutes;
-		this.data = data;
 		this.cxt = cxt;
-
 	}
 
 	public void destroyItem(View container, int position, Object view) {
@@ -62,23 +59,23 @@ public class RoutePagerAdapter extends PagerAdapter {
 	public Object instantiateItem(View container, int position) {
 
 		if (currentRoutes.length > 0) {
-			final Route currRoute = Data.hm.get(currentRoutes[position]);
+			final int listPosition = position;
+			final String currRouteStr = currentRoutes[listPosition];
+			final Route currRoute = Data.getRoute(currRouteStr);
 
 			final boolean thisRouteHasDirection = currRoute.direction.size() != 1;
 			String[] itemListTemp = new String[] {};
 			if (thisRouteHasDirection) {
 				// If route has directions, populate list with them
-				itemListTemp = Data.getDirList(currentRoutes[position]);
+				itemListTemp = Data.getDirList(currRouteStr);
 			} else {
 				// Route doesn't have direction so list view contains stops
-				itemListTemp = Data.getStopTitlesForRouteAndDir(
-						currentRoutes[position],
-						currRoute.direction.get(0).title);
+				itemListTemp = Data.getStopTitlesForRouteAndDir(currRouteStr,
+						currRoute.getDefaultDirection().title);
 			}
 
 			final String[] itemList = itemListTemp;
 
-			final int listPosition = position;
 			ListView stopList = new ListView(cxt);
 			stopList.setAdapter(new ArrayAdapter<String>(cxt,
 					android.R.layout.simple_list_item_1, itemList));
@@ -93,7 +90,7 @@ public class RoutePagerAdapter extends PagerAdapter {
 						 */
 						Intent intent = new Intent(cxt.getApplicationContext(),
 								StopListActivity.class);
-						intent.putExtra("route", currentRoutes[listPosition]);
+						intent.putExtra("route", currRouteStr);
 						intent.putExtra("direction", itemList[position]);
 						cxt.startActivity(intent);
 					} else {
@@ -106,10 +103,10 @@ public class RoutePagerAdapter extends PagerAdapter {
 						intent.putExtra("stopTag",
 								currRoute.stop.get(position).tag);
 						intent.putExtra("direction",
-								currRoute.direction.get(0).title);
+								currRoute.getDefaultDirection().title);
 						intent.putExtra("directionTag",
-								currRoute.direction.get(0).tag);
-						intent.putExtra("route", currentRoutes[listPosition]);
+								currRoute.getDefaultDirection().tag);
+						intent.putExtra("route", currRouteStr);
 						intent.putExtra("stop", itemList[position]);
 						cxt.startActivity(intent);
 					}

@@ -31,7 +31,6 @@ import com.viewpagerindicator.TitlePageIndicator.IndicatorStyle;
 public class RoutePickerActivity extends Activity implements
 		OnSharedPreferenceChangeListener {
 
-	private Data data;
 	private String[] currentRoutes;
 	private boolean onlyActiveRoutes = false;
 	private RoutePagerAdapter pagerAdapter;
@@ -41,7 +40,6 @@ public class RoutePickerActivity extends Activity implements
 	private Context cxt;
 
 	static {
-
 		allRoutes = new String[] { "red", "blue", "trolley", "green", "night",
 				"emory" };
 	}
@@ -64,7 +62,7 @@ public class RoutePickerActivity extends Activity implements
 		mapButton = (ImageView) findViewById(R.id.mapButton);
 
 		/* Setup ViewGroup */
-		pagerAdapter = new RoutePagerAdapter(currentRoutes, data, cxt);
+		pagerAdapter = new RoutePagerAdapter(currentRoutes, cxt);
 		pager = (ViewPager) findViewById(R.id.routepagerviewpager);
 		pager.setAdapter(pagerAdapter);
 
@@ -81,11 +79,13 @@ public class RoutePickerActivity extends Activity implements
 		float pixels = textSize * scale;
 		titleIndicator.setTextSize(pixels);
 		titleIndicator.setViewPager(pager);
-
+		/*
+		 * The color needs to be set on the first time this is viewed, the page
+		 * change listener takes care of subsequent changes.
+		 */
 		int color = R.color.orange; // default color
 		if (currentRoutes.length > 0) // if there are active routes
-			color = Data
-					.getColorFromRouteTag(Data.hm.get(currentRoutes[0]).tag);
+			color = Data.getColorFromRouteTag(currentRoutes[0]);
 		titleIndicator.setSelectedColor(getResources().getColor(color));
 		titleIndicator.setFooterColor(getResources().getColor(color));
 
@@ -101,8 +101,7 @@ public class RoutePickerActivity extends Activity implements
 			public void onPageSelected(int position) {
 				int color = R.color.orange; // default color
 				if (currentRoutes.length > 0) // if there are active routes
-					color = Data.getColorFromRouteTag(Data.hm
-							.get(currentRoutes[position]).tag);
+					color = Data.getColorFromRouteTag(currentRoutes[position]);
 
 				titleIndicator.setSelectedColor(getResources().getColor(color));
 				titleIndicator.setFooterColor(getResources().getColor(color));

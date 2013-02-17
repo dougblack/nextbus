@@ -230,18 +230,7 @@ public class StopViewActivity extends Activity {
 	}
 
 	public void setViewColor(String route) {
-		int color = 0;
-		if (route.equals("red")) {
-			color = R.color.red;
-		} else if (route.equals("blue")) {
-			color = R.color.blue;
-		} else if (route.equals("green")) {
-			color = R.color.green;
-		} else if (route.equals("trolley")) {
-			color = R.color.yellow;
-		} else if (route.equals("night")) {
-			color = R.color.night;
-		}
+		int color = Data.getColorFromRouteTag(route);
 
 		stopTextView.setTextColor(getResources().getColor(color));
 		colorBar.setBackgroundColor(getResources().getColor(color));

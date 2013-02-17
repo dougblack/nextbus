@@ -22,6 +22,10 @@ public class DataResult {
 			stopTable = new Hashtable<String, DataResult.Route.Stop>();
 		}
 
+		public Direction getDefaultDirection() {
+			return direction.get(0);
+		}
+
 		@Override
 		public String toString() {
 			return title + ": " + tag;
