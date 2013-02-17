@@ -95,10 +95,10 @@ public class RoutePagerAdapter extends PagerAdapter {
 						 * Route doesn't have direction so items have to point
 						 * to StopViewActivity with correct extras.
 						 */
-						Direction defaultDir = currRoute.getDefaultDirection();
+						Direction defaultDirection = currRoute.getDefaultDirection();
 						Stop stop = currRoute.getStopFromDefaultDirection(position);
 						Intent intent = StopViewActivity.createIntent(ctx,
-								currRouteStr, defaultDir, stop);
+								currRouteStr, defaultDirection, stop);
 
 						ctx.startActivity(intent);
 					}

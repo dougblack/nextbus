@@ -52,9 +52,9 @@ public class StopViewActivity extends Activity {
 	private ProgressBar routeViewProgressBar;
 	private ImageView refreshButton;
 	private String route;
-	private String direction;
+	private String directionTitle;
 	private String directionTag;
-	private String stop;
+	private String stopTitle;
 	private String stopTag;
 	private TextView drawerHandleTextView;
 	private ListView arrivalList;
@@ -69,9 +69,9 @@ public class StopViewActivity extends Activity {
 			Direction direction, Stop stop) {
 		Intent intent = new Intent(ctx, StopViewActivity.class);
 		intent.putExtra("route", route);
-		intent.putExtra("direction", direction.title);
+		intent.putExtra("directionTitle", direction.title);
 		intent.putExtra("directionTag", direction.tag);
-		intent.putExtra("stop", stop.title);
+		intent.putExtra("stopTitle", stop.title);
 		intent.putExtra("stopTag", stop.tag);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
@@ -88,9 +88,9 @@ public class StopViewActivity extends Activity {
 		/* Extras */
 		Bundle extras = getIntent().getExtras();
 		route = extras.getString("route");
-		direction = extras.getString("direction");
+		directionTitle = extras.getString("directionTitle");
 		directionTag = extras.getString("directionTag");
-		stop = extras.getString("stop");
+		stopTitle = extras.getString("stopTitle");
 		stopTag = extras.getString("stopTag");
 
 		deadCellOnly = false;
@@ -112,9 +112,10 @@ public class StopViewActivity extends Activity {
 		arrivalList = (ListView) this.findViewById(R.id.arrivalList);
 		arrivalList.setBackgroundColor(getResources().getColor(R.color.black));
 
-		stopTextView.setText(stop);
+		stopTextView.setText(stopTitle);
 
-		rads = Data.getAllRouteAndDirsWithStopTitle(stop, route, directionTag);
+		rads = Data.getAllRouteAndDirsWithStopTitle(stopTitle, route,
+				directionTag);
 		tempArrivalsList = formatArrivals(rads);
 
 		drawableList = new ArrayList<Drawable>();
@@ -172,7 +173,7 @@ public class StopViewActivity extends Activity {
 				}
 			}
 		});
-		
+
 		/* Event Listeners */
 		backButton.setOnTouchListener(new OnTouchListener() {
 			public boolean onTouch(View arg0, MotionEvent event) {
@@ -199,7 +200,7 @@ public class StopViewActivity extends Activity {
 		arrivalDrawer = (SlidingDrawer) this.findViewById(R.id.arrivalsDrawer);
 		arrivalDrawer.setOnDrawerOpenListener(new OnDrawerOpenListener() {
 			public void onDrawerOpened() {
-				drawerHandleTextView.setText(stop);
+				drawerHandleTextView.setText(stopTitle);
 			}
 		});
 

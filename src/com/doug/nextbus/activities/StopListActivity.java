@@ -34,10 +34,10 @@ public class StopListActivity extends Activity {
 	private ImageView backButton;
 
 	public static Intent createIntent(Context ctx, String route,
-			String direction) {
+			String directionTitle) {
 		Intent intent = new Intent(ctx, StopListActivity.class);
 		intent.putExtra("route", route);
-		intent.putExtra("direction", direction);
+		intent.putExtra("directionTitle", directionTitle);
 		return intent;
 	}
 
@@ -57,16 +57,16 @@ public class StopListActivity extends Activity {
 		if (extras != null) {
 			/* Pull route and direction for extras */
 			final String route = extras.getString("route");
-			final String direction = extras.getString("direction");
+			final String directionTitle = extras.getString("directionTitle");
 
 			final Route currRoute = Data.getRoute(route);
-			final String[] stopTitles = currRoute.getStopTitles(direction);
-			directionTextView.setText(Data.capitalize(direction));
+			final String[] stopTitles = currRoute.getStopTitles(directionTitle);
+			directionTextView.setText(Data.capitalize(directionTitle));
 
 			setDirectionTextViewColor(Data.getColorFromRouteTag(route));
 
 			Log.i("Info", "Showing list for route=" + route + " and direction="
-					+ direction);
+					+ directionTitle);
 
 			stopList.setAdapter(new ArrayAdapter<String>(this,
 					android.R.layout.simple_list_item_1, stopTitles));
@@ -75,8 +75,8 @@ public class StopListActivity extends Activity {
 			stopList.setOnItemClickListener(new OnItemClickListener() {
 				public void onItemClick(AdapterView<?> parent, View view,
 						int position, long id) {
-					Direction dir = currRoute.getDirection(direction);
-					Stop stop = currRoute.getStop(direction, position);
+					Direction dir = currRoute.getDirection(directionTitle);
+					Stop stop = currRoute.getStop(directionTitle, position);
 					Intent intent = StopViewActivity.createIntent(
 							getApplicationContext(), route, dir, stop);
 					startActivity(intent);
