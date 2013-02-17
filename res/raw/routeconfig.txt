@@ -416,7 +416,7 @@
                 },
                 {
                     "tag": "tranhub",
-                    "title": "Transit HUB",
+                    "title": "Transit Hub",
                     "lat": "33.77314",
                     "lon": "-84.397",
                     "stopid": "0086"
@@ -728,7 +728,7 @@
                 },
                 {
                     "tag": "tranhub_a",
-                    "title": "Transit HUB",
+                    "title": "Transit Hub",
                     "lat": "33.77314",
                     "lon": "-84.397",
                     "stopid": "0086"
@@ -1017,7 +1017,7 @@
                 },
                 {
                     "tag": "tranhub_b",
-                    "title": "Transit HUB",
+                    "title": "Transit Hub",
                     "lat": "33.77314",
                     "lon": "-84.397",
                     "stopid": "0086"
@@ -1038,7 +1038,7 @@
                 },
                 {
                     "tag": "tranhub_f",
-                    "title": "Transit HUB",
+                    "title": "Transit Hub",
                     "lat": "33.77314",
                     "lon": "-84.397",
                     "stopid": "0086"
