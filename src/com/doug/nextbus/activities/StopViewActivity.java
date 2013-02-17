@@ -39,7 +39,7 @@ import com.doug.nextbus.custom.OtherArrivalsArrayAdapter;
 
 /* This activity displays the predictions for a the current stop */
 public class StopViewActivity extends RoboActivity {
-	
+
 	@InjectView(R.id.firstArrival) TextView firstArrival;
 	@InjectView(R.id.secondArrival) private TextView secondArrival;
 	@InjectView(R.id.thirdArrival) private TextView thirdArrival;
@@ -185,7 +185,6 @@ public class StopViewActivity extends RoboActivity {
 			}
 		});
 
-		arrivalDrawer = (SlidingDrawer) this.findViewById(R.id.arrivalsDrawer);
 		arrivalDrawer.setOnDrawerOpenListener(new OnDrawerOpenListener() {
 			public void onDrawerOpened() {
 				drawerHandleTextView.setText(stopTitle);
