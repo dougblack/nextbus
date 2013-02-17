@@ -51,7 +51,7 @@ public class RoutePickerActivity extends Activity implements
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.route_picker);
 
-		cxt = getApplicationContext();
+		cxt = this;
 		Data.setConfigData(cxt);
 
 		SharedPreferences prefs = PreferenceManager
