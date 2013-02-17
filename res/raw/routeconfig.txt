@@ -111,7 +111,7 @@
                 },
                 {
                     "tag": "hubfers",
-                    "title": "HUB/Ferst Dr",
+                    "title": "Transit Hub",
                     "lat": "33.77274",
                     "lon": "-84.39706",
                     "stopid": "0085"
@@ -246,7 +246,7 @@
                 },
                 {
                     "tag": "fershub",
-                    "title": "HUB/Ferst Dr",
+                    "title": "Transit Hub",
                     "lat": "33.77279",
                     "lon": "-84.39721",
                     "stopid": "0084"
@@ -535,7 +535,7 @@
                 },
                 {
                     "tag": "fershub",
-                    "title": "HUB/Ferst Dr",
+                    "title": "Transit Hub",
                     "lat": "33.77279",
                     "lon": "-84.39721",
                     "stopid": "0084"
@@ -727,7 +727,7 @@
                     "stopid": "0043"
                 },
                 {
-                    "tag": "tranhub",
+                    "tag": "tranhub_a",
                     "title": "Transit HUB",
                     "lat": "33.77314",
                     "lon": "-84.397",
@@ -847,7 +847,7 @@
                 },
                 {
                     "tag": "hub",
-                    "title": "Transit Hub",
+                    "title": "To Transit Hub",
                     "useForUI": "true",
                     "stop": [
                         {
@@ -878,7 +878,7 @@
                             "tag": "studcentr"
                         },
                         {
-                            "tag": "tranhub"
+                            "tag": "tranhub_a"
                         }
                     ]
                 }
