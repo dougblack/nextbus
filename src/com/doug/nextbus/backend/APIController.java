@@ -25,11 +25,10 @@ import com.google.gson.Gson;
 public class APIController {
 
 	private static String createURL(String route, String direction, String stop) {
-		final String localHost = "http://10.0.2.2:3000/bus/";
-		// final String remoteHost =
-		// "http://desolate-escarpment-6039.herokuapp.com/bus/";
+		// final String localHost = "http://10.0.2.2:3000/bus/";
+		final String remoteHost = "http://desolate-escarpment-6039.herokuapp.com/bus/";
 		String url = String.format("%sget?route=%s&direction=%s&stop=%s",
-				localHost, route, direction, stop);
+				remoteHost, route, direction, stop);
 
 		return url;
 
@@ -49,7 +48,9 @@ public class APIController {
 			e.printStackTrace();
 			Log.d("error", e.getClass().toString());
 		}
-		return new ArrayList<String>();
+		ArrayList<String> al = new ArrayList<String>();
+		al.add("-1");
+		return al;
 
 	}
 
@@ -182,7 +183,8 @@ public class APIController {
 		URL url = new URL(target);
 
 		URLConnection urlConnection = url.openConnection();
-		urlConnection.setConnectTimeout(3000);
+		urlConnection.setConnectTimeout(750);
+		urlConnection.setReadTimeout(1500);
 
 		urlConnection.setRequestProperty("Accept", "application/json");
 

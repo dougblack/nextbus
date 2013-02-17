@@ -26,6 +26,7 @@ import android.widget.SlidingDrawer;
 import android.widget.SlidingDrawer.OnDrawerCloseListener;
 import android.widget.SlidingDrawer.OnDrawerOpenListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.doug.nextbus.R;
 import com.doug.nextbus.backend.APIController;
@@ -230,7 +231,7 @@ public class StopViewActivity extends Activity {
 
 	/* Gets the latest prediction data */
 	private void refresh(String route, String direction, String stopTag) {
-		new loadPredictionData().execute(route, direction, stopTag);
+		new loadPredictionData(this).execute(route, direction, stopTag);
 	}
 
 	private ArrayList<String> formatArrivals(RouteAndDirection[] rads) {
@@ -268,6 +269,11 @@ public class StopViewActivity extends Activity {
 	/* Load prediction data asynchronously. */
 	private class loadPredictionData extends
 			AsyncTask<String, Void, ArrayList<String>> {
+		Context ctx;
+
+		public loadPredictionData(Context ctx) {
+			this.ctx = ctx;
+		}
 
 		/* Get the data. */
 		protected ArrayList<String> doInBackground(String... values) {
@@ -279,11 +285,17 @@ public class StopViewActivity extends Activity {
 
 		/* Update the UI */
 		public void onPostExecute(ArrayList<String> predictions) {
+			routeViewProgressBar.setVisibility(View.INVISIBLE);
+
+			if (predictions.size() == 1 && predictions.get(0).equals("-1")) {
+				Toast.makeText(ctx, "Error, Server Down?", Toast.LENGTH_LONG)
+						.show();
+				predictions.clear();
+			}
 
 			long end = System.currentTimeMillis() - start;
 			Log.i("TIME", "Received and processed prediction in: " + end + "ms");
 
-			routeViewProgressBar.setVisibility(View.INVISIBLE);
 			drawableList = new ArrayList<Drawable>();
 			if (predictions.size() == 0 || predictions.get(0).equals("error")) {
 				firstArrival.setText("--");

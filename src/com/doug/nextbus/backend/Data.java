@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Locale;
 
 import org.json.JSONArray;
@@ -215,16 +214,6 @@ public class Data {
 
 	}
 
-	/* Make ArrayList of integers into an int array */
-	private static int[] convertIntegers(List<Integer> integers) {
-		int[] ret = new int[integers.size()];
-		Iterator<Integer> iterator = integers.iterator();
-		for (int i = 0; i < ret.length; i++) {
-			ret[i] = iterator.next().intValue();
-		}
-		return ret;
-	}
-
 	public static String[] convertToStringArray(ArrayList<String> list) {
 
 		String[] ret = new String[list.size()];
@@ -234,15 +223,6 @@ public class Data {
 		}
 		return ret;
 
-	}
-
-	private static Object convertToBooleanArray(ArrayList<Boolean> list) {
-		boolean[] ret = new boolean[list.size()];
-		Iterator<Boolean> iterator = list.iterator();
-		for (int i = 0; i < ret.length; i++) {
-			ret[i] = iterator.next();
-		}
-		return ret;
 	}
 
 }

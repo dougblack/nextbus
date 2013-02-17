@@ -26,8 +26,8 @@ public class WakeupAsyncTask extends AsyncTask<Void, Void, Void> {
 			urlConnection.setReadTimeout(1000);
 			urlConnection.setConnectTimeout(1000);
 
-			urlConnection.getInputStream(); // opening a connection to wake up
-											// dyno
+			// opening a connection to wake up dyno
+			urlConnection.getInputStream();
 
 			return;
 
