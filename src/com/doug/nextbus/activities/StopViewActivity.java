@@ -124,6 +124,9 @@ public class StopViewActivity extends Activity {
 				} else if (route.equals("night")) {
 					cellDrawable = getResources().getDrawable(
 							R.drawable.nightcell);
+				} else if (route.equals("emory")) {
+					cellDrawable = getResources().getDrawable(
+							R.drawable.pinkcell);
 				}
 				drawableList.add(cellDrawable);
 			}

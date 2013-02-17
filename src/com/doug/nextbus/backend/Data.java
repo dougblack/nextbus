@@ -36,13 +36,29 @@ public class Data {
 
 	static {
 		hm = new HashMap<String, Route>();
-
 	}
 
 	/** Reads the data into memory */
 	public static void setConfigData(Context context) {
 		setContext(context);
 		ReadData();
+	}
+
+	public static PathStop getPathStopForDirandIndex(String route, String dir,
+			int index) {
+		for (Direction direction : hm.get(route).direction) {
+			if (direction.title.equals(dir)) {
+				return direction.stop.get(index);
+			}
+		}
+
+		return null;
+	}
+
+	public static String getStopTitleFromRouteAndStopTag(String route,
+			String stopTag) {
+		return hm.get(route).stopTable.get(stopTag).title;
+
 	}
 
 	public static void ReadData() {

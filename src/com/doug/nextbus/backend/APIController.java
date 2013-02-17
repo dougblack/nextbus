@@ -126,19 +126,9 @@ public class APIController {
 	 * 
 	 * @return active routes
 	 */
-	public static Object[] getActiveRoutesList(Context context) {
-
-		int red = context.getResources().getColor(R.color.red);
-		int blue = context.getResources().getColor(R.color.blue);
-		int green = context.getResources().getColor(R.color.green);
-		int yellow = context.getResources().getColor(R.color.yellow);
-		int night = context.getResources().getColor(R.color.night);
-		int pink = context.getResources().getColor(R.color.pink);
-		boolean activeRoutesExist = true;
+	public static String[] getActiveRoutesList(Context context) {
 
 		ArrayList<String> activeRoutesList = new ArrayList<String>();
-		ArrayList<Integer> activeColorsList = new ArrayList<Integer>();
-		ArrayList<Boolean> activeRoutesHasDirectionsList = new ArrayList<Boolean>();
 
 		Time time = new Time();
 		time.switchTimezone("EST");
@@ -151,65 +141,42 @@ public class APIController {
 			if ((hour >= 7) && (hour <= 22)) {
 				// 6:45am - 10:45pm
 				activeRoutesList.add("red");
-				activeColorsList.add(red);
-				activeRoutesHasDirectionsList.add(false);
 				activeRoutesList.add("blue");
-				activeColorsList.add(blue);
-				activeRoutesHasDirectionsList.add(false);
 			}
 			if ((hour >= 7) && (hour <= 21)) {
 				// 6:15am - 9:45pm
 				activeRoutesList.add("green");
-				activeColorsList.add(green);
-				activeRoutesHasDirectionsList.add(true);
 			}
 			if ((hour >= 5) && (hour <= 22)) {
 				// 5:15am - 11:00pm
 				activeRoutesList.add("trolley");
-				activeColorsList.add(yellow);
-				activeRoutesHasDirectionsList.add(true);
 			}
 			if ((day != 4) && (hour >= 21) || (hour <= 3)) {
 				// 8:45pm - 3:30am
 				activeRoutesList.add("night");
-				activeColorsList.add(night);
-				activeRoutesHasDirectionsList.add(true);
 			}
 		} else if (day == 5) {
 			// Saturday
 			if ((hour >= 10) && (hour <= 18)) {
 				// 9:30am - 7:00pm
 				activeRoutesList.add("trolley");
-				activeColorsList.add(yellow);
-				activeRoutesHasDirectionsList.add(true);
 			}
 		} else if (day == 6) {
 			// Sunday
 			if ((hour >= 15) && (hour <= 21)) {
 				// 2:30pm - 6:30pm
 				activeRoutesList.add("trolley");
-				activeColorsList.add(yellow);
-				activeRoutesHasDirectionsList.add(true);
 			}
 			if ((hour >= 20 && time.minute >= 45)
 					|| (hour <= 3 && time.minute <= 30)) {
 				// 8:45pm - 3:30am
 				activeRoutesList.add("night");
-				activeColorsList.add(night);
-				activeRoutesHasDirectionsList.add(true);
+
 			}
 		}
 
-		if (activeRoutesList.size() == 0) {
-			activeRoutesExist = false;
-		}
-
-		Object[] returnData = { Data.convertToStringArray(activeRoutesList),
-				Data.convertIntegers(activeColorsList),
-				Data.convertToBooleanArray(activeRoutesHasDirectionsList),
-				activeRoutesExist };
-
-		return returnData;
+		String[] strings = {};
+		return activeRoutesList.toArray(strings);
 
 	}
 

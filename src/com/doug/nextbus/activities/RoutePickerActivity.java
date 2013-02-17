@@ -31,53 +31,39 @@ import com.viewpagerindicator.TitlePageIndicator.IndicatorStyle;
 public class RoutePickerActivity extends Activity implements
 		OnSharedPreferenceChangeListener {
 
-	private Context cxt;
-
 	private Data data;
-	static String[] currentRoutes;
-	private int[] colorOrder;
-	private boolean hideDeadRoutes;
-	private boolean activeRoutesExist = true;
+	private String[] currentRoutes;
+	private boolean onlyActiveRoutes = false;
 	private RoutePagerAdapter pagerAdapter;
 	private ViewPager pager;
 	private ImageView mapButton;
-	private int red;
-	private int blue;
-	private int green;
-	private int yellow;
-	private int night;
-	private int pink;
+	private static final String[] allRoutes;
+	private Context cxt;
+
+	static {
+
+		allRoutes = new String[] { "red", "blue", "trolley", "green", "night",
+				"emory" };
+	}
 
 	public void onCreate(Bundle savedInstance) {
-
 		super.onCreate(savedInstance);
-
-		red = getResources().getColor(R.color.red);
-		blue = getResources().getColor(R.color.blue);
-		green = getResources().getColor(R.color.green);
-		yellow = getResources().getColor(R.color.yellow);
-		night = getResources().getColor(R.color.night);
-		pink = getResources().getColor(R.color.pink);
-		cxt = this;
-
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.route_picker);
 
+		cxt = this;
+
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
-
 		prefs.registerOnSharedPreferenceChangeListener(this);
-		hideDeadRoutes = prefs.getBoolean("showActiveRoutes", true);
-		cxt = this;
-		Data.setConfigData(getApplicationContext());
-		data = new Data();
+		onlyActiveRoutes = prefs.getBoolean("showActiveRoutes", false);
+
+		updateCurrentRoutes();
+		Data.setConfigData(cxt);
 		mapButton = (ImageView) findViewById(R.id.mapButton);
 
-		shouldHideRoutes(hideDeadRoutes);
-
 		/* Setup ViewGroup */
-		pagerAdapter = new RoutePagerAdapter(activeRoutesExist, currentRoutes,
-				data, cxt);
+		pagerAdapter = new RoutePagerAdapter(currentRoutes, data, cxt);
 		pager = (ViewPager) findViewById(R.id.routepagerviewpager);
 		pager.setAdapter(pagerAdapter);
 
@@ -95,6 +81,12 @@ public class RoutePickerActivity extends Activity implements
 		titleIndicator.setTextSize(pixels);
 		titleIndicator.setViewPager(pager);
 
+		int color = R.color.orange; // default color
+		if (currentRoutes.length > 0) // if there are active routes
+			color = getColor(Data.hm.get(currentRoutes[0]).tag);
+		titleIndicator.setSelectedColor(getResources().getColor(color));
+		titleIndicator.setFooterColor(getResources().getColor(color));
+
 		/* Listener for PageChanging. Basically the left and right swiping */
 		titleIndicator.setOnPageChangeListener(new OnPageChangeListener() {
 
@@ -105,19 +97,15 @@ public class RoutePickerActivity extends Activity implements
 			}
 
 			public void onPageSelected(int position) {
-				if (colorOrder.length > 0) {
-					titleIndicator.setSelectedColor(colorOrder[position]);
-					titleIndicator.setFooterColor(colorOrder[position]);
-				}
+				int color = R.color.orange; // default color
+				if (currentRoutes.length > 0) // if there are active routes
+					color = getColor(Data.hm.get(currentRoutes[position]).tag);
+
+				titleIndicator.setSelectedColor(getResources().getColor(color));
+				titleIndicator.setFooterColor(getResources().getColor(color));
+
 			}
 		});
-
-		if (activeRoutesExist && currentRoutes.length > 0) {
-			pager.setCurrentItem(1);
-		} else {
-			/* If only one route, show it */
-			pager.setCurrentItem(0);
-		}
 
 		/* Button for switching to MapView */
 		mapButton.setOnTouchListener(new OnTouchListener() {
@@ -140,32 +128,39 @@ public class RoutePickerActivity extends Activity implements
 
 	}
 
-	/* Checks hideRoutes preference. */
-	private void shouldHideRoutes(boolean hideDeadRoutes) {
+	public int getColor(String route) {
 
-		if (hideDeadRoutes) {
+		int color = 0;
+		if (route.equals("red")) {
+			color = R.color.red;
+		} else if (route.equals("blue")) {
+			color = R.color.blue;
+		} else if (route.equals("green")) {
+			color = R.color.green;
+		} else if (route.equals("trolley")) {
+			color = R.color.yellow;
+		} else if (route.equals("night")) {
+			color = R.color.night;
+		} else if (route.equals("emory")) {
+			color = R.color.pink;
+		}
+		return color;
+	}
+
+	/* Checks hideRoutes preference. */
+	private void updateCurrentRoutes() {
+
+		if (onlyActiveRoutes) {
 			setCurrentRoutes(APIController.getActiveRoutesList(cxt));
 		} else {
-			Object[] activeRouteList = new Object[4];
-			String[] activeRoutes = { "red", "blue", "trolley", "green",
-					"night", "emory" };
-			boolean[] hasDirections = { false, false, true, true, true };
 
-			int[] colorOrder = { red, blue, yellow, green, night, pink };
-
-			activeRouteList[0] = activeRoutes;
-			activeRouteList[1] = colorOrder;
-			activeRouteList[2] = hasDirections;
-			activeRouteList[3] = true;
-			setCurrentRoutes(activeRouteList);
+			setCurrentRoutes(allRoutes);
 		}
 
 	}
 
-	private void setCurrentRoutes(Object[] activeRoutesList) {
-		currentRoutes = (String[]) activeRoutesList[0];
-		colorOrder = (int[]) activeRoutesList[1];
-		activeRoutesExist = (Boolean) activeRoutesList[3];
+	private void setCurrentRoutes(String[] activeRoutes) {
+		currentRoutes = activeRoutes;
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -197,26 +192,11 @@ public class RoutePickerActivity extends Activity implements
 	public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
 
 		if (key.equals("showActiveRoutes")) {
-			hideDeadRoutes = prefs.getBoolean("showActiveRoutes", true);
-			if (hideDeadRoutes) {
-				setCurrentRoutes(APIController.getActiveRoutesList(cxt));
-			} else {
-				Object[] activeRouteList = new Object[4];
-				String[] activeRoutes = { "red", "blue", "trolley", "green",
-						"night" };
-				boolean[] hasDirections = { false, false, true, true, true };
-				int[] colorOrder = { red, blue, yellow, green, night };
-				activeRouteList[0] = activeRoutes;
-				activeRouteList[1] = colorOrder;
-				activeRouteList[2] = hasDirections;
-				activeRouteList[3] = true;
-				setCurrentRoutes(activeRouteList);
-				activeRoutesExist = true;
-			}
+			onlyActiveRoutes = prefs.getBoolean("showActiveRoutes", true);
+			updateCurrentRoutes();
+
+			pagerAdapter.updateCurrentRoutes(this.currentRoutes);
 			pagerAdapter.notifyDataSetChanged();
-			RoutePagerAdapter pagerAdapter = new RoutePagerAdapter(
-					activeRoutesExist, currentRoutes, data, cxt);
-			pager.setAdapter(pagerAdapter);
 			pager.setCurrentItem(1);
 
 		}

@@ -22,16 +22,6 @@ public class DataResult {
 			stopTable = new Hashtable<String, DataResult.Route.Stop>();
 		}
 
-		public PathStop getPathStopForDirandIndex(String dir, int index) {
-			for (Direction direction : this.direction) {
-				if (direction.title.equals(dir)) {
-					return direction.stop.get(index);
-				}
-			}
-
-			return null;
-		}
-
 		@Override
 		public String toString() {
 			return title + ": " + tag;

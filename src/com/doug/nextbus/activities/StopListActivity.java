@@ -25,7 +25,6 @@ import com.doug.nextbus.backend.DataResult.Route.PathStop;
 /* This activity shows a list of stops. */
 public class StopListActivity extends Activity {
 
-	Data data;
 	String[] stops;
 	String[] stopTags;
 
@@ -42,7 +41,6 @@ public class StopListActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.stop_list);
 
-		data = new Data();
 		stopList = (ListView) findViewById(R.id.stopListView);
 		directionTextView = (TextView) findViewById(R.id.directionTextView);
 		backButton = (ImageView) findViewById(R.id.directionBackButton);
@@ -54,9 +52,9 @@ public class StopListActivity extends Activity {
 			/* Pull route and direction for extras */
 			route = extras.getString("route");
 			direction = extras.getString("direction");
-
 			directionTextView.setText(Data.capitalize(direction));
 			stops = Data.getStopTitlesForRouteAndDir(route, direction);
+
 			setDirectionTextViewColor(route);
 			Log.i("Info", "Showing list for route=" + route + " and direction="
 					+ direction);
@@ -69,8 +67,8 @@ public class StopListActivity extends Activity {
 
 				public void onItemClick(AdapterView<?> parent, View view,
 						int position, long id) {
-					PathStop pStop = Data.hm.get(route)
-							.getPathStopForDirandIndex(direction, position);
+					PathStop pStop = Data.getPathStopForDirandIndex(route,
+							direction, position);
 					Intent intent = new Intent(getApplicationContext(),
 							StopViewActivity.class);
 					intent.putExtra("direction", direction);
@@ -79,8 +77,9 @@ public class StopListActivity extends Activity {
 
 					intent.putExtra("stopTag", pStop.tag);
 					intent.putExtra("route", route);
-					intent.putExtra("stop",
-							Data.hm.get(route).stopTable.get(pStop.tag).title);
+					intent.putExtra("stop", Data
+							.getStopTitleFromRouteAndStopTag(route, pStop.tag));
+
 					startActivity(intent);
 				}
 
