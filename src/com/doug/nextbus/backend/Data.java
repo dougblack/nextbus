@@ -238,4 +238,22 @@ public class Data {
 		return ret;
 	}
 
+	public static int getColorFromRouteTag(String routeTag) {
+		int color = 0;
+		if (routeTag.equals("red")) {
+			color = R.color.red;
+		} else if (routeTag.equals("blue")) {
+			color = R.color.blue;
+		} else if (routeTag.equals("green")) {
+			color = R.color.green;
+		} else if (routeTag.equals("trolley")) {
+			color = R.color.yellow;
+		} else if (routeTag.equals("night")) {
+			color = R.color.night;
+		} else if (routeTag.equals("emory")) {
+			color = R.color.pink;
+		}
+		return color;
+	}
+
 }

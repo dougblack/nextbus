@@ -25,8 +25,7 @@ import com.doug.nextbus.backend.DataResult.Route.PathStop;
 /* This activity shows a list of stops. */
 public class StopListActivity extends Activity {
 
-	String[] stops;
-	String[] stopTags;
+	private String[] stops;
 
 	private ListView stopList;
 	private TextView directionTextView;
@@ -55,7 +54,7 @@ public class StopListActivity extends Activity {
 			directionTextView.setText(Data.capitalize(direction));
 			stops = Data.getStopTitlesForRouteAndDir(route, direction);
 
-			setDirectionTextViewColor(route);
+			setDirectionTextViewColor(Data.getColorFromRouteTag(route));
 			Log.i("Info", "Showing list for route=" + route + " and direction="
 					+ direction);
 
@@ -127,22 +126,7 @@ public class StopListActivity extends Activity {
 	}
 
 	/* Sets color of label at top of view */
-	public void setDirectionTextViewColor(String route) {
-
-		int color = 0;
-		if (route.equals("red")) {
-			color = R.color.red;
-		} else if (route.equals("blue")) {
-			color = R.color.blue;
-		} else if (route.equals("green")) {
-			color = R.color.green;
-		} else if (route.equals("trolley")) {
-			color = R.color.yellow;
-		} else if (route.equals("night")) {
-			color = R.color.night;
-		} else if (route.equals("emory")) {
-			color = R.color.pink;
-		}
+	public void setDirectionTextViewColor(int color) {
 
 		colorBar.setBackgroundColor(getResources().getColor(color));
 		directionTextView.setTextColor(getResources().getColor(color));

@@ -51,15 +51,16 @@ public class RoutePickerActivity extends Activity implements
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.route_picker);
 
-		cxt = this;
+		cxt = getApplicationContext();
+		Data.setConfigData(cxt);
 
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
 		prefs.registerOnSharedPreferenceChangeListener(this);
-		onlyActiveRoutes = prefs.getBoolean("showActiveRoutes", false);
 
+		onlyActiveRoutes = prefs.getBoolean("showActiveRoutes", false);
 		updateCurrentRoutes();
-		Data.setConfigData(cxt);
+
 		mapButton = (ImageView) findViewById(R.id.mapButton);
 
 		/* Setup ViewGroup */
@@ -83,7 +84,8 @@ public class RoutePickerActivity extends Activity implements
 
 		int color = R.color.orange; // default color
 		if (currentRoutes.length > 0) // if there are active routes
-			color = getColor(Data.hm.get(currentRoutes[0]).tag);
+			color = Data
+					.getColorFromRouteTag(Data.hm.get(currentRoutes[0]).tag);
 		titleIndicator.setSelectedColor(getResources().getColor(color));
 		titleIndicator.setFooterColor(getResources().getColor(color));
 
@@ -99,7 +101,8 @@ public class RoutePickerActivity extends Activity implements
 			public void onPageSelected(int position) {
 				int color = R.color.orange; // default color
 				if (currentRoutes.length > 0) // if there are active routes
-					color = getColor(Data.hm.get(currentRoutes[position]).tag);
+					color = Data.getColorFromRouteTag(Data.hm
+							.get(currentRoutes[position]).tag);
 
 				titleIndicator.setSelectedColor(getResources().getColor(color));
 				titleIndicator.setFooterColor(getResources().getColor(color));
@@ -128,39 +131,14 @@ public class RoutePickerActivity extends Activity implements
 
 	}
 
-	public int getColor(String route) {
-
-		int color = 0;
-		if (route.equals("red")) {
-			color = R.color.red;
-		} else if (route.equals("blue")) {
-			color = R.color.blue;
-		} else if (route.equals("green")) {
-			color = R.color.green;
-		} else if (route.equals("trolley")) {
-			color = R.color.yellow;
-		} else if (route.equals("night")) {
-			color = R.color.night;
-		} else if (route.equals("emory")) {
-			color = R.color.pink;
-		}
-		return color;
-	}
-
 	/* Checks hideRoutes preference. */
 	private void updateCurrentRoutes() {
-
 		if (onlyActiveRoutes) {
-			setCurrentRoutes(APIController.getActiveRoutesList(cxt));
+			currentRoutes = APIController.getActiveRoutesList(cxt);
 		} else {
-
-			setCurrentRoutes(allRoutes);
+			currentRoutes = allRoutes;
 		}
 
-	}
-
-	private void setCurrentRoutes(String[] activeRoutes) {
-		currentRoutes = activeRoutes;
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) {
