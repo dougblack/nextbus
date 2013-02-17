@@ -83,7 +83,7 @@ public class RoutePickerActivity extends Activity implements
 		float pixels = textSize * scale;
 		titleIndicator.setTextSize(pixels);
 		titleIndicator.setViewPager(pager);
-		updateColor(0);
+		setViewColor(0);
 
 		// Listener for page changing. Basically the left and right swiping
 		titleIndicator.setOnPageChangeListener(new OnPageChangeListener() {
@@ -94,7 +94,7 @@ public class RoutePickerActivity extends Activity implements
 			}
 
 			public void onPageSelected(int position) {
-				updateColor(position);
+				setViewColor(position);
 			}
 		});
 
@@ -120,7 +120,7 @@ public class RoutePickerActivity extends Activity implements
 
 	}
 
-	/** Updates available routes depending on preference. */
+	/** Updates available routes depending on show active routes preference. */
 	private void updateCurrentRoutes() {
 		if (onlyActiveRoutes) {
 			currentRoutes = APIController.getActiveRoutesList(cxt);
@@ -129,20 +129,20 @@ public class RoutePickerActivity extends Activity implements
 		}
 	}
 
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.stock_menu, menu);
-		return true;
-	}
-
 	/** Updates text color depending on the position of view page */
-	private void updateColor(int position) {
+	private void setViewColor(int position) {
 		int color = R.color.orange; // default color
 		if (currentRoutes.length > 0) // if there are active routes
 			color = Data.getColorFromRouteTag(currentRoutes[position]);
 
 		titleIndicator.setSelectedColor(getResources().getColor(color));
 		titleIndicator.setFooterColor(getResources().getColor(color));
+	}
+
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.stock_menu, menu);
+		return true;
 	}
 
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -176,7 +176,7 @@ public class RoutePickerActivity extends Activity implements
 			pagerAdapter.updateCurrentRoutes(this.currentRoutes);
 			pager.setCurrentItem(0);
 			pagerAdapter.notifyDataSetChanged();
-			updateColor(0);
+			setViewColor(0);
 		}
 
 	}

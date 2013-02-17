@@ -51,7 +51,7 @@ public class StopViewActivity extends Activity {
 
 	private ProgressBar routeViewProgressBar;
 	private ImageView refreshButton;
-	private String route;
+	private String routeTag;
 	private String directionTitle;
 	private String directionTag;
 	private String stopTitle;
@@ -65,15 +65,16 @@ public class StopViewActivity extends Activity {
 	private boolean deadCellOnly;
 	private RouteAndDirection[] rads;
 
-	public static Intent createIntent(Context ctx, String route,
+	public static Intent createIntent(Context ctx, String routeTag,
 			Direction direction, Stop stop) {
 		Intent intent = new Intent(ctx, StopViewActivity.class);
-		intent.putExtra("route", route);
+		intent.putExtra("routeTag", routeTag);
 		intent.putExtra("directionTitle", direction.title);
 		intent.putExtra("directionTag", direction.tag);
 		intent.putExtra("stopTitle", stop.title);
 		intent.putExtra("stopTag", stop.tag);
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		// Closes all instances of the same activity
+		// intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
 		return intent;
 
@@ -85,18 +86,19 @@ public class StopViewActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.stop_view);
 
-		/* Extras */
+		// Extras
 		Bundle extras = getIntent().getExtras();
-		route = extras.getString("route");
+		routeTag = extras.getString("routeTag");
 		directionTitle = extras.getString("directionTitle");
 		directionTag = extras.getString("directionTag");
 		stopTitle = extras.getString("stopTitle");
 		stopTag = extras.getString("stopTag");
 
 		deadCellOnly = false;
+
+		// Setting Views
 		routeViewProgressBar = (ProgressBar) this
 				.findViewById(R.id.routeviewprogressbar);
-
 		refreshButton = (ImageView) this.findViewById(R.id.refreshButton);
 		firstArrival = (TextView) this.findViewById(R.id.firstArrival);
 		secondArrival = (TextView) this.findViewById(R.id.secondArrival);
@@ -114,8 +116,7 @@ public class StopViewActivity extends Activity {
 
 		stopTextView.setText(stopTitle);
 
-		rads = Data.getAllRouteAndDirsWithStopTitle(stopTitle, route,
-				directionTag);
+		rads = Data.getAllRadsWithStopTitle(stopTitle, routeTag, directionTag);
 		tempArrivalsList = formatArrivals(rads);
 
 		drawableList = new ArrayList<Drawable>();
@@ -131,7 +132,6 @@ public class StopViewActivity extends Activity {
 				if (rad.route.tag.equals("red")) {
 					cellDrawable = getResources().getDrawable(
 							R.drawable.redcell);
-
 				} else if (rad.route.tag.equals("blue")) {
 					cellDrawable = getResources().getDrawable(
 							R.drawable.bluecell);
@@ -194,7 +194,7 @@ public class StopViewActivity extends Activity {
 		refreshButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				routeViewProgressBar.setVisibility(View.VISIBLE);
-				refresh(route, directionTag, stopTag);
+				refresh(routeTag, directionTag, stopTag);
 			}
 		});
 
@@ -211,15 +211,26 @@ public class StopViewActivity extends Activity {
 			}
 		});
 
-		setViewColor(route);
+		setViewColor(routeTag);
 
 		firstArrival.setText("");
 		secondArrival.setText("");
 		thirdArrival.setText("");
 		fourthArrival.setText("");
 
-		refresh(route, directionTag, stopTag);
+		refresh(routeTag, directionTag, stopTag);
 
+	}
+
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.stock_menu, menu);
+		return true;
+	}
+
+	/* Gets the latest prediction data */
+	private void refresh(String route, String direction, String stopTag) {
+		new loadPredictionData().execute(route, direction, stopTag);
 	}
 
 	private ArrayList<String> formatArrivals(RouteAndDirection[] rads) {
@@ -229,10 +240,12 @@ public class StopViewActivity extends Activity {
 		return radsList;
 	}
 
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.stock_menu, menu);
-		return true;
+	/* Set color of text with respect to route */
+	private void setViewColor(String route) {
+		int color = Data.getColorFromRouteTag(route);
+		stopTextView.setTextColor(getResources().getColor(color));
+		colorBar.setBackgroundColor(getResources().getColor(color));
+		colorSeperator.setBackgroundColor(getResources().getColor(color));
 	}
 
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -250,19 +263,6 @@ public class StopViewActivity extends Activity {
 		default:
 			return super.onOptionsItemSelected(item);
 		}
-	}
-
-	/* Set color of text with respect to route */
-	private void setViewColor(String route) {
-		int color = Data.getColorFromRouteTag(route);
-		stopTextView.setTextColor(getResources().getColor(color));
-		colorBar.setBackgroundColor(getResources().getColor(color));
-		colorSeperator.setBackgroundColor(getResources().getColor(color));
-	}
-
-	/* Gets the latest prediction data */
-	private void refresh(String route, String direction, String stopTag) {
-		new loadPredictionData().execute(route, direction, stopTag);
 	}
 
 	/* Load prediction data asynchronously. */

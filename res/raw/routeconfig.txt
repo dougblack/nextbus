@@ -96,7 +96,7 @@
                     "stopid": "0057"
                 },
                 {
-                    "tag": "nortavea",
+                    "tag": "nortavea_a",
                     "title": "North Avenue Apartments",
                     "lat": "33.77019",
                     "lon": "-84.39174",
@@ -174,7 +174,7 @@
                             "tag": "technorth"
                         },
                         {
-                            "tag": "nortavea"
+                            "tag": "nortavea_a"
                         },
                         {
                             "tag": "ferstcher"
@@ -401,6 +401,13 @@
                     "stopid": "0063"
                 },
                 {
+                    "tag": "tep_a",
+                    "title": "TEP",
+                    "lat": "33.7695",
+                    "lon": "-84.402752",
+                    "stopid": "0063"
+                },
+                {
                     "tag": "stuctr",
                     "title": "Student Center at Tech Pkwy",
                     "lat": "33.7731096",
@@ -464,7 +471,7 @@
                     "stopid": "0076"
                 },
                 {
-                    "tag": "14thmcmi",
+                    "tag": "14thmcmi_a",
                     "title": "14th St Bus Yard",
                     "lat": "33.78617",
                     "lon": "-84.4052407",
@@ -562,17 +569,18 @@
                         },
                         {
                             "tag": "nara"
+                        },
+                        {
+                            "tag": "tep_a"
                         }
+
                     ]
                 },
                 {
                     "tag": "hub",
-                    "title": "To Transit Hub",
+                    "title": "Transit Hub",
                     "useForUI": "true",
                     "stop": [
-                        {
-                            "tag": "14thmcmi"
-                        },
                         {
                             "tag": "14thstat"
                         },
@@ -605,9 +613,6 @@
                     "useForUI": "true",
                     "stop": [
                         {
-                            "tag": "tep_d"
-                        },
-                        {
                             "tag": "stuctr"
                         },
                         {
@@ -633,6 +638,9 @@
                         },
                         {
                             "tag": "hempcurr"
+                        },
+                        {
+                            "tag": "14thmcmi_a"
                         }
                     ]
                 }
@@ -839,7 +847,7 @@
                 },
                 {
                     "tag": "hub",
-                    "title": "To Transit Hub",
+                    "title": "Transit Hub",
                     "useForUI": "true",
                     "stop": [
                         {
@@ -994,13 +1002,6 @@
                     "stopid": "0022"
                 },
                 {
-                    "tag": "fitten_a",
-                    "title": "Fitten Hall",
-                    "lat": "33.7782737",
-                    "lon": "-84.4041907",
-                    "stopid": "0022"
-                },                
-                {
                     "tag": "8thhemp",
                     "title": "8th St & Hemphill Ave",
                     "lat": "33.7796305",
@@ -1051,7 +1052,7 @@
                 },
                 {
                     "tag": "clough",
-                    "title": "Clough Commons",
+                    "title": "Clough",
                     "lat": "33.7755678",
                     "lon": "-84.4024904",
                     "stopid": "0088"
@@ -1074,7 +1075,7 @@
             "direction": [
                 {
                     "tag": "clough",
-                    "title": "To Clough",
+                    "title": "To Clough Commons",
                     "useForUI": "true",
                     "stop": [
                         {
@@ -1115,7 +1116,7 @@
                             "tag": "765femrt"
                         },
                         {
-                            "tag": "fitten_a"
+                            "tag": "fitten"
                         }
                     ]
                 }

@@ -84,8 +84,8 @@ public class Data {
 
 	}
 
-	public static RouteAndDirection[] getAllRouteAndDirsWithStopTitle(
-			String stopTitle, String route, String directionTag) {
+	public static RouteAndDirection[] getAllRadsWithStopTitle(String stopTitle,
+			String route, String directionTag) {
 		ArrayList<RouteAndDirection> radsList = new ArrayList<RouteAndDirection>();
 
 		SharedPreferences prefs = PreferenceManager
@@ -109,9 +109,7 @@ public class Data {
 					.equals(directionTag))
 					|| notInArray(activeRoutes, rad.route.tag))
 				continue;
-
 			radsList.add(rad);
-
 		}
 
 		// Sorting to put the reds, blues, etc together
@@ -128,8 +126,8 @@ public class Data {
 		return true;
 	}
 
-	public static Route getRoute(String route) {
-		return hm.get(route);
+	public static Route getRouteWithTag(String routeTag) {
+		return hm.get(routeTag);
 	}
 
 	public static int getColorFromRouteTag(String routeTag) {
@@ -145,7 +143,7 @@ public class Data {
 		} else if (routeTag.equals("night")) {
 			color = R.color.night;
 		} else if (routeTag.equals("emory")) {
-			color = R.color.white;
+			color = R.color.pink;
 		}
 		return color;
 	}
@@ -218,7 +216,7 @@ public class Data {
 	}
 
 	/* Make ArrayList of integers into an int array */
-	public static int[] convertIntegers(List<Integer> integers) {
+	private static int[] convertIntegers(List<Integer> integers) {
 		int[] ret = new int[integers.size()];
 		Iterator<Integer> iterator = integers.iterator();
 		for (int i = 0; i < ret.length; i++) {
@@ -238,7 +236,7 @@ public class Data {
 
 	}
 
-	public static Object convertToBooleanArray(ArrayList<Boolean> list) {
+	private static Object convertToBooleanArray(ArrayList<Boolean> list) {
 		boolean[] ret = new boolean[list.size()];
 		Iterator<Boolean> iterator = list.iterator();
 		for (int i = 0; i < ret.length; i++) {

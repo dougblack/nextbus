@@ -26,7 +26,7 @@ public class DataResult {
 
 		public Direction getDirection(String directionTitle) {
 			for (Direction dir : this.direction) {
-				if (dir.title.equals(direction))
+				if (dir.title.equals(directionTitle))
 					return dir;
 			}
 			// if can't find anything, return default

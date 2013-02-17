@@ -57,8 +57,8 @@ public class RoutePagerAdapter extends PagerAdapter {
 
 		if (currentRoutes.length > 0) {
 			final int listPosition = position;
-			final String currRouteStr = currentRoutes[listPosition];
-			final Route currRoute = Data.getRoute(currRouteStr);
+			final String routeTag = currentRoutes[listPosition];
+			final Route currRoute = Data.getRouteWithTag(routeTag);
 
 			String[] itemListTemp = new String[] {};
 			final boolean thisRouteHasDirection = currRoute.direction.size() != 1;
@@ -88,17 +88,19 @@ public class RoutePagerAdapter extends PagerAdapter {
 						 */
 
 						Intent intent = StopListActivity.createIntent(ctx,
-								currRouteStr, itemList[position]);
+								routeTag, itemList[position]);
 						ctx.startActivity(intent);
 					} else {
 						/*
 						 * Route doesn't have direction so items have to point
 						 * to StopViewActivity with correct extras.
 						 */
-						Direction defaultDirection = currRoute.getDefaultDirection();
-						Stop stop = currRoute.getStopFromDefaultDirection(position);
+						Direction defaultDirection = currRoute
+								.getDefaultDirection();
+						Stop stop = currRoute
+								.getStopFromDefaultDirection(position);
 						Intent intent = StopViewActivity.createIntent(ctx,
-								currRouteStr, defaultDirection, stop);
+								routeTag, defaultDirection, stop);
 
 						ctx.startActivity(intent);
 					}

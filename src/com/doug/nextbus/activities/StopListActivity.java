@@ -33,10 +33,10 @@ public class StopListActivity extends Activity {
 	private View colorBar;
 	private ImageView backButton;
 
-	public static Intent createIntent(Context ctx, String route,
+	public static Intent createIntent(Context ctx, String routeTag,
 			String directionTitle) {
 		Intent intent = new Intent(ctx, StopListActivity.class);
-		intent.putExtra("route", route);
+		intent.putExtra("routeTag", routeTag);
 		intent.putExtra("directionTitle", directionTitle);
 		return intent;
 	}
@@ -56,10 +56,10 @@ public class StopListActivity extends Activity {
 
 		if (extras != null) {
 			/* Pull route and direction for extras */
-			final String route = extras.getString("route");
+			final String route = extras.getString("routeTag");
 			final String directionTitle = extras.getString("directionTitle");
 
-			final Route currRoute = Data.getRoute(route);
+			final Route currRoute = Data.getRouteWithTag(route);
 			final String[] stopTitles = currRoute.getStopTitles(directionTitle);
 			directionTextView.setText(Data.capitalize(directionTitle));
 
@@ -101,6 +101,12 @@ public class StopListActivity extends Activity {
 		});
 	}
 
+	/** Sets color of label at top of view */
+	public void setDirectionTextViewColor(int color) {
+		colorBar.setBackgroundColor(getResources().getColor(color));
+		directionTextView.setTextColor(getResources().getColor(color));
+	}
+
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.stock_menu, menu);
@@ -123,12 +129,6 @@ public class StopListActivity extends Activity {
 		default:
 			return super.onOptionsItemSelected(item);
 		}
-	}
-
-	/** Sets color of label at top of view */
-	public void setDirectionTextViewColor(int color) {
-		colorBar.setBackgroundColor(getResources().getColor(color));
-		directionTextView.setTextColor(getResources().getColor(color));
 	}
 
 }
