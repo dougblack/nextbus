@@ -1,6 +1,18 @@
 GT NextBus
 ==========
 
+Vidhur's Planned Changes
+
+- Fix times for buses [Done, need verification]
+- Change static modifiers to private [Done]
+- Removed same route for "other route" popup. [Done]
+- Added support for Emory route [Done, needs verification]
+- Fix support for stops that have different tags for different routes,
+but are the same. (Like fitten_a for blue and fitten for red) [Exploring options]
+- Update the JSON data [work in progress]
+- Change from native JSON parser to GSON [Done]
+
+==========
 An Android client for the Georgia Tech Nextbus stop service.
 
 Link:
