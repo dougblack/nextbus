@@ -32,13 +32,13 @@ import com.viewpagerindicator.TitlePageIndicator.IndicatorStyle;
 public class RoutePickerActivity extends Activity implements
 		OnSharedPreferenceChangeListener {
 
-	private String[] currentRoutes;
 	public static final String[] allRoutes;
+	private String[] currentRoutes;
 	private boolean onlyActiveRoutes;
 	private ViewPager pager;
 	private RoutePagerAdapter pagerAdapter;
-	private ImageView mapButton;
 	private Context cxt;
+	private ImageView mapButton;
 	private TitlePageIndicator titleIndicator;
 
 	static {
@@ -85,7 +85,7 @@ public class RoutePickerActivity extends Activity implements
 		titleIndicator.setViewPager(pager);
 		updateColor(0);
 
-		// Listener for PageChanging. Basically the left and right swiping
+		// Listener for page changing. Basically the left and right swiping
 		titleIndicator.setOnPageChangeListener(new OnPageChangeListener() {
 			public void onPageScrollStateChanged(int arg0) {
 			}

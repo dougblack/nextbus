@@ -2,8 +2,11 @@ package com.doug.nextbus.custom;
 
 import java.util.ArrayList;
 
+import com.doug.nextbus.backend.RouteAndDirection;
+
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.text.Html;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -12,17 +15,20 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 /* Array adapter for multicolored cells */
-public class RainbowArrayAdapter extends ArrayAdapter<String> {
+public class OtherArrivalsArrayAdapter extends ArrayAdapter<String> {
 
 	private ArrayList<Drawable> drawableList;
 	boolean deadCellOnly;
+	RouteAndDirection[] rads;
 
-	public RainbowArrayAdapter(Context context, int textViewResourceId,
+	public OtherArrivalsArrayAdapter(Context context, int textViewResourceId,
 			String[] data, ArrayList<Drawable> cellDrawables,
-			boolean deadCellOnly) {
+			boolean deadCellOnly, RouteAndDirection[] rads) {
+
 		super(context, textViewResourceId, data);
 		drawableList = cellDrawables;
 		this.deadCellOnly = deadCellOnly;
+		this.rads = rads;
 	}
 
 	@Override
@@ -33,8 +39,15 @@ public class RainbowArrayAdapter extends ArrayAdapter<String> {
 		if (deadCellOnly) {
 			Log.i("INFO", "DEAD CELL ONLY.");
 			view.setGravity(Gravity.CENTER);
+		} else {
+			view.setText(Html.fromHtml(htmlFormatted(rads[position])));
+
 		}
 		return view;
 	}
 
+	private String htmlFormatted(RouteAndDirection rad) {
+		return rad.route.title + " <small> (" + rad.direction.title
+				+ ") </small>";
+	}
 }

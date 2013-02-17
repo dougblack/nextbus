@@ -37,7 +37,6 @@ public class APIController {
 
 	public static ArrayList<String> getPrediction(String route,
 			String direction, String stop) {
-
 		String target = createURL(route, direction, stop);
 		try {
 			Reader reader = getReaderFromURL(target);

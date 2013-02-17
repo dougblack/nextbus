@@ -6,6 +6,10 @@ import java.net.URLConnection;
 import android.os.AsyncTask;
 import android.util.Log;
 
+/**
+ * A Heroku will fall asleep, so it needs a request to wake up. This should be
+ * done before any requests are made to teh server
+ */
 public class WakeupAsyncTask extends AsyncTask<Void, Void, Void> {
 
 	@Override
@@ -22,7 +26,8 @@ public class WakeupAsyncTask extends AsyncTask<Void, Void, Void> {
 			urlConnection.setReadTimeout(1000);
 			urlConnection.setConnectTimeout(1000);
 
-			urlConnection.getInputStream(); // opening a connection to wake up dyno
+			urlConnection.getInputStream(); // opening a connection to wake up
+											// dyno
 
 			return;
 

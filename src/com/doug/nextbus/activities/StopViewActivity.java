@@ -33,7 +33,7 @@ import com.doug.nextbus.backend.Data;
 import com.doug.nextbus.backend.DataResult.Route.Direction;
 import com.doug.nextbus.backend.DataResult.Route.Stop;
 import com.doug.nextbus.backend.RouteAndDirection;
-import com.doug.nextbus.custom.RainbowArrayAdapter;
+import com.doug.nextbus.custom.OtherArrivalsArrayAdapter;
 
 /* This activity displays the predictions for a the current stop */
 public class StopViewActivity extends Activity {
@@ -131,6 +131,7 @@ public class StopViewActivity extends Activity {
 				if (rad.route.tag.equals("red")) {
 					cellDrawable = getResources().getDrawable(
 							R.drawable.redcell);
+
 				} else if (rad.route.tag.equals("blue")) {
 					cellDrawable = getResources().getDrawable(
 							R.drawable.bluecell);
@@ -153,9 +154,9 @@ public class StopViewActivity extends Activity {
 
 		arrivalsArray = Data.convertToStringArray(tempArrivalsList);
 
-		arrivalList.setAdapter(new RainbowArrayAdapter(getApplicationContext(),
-				R.layout.arrival_list, arrivalsArray, drawableList,
-				deadCellOnly));
+		arrivalList.setAdapter(new OtherArrivalsArrayAdapter(
+				getApplicationContext(), R.layout.arrival_list, arrivalsArray,
+				drawableList, deadCellOnly, rads));
 
 		/*
 		 * Listener for arrival drawer thing. If a cell is clicked, open the

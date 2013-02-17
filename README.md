@@ -11,6 +11,8 @@ Vidhur's Planned Changes
 but are the same. (Like fitten_a for blue and fitten for red) [Done]
 - Update the JSON data [work in progress]
 - Change from native JSON parser to GSON [Done]
+- Implement warning for when the API is down?
+- Fix Other Arrival Cells
 
 ==========
 Random Notes for Documentation

@@ -19,7 +19,10 @@ public class RouteAndDirection implements Comparable<RouteAndDirection> {
 
 	@Override
 	public String toString() {
-		return route.title + " (" + direction.title + ")";
+		if (route.direction.size() > 1)
+			return route.title + " (" + direction.title + ")";
+		else
+			return route.title;
 
 	}
 
