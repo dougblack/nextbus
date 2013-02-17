@@ -2,7 +2,8 @@ package com.doug.nextbus.activities;
 
 import java.util.ArrayList;
 
-import android.app.Activity;
+import roboguice.activity.RoboActivity;
+import roboguice.inject.InjectView;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -37,28 +38,29 @@ import com.doug.nextbus.backend.RouteAndDirection;
 import com.doug.nextbus.custom.OtherArrivalsArrayAdapter;
 
 /* This activity displays the predictions for a the current stop */
-public class StopViewActivity extends Activity {
+public class StopViewActivity extends RoboActivity {
+	
+	@InjectView(R.id.firstArrival) TextView firstArrival;
+	@InjectView(R.id.secondArrival) private TextView secondArrival;
+	@InjectView(R.id.thirdArrival) private TextView thirdArrival;
+	@InjectView(R.id.fourthArrival) private TextView fourthArrival;
+	@InjectView(R.id.stopTextView) private TextView stopTextView;
+	@InjectView(R.id.arrivalsDrawer) private SlidingDrawer arrivalDrawer;
+	@InjectView(R.id.backButton) private ImageView backButton;
 
-	private TextView firstArrival;
-	private TextView secondArrival;
-	private TextView thirdArrival;
-	private TextView fourthArrival;
-	private TextView stopTextView;
-	private SlidingDrawer arrivalDrawer;
-	private ImageView backButton;
+	@InjectView(R.id.colorbar) private View colorBar;
+	@InjectView(R.id.colorSeperator) private View colorSeperator;
+	@InjectView(R.id.routeviewprogressbar) private ProgressBar routeViewProgressBar;
+	@InjectView(R.id.refreshButton) private ImageView refreshButton;
+	@InjectView(R.id.drawerTextView) private TextView drawerHandleTextView;
+	@InjectView(R.id.arrivalList) private ListView arrivalList;
 
-	private View colorBar;
-	private View colorSeperator;
-
-	private ProgressBar routeViewProgressBar;
-	private ImageView refreshButton;
 	private String routeTag;
 	private String directionTitle;
 	private String directionTag;
 	private String stopTitle;
 	private String stopTag;
-	private TextView drawerHandleTextView;
-	private ListView arrivalList;
+
 	private ArrayList<Drawable> drawableList;
 	private ArrayList<String> tempArrivalsList;
 	private String[] arrivalsArray;
@@ -97,22 +99,6 @@ public class StopViewActivity extends Activity {
 
 		deadCellOnly = false;
 
-		// Setting Views
-		routeViewProgressBar = (ProgressBar) this
-				.findViewById(R.id.routeviewprogressbar);
-		refreshButton = (ImageView) this.findViewById(R.id.refreshButton);
-		firstArrival = (TextView) this.findViewById(R.id.firstArrival);
-		secondArrival = (TextView) this.findViewById(R.id.secondArrival);
-		thirdArrival = (TextView) this.findViewById(R.id.thirdArrival);
-		fourthArrival = (TextView) this.findViewById(R.id.fourthArrival);
-		stopTextView = (TextView) this.findViewById(R.id.stopTextView);
-		backButton = (ImageView) this.findViewById(R.id.backButton);
-		colorBar = (View) this.findViewById(R.id.colorbar);
-		colorSeperator = (View) this.findViewById(R.id.colorSeperator);
-		drawerHandleTextView = (TextView) this
-				.findViewById(R.id.drawerTextView);
-
-		arrivalList = (ListView) this.findViewById(R.id.arrivalList);
 		arrivalList.setBackgroundColor(getResources().getColor(R.color.black));
 
 		stopTextView.setText(stopTitle);

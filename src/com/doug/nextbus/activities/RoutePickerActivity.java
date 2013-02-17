@@ -1,6 +1,7 @@
 package com.doug.nextbus.activities;
 
-import android.app.Activity;
+import roboguice.activity.RoboActivity;
+import roboguice.inject.InjectView;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -29,17 +30,18 @@ import com.viewpagerindicator.TitlePageIndicator.IndicatorStyle;
 /*
  * The top level, main activity. It lets the users switch between routes.
  */
-public class RoutePickerActivity extends Activity implements
+public class RoutePickerActivity extends RoboActivity implements
 		OnSharedPreferenceChangeListener {
+
+	@InjectView(R.id.routepagerviewpager) private ViewPager pager;
+	@InjectView(R.id.mapButton) private ImageView mapButton;
+	@InjectView(R.id.routes) private TitlePageIndicator titleIndicator;
 
 	public static final String[] allRoutes;
 	private String[] currentRoutes;
 	private boolean onlyActiveRoutes;
-	private ViewPager pager;
 	private RoutePagerAdapter pagerAdapter;
 	private Context cxt;
-	private ImageView mapButton;
-	private TitlePageIndicator titleIndicator;
 
 	static {
 		allRoutes = new String[] { "red", "blue", "trolley", "green", "night",
@@ -66,11 +68,9 @@ public class RoutePickerActivity extends Activity implements
 
 		// Setup ViewGroup
 		pagerAdapter = new RoutePagerAdapter(currentRoutes, cxt);
-		pager = (ViewPager) findViewById(R.id.routepagerviewpager);
 		pager.setAdapter(pagerAdapter);
 
 		// Setup ViewGroup Indicator
-		titleIndicator = (TitlePageIndicator) findViewById(R.id.routes);
 		titleIndicator.setFooterIndicatorStyle(IndicatorStyle.Underline);
 		titleIndicator.setBackgroundColor(getResources().getColor(
 				R.color.subtitlecolor));
@@ -99,7 +99,6 @@ public class RoutePickerActivity extends Activity implements
 		});
 
 		// Button and event for switching to MapView
-		mapButton = (ImageView) findViewById(R.id.mapButton);
 		mapButton.setOnTouchListener(new OnTouchListener() {
 
 			public boolean onTouch(View arg0, MotionEvent event) {

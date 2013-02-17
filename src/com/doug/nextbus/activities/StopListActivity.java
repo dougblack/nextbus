@@ -1,6 +1,7 @@
 package com.doug.nextbus.activities;
 
-import android.app.Activity;
+import roboguice.activity.RoboActivity;
+import roboguice.inject.InjectView;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,12 +27,12 @@ import com.doug.nextbus.backend.DataResult.Route.Direction;
 import com.doug.nextbus.backend.DataResult.Route.Stop;
 
 /* This activity shows a list of stops. */
-public class StopListActivity extends Activity {
+public class StopListActivity extends RoboActivity {
 
-	private ListView stopList;
-	private TextView directionTextView;
-	private View colorBar;
-	private ImageView backButton;
+	@InjectView(R.id.stopListView) private ListView stopList;
+	@InjectView(R.id.directionTextView) private TextView directionTextView;
+	@InjectView(R.id.colorbar) private View colorBar;
+	@InjectView(R.id.directionBackButton) private ImageView backButton;
 
 	public static Intent createIntent(Context ctx, String routeTag,
 			String directionTitle) {
@@ -46,11 +47,6 @@ public class StopListActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.stop_list);
-
-		stopList = (ListView) findViewById(R.id.stopListView);
-		directionTextView = (TextView) findViewById(R.id.directionTextView);
-		backButton = (ImageView) findViewById(R.id.directionBackButton);
-		colorBar = (View) findViewById(R.id.colorbar);
 
 		Bundle extras = getIntent().getExtras();
 
