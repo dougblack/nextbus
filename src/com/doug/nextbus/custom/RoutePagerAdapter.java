@@ -24,13 +24,11 @@ import com.doug.nextbus.backend.DataResult.Route.Stop;
 public class RoutePagerAdapter extends PagerAdapter {
 
 	private String[] currentRoutes;
-	private Context ctx;
-	private int currPosition;
+	private final Context ctx;
 
 	public RoutePagerAdapter(String[] currentRoutes, Context cxt) {
 		this.currentRoutes = currentRoutes;
 		this.ctx = cxt;
-		currPosition = 0;
 	}
 
 	public void destroyItem(View container, int position, Object view) {
@@ -50,17 +48,12 @@ public class RoutePagerAdapter extends PagerAdapter {
 		}
 	}
 
-	public int getItemPosition() {
-		return currPosition;
-	}
-
 	/*
 	 * For each page, make a list view of available stops. Or, if there are
 	 * directions, make a list view of available directions. Then launch the
 	 * correct activity based on which item in the list view is selected.
 	 */
 	public Object instantiateItem(View container, int position) {
-		currPosition = position;
 
 		if (currentRoutes.length > 0) {
 			final int listPosition = position;
@@ -71,11 +64,12 @@ public class RoutePagerAdapter extends PagerAdapter {
 			final boolean thisRouteHasDirection = currRoute.direction.size() != 1;
 			if (thisRouteHasDirection) {
 				// If route has directions, populate list with them
-				itemListTemp = Data.getDirectionTitlesFromRoute(currRouteStr);
+				itemListTemp = currRoute.getDirectionTitles();
 			} else {
 				// Route doesn't have direction so list view contains stops
-				itemListTemp = Data.getStopTitlesFromRouteAndDir(currRouteStr,
-						currRoute.getDefaultDirection().title);
+				itemListTemp = currRoute.getStopTitles(currRoute
+						.getDefaultDirection().title);
+
 			}
 
 			final String[] itemList = itemListTemp;
@@ -102,8 +96,7 @@ public class RoutePagerAdapter extends PagerAdapter {
 						 * to StopViewActivity with correct extras.
 						 */
 						Direction defaultDir = currRoute.getDefaultDirection();
-						Stop stop = Data.getStopFromDefaultDir(currRouteStr,
-								position);
+						Stop stop = currRoute.getStopFromDefaultDirection(position);
 						Intent intent = StopViewActivity.createIntent(ctx,
 								currRouteStr, defaultDir, stop);
 
@@ -126,6 +119,11 @@ public class RoutePagerAdapter extends PagerAdapter {
 			((ViewPager) container).addView(noRoutes, 0);
 			return noRoutes;
 		}
+	}
+
+	/* Necessary code to force the view to update */
+	public int getItemPosition(Object object) {
+		return POSITION_NONE;
 	}
 
 	public boolean isViewFromObject(View view, Object object) {

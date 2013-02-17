@@ -37,12 +37,12 @@ public class Data {
 	private static Context context;
 	private static DataResult dataResult;
 	final private static HashMap<String, Route> hm;
-	final static String[] stringReturnType = {};
-	private static HashMap<String, HashSet<RouteAndDirection>> similar;
+	private static HashMap<String, HashSet<RouteAndDirection>> sharedStops;
 
+	final static String[] stringReturnType = {};
 	static {
 		hm = new HashMap<String, Route>();
-		similar = new HashMap<String, HashSet<RouteAndDirection>>();
+		sharedStops = new HashMap<String, HashSet<RouteAndDirection>>();
 	}
 
 	/** Reads the data into memory */
@@ -50,41 +50,6 @@ public class Data {
 		Data.context = context;
 		if (dataResult == null)
 			ReadData();
-	}
-
-	public static RouteAndDirection[] getAllRoutesWithStopTitle(
-			String stopTitle, String route, String directionTag) {
-		ArrayList<RouteAndDirection> al = new ArrayList<RouteAndDirection>();
-		Iterator<RouteAndDirection> iter = similar.get(stopTitle).iterator();
-		SharedPreferences prefs = PreferenceManager
-				.getDefaultSharedPreferences(Data.context);
-		boolean onlyActiveRoutes = prefs.getBoolean("showActiveRoutes", false);
-
-		String[] activeRoutes = RoutePickerActivity.allRoutes;
-		if (onlyActiveRoutes)
-			activeRoutes = APIController.getActiveRoutesList(Data.context);
-
-		while (iter.hasNext()) {
-			RouteAndDirection rad = iter.next();
-			if ((rad.route.tag.equals(route) && rad.direction.tag
-					.equals(directionTag))
-					|| !checkInArray(activeRoutes, rad.route.tag))
-				continue;
-			al.add(rad);
-
-		}
-
-		Collections.sort(al);
-		RouteAndDirection[] rads = {};
-		return al.toArray(rads);
-	}
-
-	public static boolean checkInArray(String[] activeRoutes, String val) {
-		for (String routes : activeRoutes) {
-			if (routes.equals(val))
-				return true;
-		}
-		return false;
 	}
 
 	public static void ReadData() {
@@ -96,126 +61,75 @@ public class Data {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		for (int i = 0; i < dataResult.route.size(); i++) {
-			for (int j = 0; j < dataResult.route.get(i).stop.size(); j++) {
-				Stop stop = dataResult.route.get(i).stop.get(j);
-				if (dataResult.route.get(i).stopTable == null)
-					dataResult.route.get(i).stopTable = new Hashtable<String, DataResult.Route.Stop>();
-				dataResult.route.get(i).stopTable.put(stop.tag, stop);
-			}
-
-			hm.put(dataResult.route.get(i).tag, dataResult.route.get(i));
-		}
 
 		for (Route route : dataResult.route) {
+			for (Stop stop : route.stop) {
+				if (route.stopTagTable == null)
+					route.stopTagTable = new Hashtable<String, DataResult.Route.Stop>();
+				route.stopTagTable.put(stop.tag, stop);
+			}
+			hm.put(route.tag, route);
+
 			for (Direction direction : route.direction)
 				for (PathStop pathStop : direction.stop) {
-					Stop stop = Data.getStopObjFromRouteAndStopTag(route.tag,
-							pathStop.tag);
 
-					HashSet<RouteAndDirection> hs = similar.get(stop.title) == null ? new HashSet<RouteAndDirection>()
-							: similar.get(stop.title);
+					Stop stop = route.getStop(pathStop.tag);
+
+					HashSet<RouteAndDirection> hs = sharedStops.get(stop.title) == null ? new HashSet<RouteAndDirection>()
+							: sharedStops.get(stop.title);
 					hs.add(new RouteAndDirection(route, direction, stop));
-					similar.put(stop.title, hs);
+					sharedStops.put(stop.title, hs);
 				}
+		}
+
+	}
+
+	public static RouteAndDirection[] getAllRouteAndDirsWithStopTitle(
+			String stopTitle, String route, String directionTag) {
+		ArrayList<RouteAndDirection> radsList = new ArrayList<RouteAndDirection>();
+
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(Data.context);
+		boolean onlyActiveRoutes = prefs.getBoolean("showActiveRoutes", false);
+
+		// Get the default list of routes and overwrite if active routes is true
+		String[] activeRoutes = RoutePickerActivity.allRoutes;
+		if (onlyActiveRoutes)
+			activeRoutes = APIController.getActiveRoutesList(Data.context);
+
+		/*
+		 * Iterate through route and direction if the rad matches the given
+		 * route/direction or is not in the activeRoutes the continue
+		 */
+		Iterator<RouteAndDirection> iter = sharedStops.get(stopTitle)
+				.iterator();
+		while (iter.hasNext()) {
+			RouteAndDirection rad = iter.next();
+			if ((rad.route.tag.equals(route) && rad.direction.tag
+					.equals(directionTag))
+					|| notInArray(activeRoutes, rad.route.tag))
+				continue;
+
+			radsList.add(rad);
 
 		}
 
+		// Sorting to put the reds, blues, etc together
+		Collections.sort(radsList);
+		RouteAndDirection[] rads = {};
+		return radsList.toArray(rads);
+	}
+
+	private static boolean notInArray(String[] activeRoutes, String val) {
+		for (String routes : activeRoutes) {
+			if (routes.equals(val))
+				return false;
+		}
+		return true;
 	}
 
 	public static Route getRoute(String route) {
 		return hm.get(route);
-	}
-
-	public static PathStop getPathStop(String route, String dir, int index) {
-		for (Direction direction : hm.get(route).direction) {
-			if (direction.title.equals(dir)) {
-				return direction.stop.get(index);
-			}
-		}
-
-		return null;
-	}
-
-	public static String[] getRouteTitlesFromStopTag(String stopTag) {
-		ArrayList<String> al = new ArrayList<String>();
-
-		for (Route currRoute : dataResult.route) {
-			for (Direction currDirection : currRoute.direction) {
-				for (PathStop currStop : currDirection.stop) {
-					if (currStop.tag.equals(stopTag))
-						al.add(currRoute.title);
-				}
-			}
-		}
-
-		return al.toArray(stringReturnType);
-
-	}
-
-	/** Returns the directions titles for a route */
-	public static String[] getDirectionTitlesFromRoute(String route) {
-		ArrayList<String> dirList = new ArrayList<String>();
-		for (int i = 0; i < hm.get(route).direction.size(); i++)
-			dirList.add(hm.get(route).direction.get(i).title);
-
-		return dirList.toArray(stringReturnType);
-	}
-
-	public static String[] getStopTitlesFromRouteAndDir(String route, String dir) {
-		Route curr_route = hm.get(route);
-		ArrayList<String> al = new ArrayList<String>();
-		for (int i = 0; i < curr_route.direction.size(); i++) {
-			if (curr_route.direction.get(i).title.equals(dir)) {
-				Direction currDirection = curr_route.direction.get(i);
-
-				for (int j = 0; j < currDirection.stop.size(); j++) {
-					PathStop pStop = currDirection.stop.get(j);
-					Stop stop = curr_route.stopTable.get(pStop.tag);
-					al.add(stop.title);
-				}
-			}
-		}
-
-		return al.toArray(stringReturnType);
-	}
-
-	public static String getStopTitleFromRouteAndStopTag(String route,
-			String stopTag) {
-		return hm.get(route).stopTable.get(stopTag).title;
-
-	}
-
-	public static Stop getStopObjFromRouteAndStopTag(String route,
-			String stopTag) {
-		return hm.get(route).stopTable.get(stopTag);
-	}
-
-	/** Gets direction tag from route and direction title */
-	public static String getDirTagFromRouteAndDir(String route, String direction) {
-		return getDirObjFromRouteAndDir(route, direction).tag;
-	}
-
-	public static Stop getStopFromDefaultDir(String route, int index) {
-		PathStop pStop = hm.get(route).direction.get(0).stop.get(index);
-		return getStopObjFromRouteAndStopTag(route, pStop.tag);
-	}
-
-	public static Direction getDirObjFromRouteAndDir(String route,
-			String direction) {
-		Route currRoute = hm.get(route);
-		for (Direction dir : currRoute.direction) {
-			if (dir.title.equals(direction))
-				return dir;
-		}
-		// if can't find anything, return default
-		return hm.get(route).getDefaultDirection();
-	}
-
-	public static Stop getStop(String route, String direction, int index) {
-		PathStop pStop = Data.getPathStop(route, direction, index);
-		return getStopObjFromRouteAndStopTag(route, pStop.tag);
-
 	}
 
 	public static int getColorFromRouteTag(String routeTag) {

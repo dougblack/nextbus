@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.doug.nextbus.R;
 import com.doug.nextbus.backend.Data;
+import com.doug.nextbus.backend.DataResult.Route;
 import com.doug.nextbus.backend.DataResult.Route.Direction;
 import com.doug.nextbus.backend.DataResult.Route.Stop;
 
@@ -57,9 +58,10 @@ public class StopListActivity extends Activity {
 			/* Pull route and direction for extras */
 			final String route = extras.getString("route");
 			final String direction = extras.getString("direction");
+
+			final Route currRoute = Data.getRoute(route);
+			final String[] stopTitles = currRoute.getStopTitles(direction);
 			directionTextView.setText(Data.capitalize(direction));
-			final String[] stopTitles = Data.getStopTitlesFromRouteAndDir(
-					route, direction);
 
 			setDirectionTextViewColor(Data.getColorFromRouteTag(route));
 
@@ -69,13 +71,12 @@ public class StopListActivity extends Activity {
 			stopList.setAdapter(new ArrayAdapter<String>(this,
 					android.R.layout.simple_list_item_1, stopTitles));
 
-			/* Handler for a stop cell. */
+			/* Handler for a stop cell event listener. */
 			stopList.setOnItemClickListener(new OnItemClickListener() {
 				public void onItemClick(AdapterView<?> parent, View view,
 						int position, long id) {
-					Direction dir = Data.getDirObjFromRouteAndDir(route,
-							direction);
-					Stop stop = Data.getStop(route, direction, position);
+					Direction dir = currRoute.getDirection(direction);
+					Stop stop = currRoute.getStop(direction, position);
 					Intent intent = StopViewActivity.createIntent(
 							getApplicationContext(), route, dir, stop);
 					startActivity(intent);
@@ -124,7 +125,7 @@ public class StopListActivity extends Activity {
 		}
 	}
 
-	/* Sets color of label at top of view */
+	/** Sets color of label at top of view */
 	public void setDirectionTextViewColor(int color) {
 		colorBar.setBackgroundColor(getResources().getColor(color));
 		directionTextView.setTextColor(getResources().getColor(color));

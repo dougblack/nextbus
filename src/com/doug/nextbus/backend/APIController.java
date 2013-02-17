@@ -124,8 +124,6 @@ public class APIController {
 	/**
 	 * This method returns the list of active routes by NextBus official
 	 * schedule.
-	 * 
-	 * @return active routes
 	 */
 	public static String[] getActiveRoutesList(Context context) {
 
@@ -181,7 +179,7 @@ public class APIController {
 
 	}
 
-	public static Reader getReaderFromURL(String target) throws Exception {
+	private static Reader getReaderFromURL(String target) throws Exception {
 		URL url = new URL(target);
 
 		URLConnection urlConnection = url.openConnection();
@@ -195,6 +193,7 @@ public class APIController {
 		return reader;
 	}
 
+	/** For Gson parsing */
 	private class PredictionResult {
 		ArrayList<String> predictions;
 	}

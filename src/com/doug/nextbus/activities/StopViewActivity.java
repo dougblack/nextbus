@@ -114,7 +114,7 @@ public class StopViewActivity extends Activity {
 
 		stopTextView.setText(stop);
 
-		rads = Data.getAllRoutesWithStopTitle(stop, route, directionTag);
+		rads = Data.getAllRouteAndDirsWithStopTitle(stop, route, directionTag);
 		tempArrivalsList = formatArrivals(rads);
 
 		drawableList = new ArrayList<Drawable>();

@@ -34,12 +34,13 @@ public class RoutePickerActivity extends Activity implements
 
 	private String[] currentRoutes;
 	public static final String[] allRoutes;
-	private boolean onlyActiveRoutes = false;
+	private boolean onlyActiveRoutes;
 	private ViewPager pager;
 	private RoutePagerAdapter pagerAdapter;
 	private ImageView mapButton;
 	private Context cxt;
 	private TitlePageIndicator titleIndicator;
+
 	static {
 		allRoutes = new String[] { "red", "blue", "trolley", "green", "night",
 				"emory" };
@@ -59,17 +60,16 @@ public class RoutePickerActivity extends Activity implements
 				.getDefaultSharedPreferences(this);
 		prefs.registerOnSharedPreferenceChangeListener(this);
 
+		// Updating available routes depending on preference
 		onlyActiveRoutes = prefs.getBoolean("showActiveRoutes", false);
 		updateCurrentRoutes();
 
-		mapButton = (ImageView) findViewById(R.id.mapButton);
-
-		/* Setup ViewGroup */
+		// Setup ViewGroup
 		pagerAdapter = new RoutePagerAdapter(currentRoutes, cxt);
 		pager = (ViewPager) findViewById(R.id.routepagerviewpager);
 		pager.setAdapter(pagerAdapter);
 
-		/* Setup ViewGroup Indicator */
+		// Setup ViewGroup Indicator
 		titleIndicator = (TitlePageIndicator) findViewById(R.id.routes);
 		titleIndicator.setFooterIndicatorStyle(IndicatorStyle.Underline);
 		titleIndicator.setBackgroundColor(getResources().getColor(
@@ -77,6 +77,7 @@ public class RoutePickerActivity extends Activity implements
 		titleIndicator.setFooterIndicatorHeight(10);
 		titleIndicator.setSelectedBold(false);
 
+		// Sets the size and color of the text
 		final float scale = getResources().getDisplayMetrics().density;
 		final float textSize = 20.0f;
 		float pixels = textSize * scale;
@@ -84,9 +85,8 @@ public class RoutePickerActivity extends Activity implements
 		titleIndicator.setViewPager(pager);
 		updateColor(0);
 
-		/* Listener for PageChanging. Basically the left and right swiping */
+		// Listener for PageChanging. Basically the left and right swiping
 		titleIndicator.setOnPageChangeListener(new OnPageChangeListener() {
-
 			public void onPageScrollStateChanged(int arg0) {
 			}
 
@@ -94,12 +94,12 @@ public class RoutePickerActivity extends Activity implements
 			}
 
 			public void onPageSelected(int position) {
-
 				updateColor(position);
 			}
 		});
 
-		/* Button for switching to MapView */
+		// Button and event for switching to MapView
+		mapButton = (ImageView) findViewById(R.id.mapButton);
 		mapButton.setOnTouchListener(new OnTouchListener() {
 
 			public boolean onTouch(View arg0, MotionEvent event) {
@@ -120,7 +120,7 @@ public class RoutePickerActivity extends Activity implements
 
 	}
 
-	/* Updates available routes depending on preference. */
+	/** Updates available routes depending on preference. */
 	private void updateCurrentRoutes() {
 		if (onlyActiveRoutes) {
 			currentRoutes = APIController.getActiveRoutesList(cxt);
@@ -135,16 +135,16 @@ public class RoutePickerActivity extends Activity implements
 		return true;
 	}
 
+	/** Updates text color depending on the position of view page */
 	private void updateColor(int position) {
 		int color = R.color.orange; // default color
-		if (currentRoutes.length > 0) // if there are active routess
+		if (currentRoutes.length > 0) // if there are active routes
 			color = Data.getColorFromRouteTag(currentRoutes[position]);
 
 		titleIndicator.setSelectedColor(getResources().getColor(color));
 		titleIndicator.setFooterColor(getResources().getColor(color));
 	}
 
-	/* Options menu handler. */
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
@@ -163,18 +163,21 @@ public class RoutePickerActivity extends Activity implements
 		}
 	}
 
-	/* Listener for changed preferences */
 	public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+		/*
+		 * Listener for changed preferences, need to update current route and
+		 * pager adapter
+		 */
 
 		if (key.equals("showActiveRoutes")) {
 			onlyActiveRoutes = prefs.getBoolean("showActiveRoutes", true);
 			updateCurrentRoutes();
 
 			pagerAdapter.updateCurrentRoutes(this.currentRoutes);
+			pager.setCurrentItem(0);
 			pagerAdapter.notifyDataSetChanged();
 			updateColor(0);
 		}
 
 	}
-
 }
