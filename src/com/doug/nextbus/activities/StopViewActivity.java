@@ -82,12 +82,15 @@ public class StopViewActivity extends Activity {
 		super.onCreate(savedInstance);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.stop_view);
+
+		/* Extras */
 		Bundle extras = getIntent().getExtras();
 		route = extras.getString("route");
 		direction = extras.getString("direction");
 		directionTag = extras.getString("directionTag");
 		stop = extras.getString("stop");
 		stopTag = extras.getString("stopTag");
+
 		deadCellOnly = false;
 		routeViewProgressBar = (ProgressBar) this
 				.findViewById(R.id.routeviewprogressbar);
@@ -161,14 +164,10 @@ public class StopViewActivity extends Activity {
 					int position, long id) {
 				if (!arrivals[0].equals("No other arrivals")) {
 					RouteAndDirection rad = rads[position];
-					Stop stop = Data.getStopObjFromRouteAndStopTag(
-							rad.route.tag, stopTag);
-
-					Intent intent2 = StopViewActivity.createIntent(
+					Intent intent = StopViewActivity.createIntent(
 							getApplicationContext(), rad.route.tag,
-							rad.direction, stop);
-
-					startActivity(intent2);
+							rad.direction, rad.stop);
+					startActivity(intent);
 				}
 			}
 		});
@@ -255,21 +254,12 @@ public class StopViewActivity extends Activity {
 
 	public void setViewColor(String route) {
 		int color = Data.getColorFromRouteTag(route);
-
 		stopTextView.setTextColor(getResources().getColor(color));
 		colorBar.setBackgroundColor(getResources().getColor(color));
 		colorSeperator.setBackgroundColor(getResources().getColor(color));
 	}
 
 	public void refresh(String route, String direction, String stopTag) {
-		if (route.equals("red")
-				&& (stopTag.equals("fitten_a") || stopTag.equals("fitten"))) {
-			stopTag = "fitten";
-
-		} else if (route.equals("blue")
-				&& (stopTag.equals("fitten_a") || stopTag.equals("fitten"))) {
-			stopTag = "fitten_a";
-		}
 		new loadPredictionData().execute(route, direction, stopTag);
 	}
 

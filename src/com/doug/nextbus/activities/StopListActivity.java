@@ -27,12 +27,8 @@ import com.doug.nextbus.backend.DataResult.Route.Stop;
 /* This activity shows a list of stops. */
 public class StopListActivity extends Activity {
 
-	private String[] stops;
-
 	private ListView stopList;
 	private TextView directionTextView;
-	private String route;
-	private String direction;
 	private View colorBar;
 	private ImageView backButton;
 
@@ -53,23 +49,25 @@ public class StopListActivity extends Activity {
 		stopList = (ListView) findViewById(R.id.stopListView);
 		directionTextView = (TextView) findViewById(R.id.directionTextView);
 		backButton = (ImageView) findViewById(R.id.directionBackButton);
-		Bundle extras = getIntent().getExtras();
-
 		colorBar = (View) findViewById(R.id.colorbar);
+
+		Bundle extras = getIntent().getExtras();
 
 		if (extras != null) {
 			/* Pull route and direction for extras */
-			route = extras.getString("route");
-			direction = extras.getString("direction");
+			final String route = extras.getString("route");
+			final String direction = extras.getString("direction");
 			directionTextView.setText(Data.capitalize(direction));
-			stops = Data.getStopTitlesFromRouteAndDir(route, direction);
+			final String[] stopTitles = Data.getStopTitlesFromRouteAndDir(
+					route, direction);
 
 			setDirectionTextViewColor(Data.getColorFromRouteTag(route));
+
 			Log.i("Info", "Showing list for route=" + route + " and direction="
 					+ direction);
 
 			stopList.setAdapter(new ArrayAdapter<String>(this,
-					android.R.layout.simple_list_item_1, stops));
+					android.R.layout.simple_list_item_1, stopTitles));
 
 			/* Handler for a stop cell. */
 			stopList.setOnItemClickListener(new OnItemClickListener() {

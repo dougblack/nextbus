@@ -32,11 +32,11 @@ public class RoutePickerActivity extends Activity implements
 		OnSharedPreferenceChangeListener {
 
 	private String[] currentRoutes;
-	private boolean onlyActiveRoutes = false;
-	private RoutePagerAdapter pagerAdapter;
-	private ViewPager pager;
-	private ImageView mapButton;
 	public static final String[] allRoutes;
+	private boolean onlyActiveRoutes = false;
+	private ViewPager pager;
+	private RoutePagerAdapter pagerAdapter;
+	private ImageView mapButton;
 	private Context cxt;
 
 	static {
@@ -132,13 +132,11 @@ public class RoutePickerActivity extends Activity implements
 
 	/* Updates available routes depending on preference. */
 	private void updateCurrentRoutes() {
-
 		if (onlyActiveRoutes) {
 			currentRoutes = APIController.getActiveRoutesList(cxt);
 		} else {
 			currentRoutes = allRoutes;
 		}
-
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) {

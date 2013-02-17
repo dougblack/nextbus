@@ -39,17 +39,17 @@ public class Data {
 	final private static HashMap<String, Route> hm;
 	final static String[] stringReturnType = {};
 	private static HashMap<String, HashSet<RouteAndDirection>> similar;
+
 	static {
 		hm = new HashMap<String, Route>();
 		similar = new HashMap<String, HashSet<RouteAndDirection>>();
-
 	}
 
 	/** Reads the data into memory */
 	public static void setConfigData(Context context) {
 		Data.context = context;
-		ReadData();
-
+		if (dataResult == null)
+			ReadData();
 	}
 
 	public static RouteAndDirection[] getAllRoutesWithStopTitle(
@@ -58,8 +58,8 @@ public class Data {
 		Iterator<RouteAndDirection> iter = similar.get(stopTitle).iterator();
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(Data.context);
-
 		boolean onlyActiveRoutes = prefs.getBoolean("showActiveRoutes", false);
+
 		String[] activeRoutes = RoutePickerActivity.allRoutes;
 		if (onlyActiveRoutes)
 			activeRoutes = APIController.getActiveRoutesList(Data.context);
@@ -112,17 +112,14 @@ public class Data {
 				for (PathStop pathStop : direction.stop) {
 					Stop stop = Data.getStopObjFromRouteAndStopTag(route.tag,
 							pathStop.tag);
-					if (stop == null) {
-						System.out.println("test");
-					}
+
 					HashSet<RouteAndDirection> hs = similar.get(stop.title) == null ? new HashSet<RouteAndDirection>()
 							: similar.get(stop.title);
-					hs.add(new RouteAndDirection(route, direction));
+					hs.add(new RouteAndDirection(route, direction, stop));
 					similar.put(stop.title, hs);
 				}
 
 		}
-		System.out.println("temp");
 
 	}
 
@@ -148,7 +145,6 @@ public class Data {
 				for (PathStop currStop : currDirection.stop) {
 					if (currStop.tag.equals(stopTag))
 						al.add(currRoute.title);
-
 				}
 			}
 		}
@@ -193,7 +189,6 @@ public class Data {
 	public static Stop getStopObjFromRouteAndStopTag(String route,
 			String stopTag) {
 		return hm.get(route).stopTable.get(stopTag);
-
 	}
 
 	/** Gets direction tag from route and direction title */

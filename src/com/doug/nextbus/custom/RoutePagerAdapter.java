@@ -23,11 +23,10 @@ import com.doug.nextbus.backend.DataResult.Route.Stop;
 /* The adapter for the swiping between route pages for the RoutePickerActivity */
 public class RoutePagerAdapter extends PagerAdapter {
 
-	String[] currentRoutes;
-	Context ctx;
+	private String[] currentRoutes;
+	private Context ctx;
 
 	public RoutePagerAdapter(String[] currentRoutes, Context cxt) {
-		super();
 		this.currentRoutes = currentRoutes;
 		this.ctx = cxt;
 	}
