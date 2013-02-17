@@ -3,6 +3,7 @@ package com.doug.nextbus.activities;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -29,6 +30,8 @@ import android.widget.TextView;
 import com.doug.nextbus.R;
 import com.doug.nextbus.backend.APIController;
 import com.doug.nextbus.backend.Data;
+import com.doug.nextbus.backend.DataResult.Route.Direction;
+import com.doug.nextbus.backend.DataResult.Route.Stop;
 import com.doug.nextbus.custom.RainbowArrayAdapter;
 
 /* This activity displays the predictions for a the current stop */
@@ -59,6 +62,18 @@ public class StopViewActivity extends Activity {
 	private String[] arrivals;
 	private long start;
 	private boolean deadCellOnly;
+
+	public static Intent createIntent(Context ctx, String route,
+			Direction direction, Stop stop) {
+		Intent intent = new Intent(ctx, StopViewActivity.class);
+		intent.putExtra("route", route);
+		intent.putExtra("direction", direction.title);
+		intent.putExtra("directionTag", direction.tag);
+		intent.putExtra("stop", stop.title);
+		intent.putExtra("stopTag", stop.tag);
+		return intent;
+
+	}
 
 	public void onCreate(Bundle savedInstance) {
 

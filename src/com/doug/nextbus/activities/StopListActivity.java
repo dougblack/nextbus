@@ -1,6 +1,7 @@
 package com.doug.nextbus.activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,7 +21,8 @@ import android.widget.TextView;
 
 import com.doug.nextbus.R;
 import com.doug.nextbus.backend.Data;
-import com.doug.nextbus.backend.DataResult.Route.PathStop;
+import com.doug.nextbus.backend.DataResult.Route.Direction;
+import com.doug.nextbus.backend.DataResult.Route.Stop;
 
 /* This activity shows a list of stops. */
 public class StopListActivity extends Activity {
@@ -33,6 +35,14 @@ public class StopListActivity extends Activity {
 	private String direction;
 	private View colorBar;
 	private ImageView backButton;
+
+	public static Intent createIntent(Context ctx, String route,
+			String direction) {
+		Intent intent = new Intent(ctx, StopListActivity.class);
+		intent.putExtra("route", route);
+		intent.putExtra("direction", direction);
+		return intent;
+	}
 
 	public void onCreate(Bundle savedInstanceState) {
 
@@ -63,21 +73,13 @@ public class StopListActivity extends Activity {
 
 			/* Handler for a stop cell. */
 			stopList.setOnItemClickListener(new OnItemClickListener() {
-
 				public void onItemClick(AdapterView<?> parent, View view,
 						int position, long id) {
-					PathStop pStop = Data.getPathStop(route,
-							direction, position);
-					Intent intent = new Intent(getApplicationContext(),
-							StopViewActivity.class);
-					intent.putExtra("direction", direction);
-					intent.putExtra("directionTag",
-							Data.getDirTagFromRouteAndDir(route, direction));
-
-					intent.putExtra("stopTag", pStop.tag);
-					intent.putExtra("route", route);
-					intent.putExtra("stop", Data
-							.getStopTitleFromRouteAndStopTag(route, pStop.tag));
+					Direction dir = Data.getDirObjFromRouteAndDir(route,
+							direction);
+					Stop stop = Data.getStop(route, direction, position);
+					Intent intent = StopViewActivity.createIntent(
+							getApplicationContext(), route, dir, stop);
 
 					startActivity(intent);
 				}
@@ -127,7 +129,6 @@ public class StopListActivity extends Activity {
 
 	/* Sets color of label at top of view */
 	public void setDirectionTextViewColor(int color) {
-
 		colorBar.setBackgroundColor(getResources().getColor(color));
 		directionTextView.setTextColor(getResources().getColor(color));
 	}

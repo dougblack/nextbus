@@ -127,17 +127,40 @@ public class Data {
 	public static String getStopTitleFromRouteAndStopTag(String route,
 			String stopTag) {
 		return hm.get(route).stopTable.get(stopTag).title;
-	
+
+	}
+
+	public static Stop getStopObjFromRouteAndStopTag(String route,
+			String stopTag) {
+		return hm.get(route).stopTable.get(stopTag);
+
 	}
 
 	/** Gets direction tag from route and direction title */
 	public static String getDirTagFromRouteAndDir(String route, String direction) {
+		return getDirObjFromRouteAndDir(route, direction).tag;
+	}
+
+	public static Stop getStopFromDefaultDir(String route, int index) {
+		PathStop pStop = hm.get(route).direction.get(0).stop.get(index);
+		return getStopObjFromRouteAndStopTag(route, pStop.tag);
+	}
+
+	public static Direction getDirObjFromRouteAndDir(String route,
+			String direction) {
 		Route currRoute = hm.get(route);
 		for (Direction dir : currRoute.direction) {
 			if (dir.title.equals(direction))
-				return dir.tag;
+				return dir;
 		}
-		return "Not Found";
+		// if can't find anything, return default
+		return hm.get(route).getDefaultDirection();
+	}
+
+	public static Stop getStop(String route, String direction, int index) {
+		PathStop pStop = Data.getPathStop(route, direction, index);
+		return getStopObjFromRouteAndStopTag(route, pStop.tag);
+
 	}
 
 	public static int getColorFromRouteTag(String routeTag) {
@@ -181,9 +204,9 @@ public class Data {
 
 	/* Reads the path data for a given route */
 	public static JSONArray getRoutePathData(String route) {
-	
+
 		InputStream is = null;
-	
+
 		if (route.equals("red")) {
 			is = (InputStream) context.getResources().openRawResource(
 					R.raw.redroute);
@@ -207,12 +230,12 @@ public class Data {
 			while (line != null) {
 				lines.append(line);
 				line = br.readLine();
-	
+
 			}
 		} catch (IOException ie) {
 			Log.e("ERROR", "Failed to parse file.");
 		}
-	
+
 		try {
 			routeData = new JSONObject(lines.toString());
 			routePathData = routeData.getJSONObject("body")
@@ -220,9 +243,9 @@ public class Data {
 		} catch (JSONException e) {
 			Log.e("ERROR", "Failed to make into JSON.");
 		}
-	
+
 		return routePathData;
-	
+
 	}
 
 	/* Make ArrayList of integers into an int array */

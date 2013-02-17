@@ -132,6 +132,7 @@ public class RoutePickerActivity extends Activity implements
 
 	/* Updates available routes depending on preference. */
 	private void updateCurrentRoutes() {
+		
 		if (onlyActiveRoutes) {
 			currentRoutes = APIController.getActiveRoutesList(cxt);
 		} else {

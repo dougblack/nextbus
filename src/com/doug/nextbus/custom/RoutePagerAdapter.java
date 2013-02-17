@@ -17,17 +17,19 @@ import com.doug.nextbus.activities.StopListActivity;
 import com.doug.nextbus.activities.StopViewActivity;
 import com.doug.nextbus.backend.Data;
 import com.doug.nextbus.backend.DataResult.Route;
+import com.doug.nextbus.backend.DataResult.Route.Direction;
+import com.doug.nextbus.backend.DataResult.Route.Stop;
 
 /* The adapter for the swiping between route pages for the RoutePickerActivity */
 public class RoutePagerAdapter extends PagerAdapter {
 
 	String[] currentRoutes;
-	Context cxt;
+	Context ctx;
 
 	public RoutePagerAdapter(String[] currentRoutes, Context cxt) {
 		super();
 		this.currentRoutes = currentRoutes;
-		this.cxt = cxt;
+		this.ctx = cxt;
 	}
 
 	public void destroyItem(View container, int position, Object view) {
@@ -76,8 +78,8 @@ public class RoutePagerAdapter extends PagerAdapter {
 
 			final String[] itemList = itemListTemp;
 
-			ListView stopList = new ListView(cxt);
-			stopList.setAdapter(new ArrayAdapter<String>(cxt,
+			ListView stopList = new ListView(ctx);
+			stopList.setAdapter(new ArrayAdapter<String>(ctx,
 					android.R.layout.simple_list_item_1, itemList));
 			stopList.setOnItemClickListener(new OnItemClickListener() {
 
@@ -88,27 +90,21 @@ public class RoutePagerAdapter extends PagerAdapter {
 						 * Route has direction so items have to point to
 						 * StopListActivity with correct extras.
 						 */
-						Intent intent = new Intent(cxt.getApplicationContext(),
-								StopListActivity.class);
-						intent.putExtra("route", currRouteStr);
-						intent.putExtra("direction", itemList[position]);
-						cxt.startActivity(intent);
+						Intent intent = StopListActivity.createIntent(ctx,
+								currRouteStr, itemList[position]);
+						ctx.startActivity(intent);
 					} else {
 						/*
 						 * Route doesn't have direction so items have to point
 						 * to StopViewActivity with correct extras.
 						 */
-						Intent intent = new Intent(cxt.getApplicationContext(),
-								StopViewActivity.class);
-						intent.putExtra("route", currRouteStr);
-						intent.putExtra("direction",
-								currRoute.getDefaultDirection().title);
-						intent.putExtra("directionTag",
-								currRoute.getDefaultDirection().tag);
-						intent.putExtra("stop", itemList[position]);
-						intent.putExtra("stopTag",
-								currRoute.stop.get(position).tag);
-						cxt.startActivity(intent);
+						Direction defaultDir = currRoute.getDefaultDirection();
+						Stop stop = Data.getStopFromDefaultDir(currRouteStr,
+								position);
+						Intent intent = StopViewActivity.createIntent(ctx,
+								currRouteStr, defaultDir, stop);
+
+						ctx.startActivity(intent);
 					}
 				}
 
@@ -118,12 +114,12 @@ public class RoutePagerAdapter extends PagerAdapter {
 
 			return stopList;
 		} else {
-			TextView noRoutes = new TextView(cxt);
+			TextView noRoutes = new TextView(ctx);
 			noRoutes.setText("No active routes");
 			noRoutes.setGravity(Gravity.CENTER);
 			noRoutes.setTextSize(40);
 			noRoutes.setTypeface(null, 1);
-			noRoutes.setTextColor(cxt.getResources().getColor(R.color.white));
+			noRoutes.setTextColor(ctx.getResources().getColor(R.color.white));
 			((ViewPager) container).addView(noRoutes, 0);
 			return noRoutes;
 		}
