@@ -18,13 +18,16 @@ public class RainbowArrayAdapter extends ArrayAdapter<String> {
 	ArrayList<Drawable> drawableList;
 	Context context;
 	boolean deadCellOnly;
-	
-	public RainbowArrayAdapter(Context context, int textViewResourceId, String[] data, ArrayList<Drawable> cellDrawables, boolean deadCellOnly) {
+
+	public RainbowArrayAdapter(Context context, int textViewResourceId,
+			String[] data, ArrayList<Drawable> cellDrawables,
+			boolean deadCellOnly) {
 		super(context, textViewResourceId, data);
 		this.context = context;
 		drawableList = cellDrawables;
 		this.deadCellOnly = deadCellOnly;
 	}
+
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		TextView view = (TextView) super.getView(position, convertView, parent);
@@ -35,7 +38,5 @@ public class RainbowArrayAdapter extends ArrayAdapter<String> {
 		}
 		return view;
 	}
-	
-	
-	
+
 }

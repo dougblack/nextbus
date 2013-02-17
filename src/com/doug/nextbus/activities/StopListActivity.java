@@ -52,7 +52,7 @@ public class StopListActivity extends Activity {
 			route = extras.getString("route");
 			direction = extras.getString("direction");
 			directionTextView.setText(Data.capitalize(direction));
-			stops = Data.getStopTitlesForRouteAndDir(route, direction);
+			stops = Data.getStopTitlesFromRouteAndDir(route, direction);
 
 			setDirectionTextViewColor(Data.getColorFromRouteTag(route));
 			Log.i("Info", "Showing list for route=" + route + " and direction="
@@ -66,13 +66,13 @@ public class StopListActivity extends Activity {
 
 				public void onItemClick(AdapterView<?> parent, View view,
 						int position, long id) {
-					PathStop pStop = Data.getPathStopForDirandIndex(route,
+					PathStop pStop = Data.getPathStop(route,
 							direction, position);
 					Intent intent = new Intent(getApplicationContext(),
 							StopViewActivity.class);
 					intent.putExtra("direction", direction);
 					intent.putExtra("directionTag",
-							Data.getDirectionTag(route, direction));
+							Data.getDirTagFromRouteAndDir(route, direction));
 
 					intent.putExtra("stopTag", pStop.tag);
 					intent.putExtra("route", route);
