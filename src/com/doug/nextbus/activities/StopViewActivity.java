@@ -59,8 +59,8 @@ public class StopViewActivity extends Activity {
 	private TextView drawerHandleTextView;
 	private ListView arrivalList;
 	private ArrayList<Drawable> drawableList;
-	private ArrayList<String> arrivalsList;
-	private String[] arrivals;
+	private ArrayList<String> tempArrivalsList;
+	private String[] arrivalsArray;
 	private long start;
 	private boolean deadCellOnly;
 	private RouteAndDirection[] rads;
@@ -104,24 +104,23 @@ public class StopViewActivity extends Activity {
 		fourthArrival = (TextView) this.findViewById(R.id.fourthArrival);
 		stopTextView = (TextView) this.findViewById(R.id.stopTextView);
 		backButton = (ImageView) this.findViewById(R.id.backButton);
-
 		colorBar = (View) this.findViewById(R.id.colorbar);
 		colorSeperator = (View) this.findViewById(R.id.colorSeperator);
-
 		drawerHandleTextView = (TextView) this
 				.findViewById(R.id.drawerTextView);
+
 		arrivalList = (ListView) this.findViewById(R.id.arrivalList);
 		arrivalList.setBackgroundColor(getResources().getColor(R.color.black));
 
-		rads = Data.getAllRoutesWithStopTitle(stop, route, directionTag);
+		stopTextView.setText(stop);
 
-		arrivalsList = formatArrivals(rads);
+		rads = Data.getAllRoutesWithStopTitle(stop, route, directionTag);
+		tempArrivalsList = formatArrivals(rads);
 
 		drawableList = new ArrayList<Drawable>();
-		if (arrivalsList.size() <= 0) {
-
+		if (tempArrivalsList.size() == 0) {
 			drawableList.add(getResources().getDrawable(R.drawable.deadcell));
-			arrivalsList.add("No other arrivals");
+			tempArrivalsList.add("No other arrivals");
 			deadCellOnly = true;
 		} else {
 
@@ -151,10 +150,10 @@ public class StopViewActivity extends Activity {
 			}
 		}
 
-		arrivals = Data.convertToStringArray(arrivalsList);
+		arrivalsArray = Data.convertToStringArray(tempArrivalsList);
 
 		arrivalList.setAdapter(new RainbowArrayAdapter(getApplicationContext(),
-				R.layout.customarrivallist, arrivals, drawableList,
+				R.layout.arrival_list, arrivalsArray, drawableList,
 				deadCellOnly));
 
 		/*
@@ -164,7 +163,7 @@ public class StopViewActivity extends Activity {
 		arrivalList.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				if (!arrivals[0].equals("No other arrivals")) {
+				if (!arrivalsArray[0].equals("No other arrivals")) {
 					RouteAndDirection rad = rads[position];
 					Intent intent = StopViewActivity.createIntent(
 							getApplicationContext(), rad.route.tag,
@@ -173,7 +172,8 @@ public class StopViewActivity extends Activity {
 				}
 			}
 		});
-
+		
+		/* Event Listeners */
 		backButton.setOnTouchListener(new OnTouchListener() {
 			public boolean onTouch(View arg0, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -188,8 +188,6 @@ public class StopViewActivity extends Activity {
 				return true;
 			}
 		});
-
-		stopTextView.setText(stop);
 
 		refreshButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -208,7 +206,6 @@ public class StopViewActivity extends Activity {
 		arrivalDrawer.setOnDrawerCloseListener(new OnDrawerCloseListener() {
 			public void onDrawerClosed() {
 				drawerHandleTextView.setText("OTHER ROUTES");
-				drawerHandleTextView.postInvalidate();
 			}
 		});
 
@@ -223,7 +220,7 @@ public class StopViewActivity extends Activity {
 
 	}
 
-	public ArrayList<String> formatArrivals(RouteAndDirection[] rads) {
+	private ArrayList<String> formatArrivals(RouteAndDirection[] rads) {
 		ArrayList<String> radsList = new ArrayList<String>();
 		for (RouteAndDirection rad : rads)
 			radsList.add(rad.toString());
@@ -237,7 +234,6 @@ public class StopViewActivity extends Activity {
 	}
 
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle item selection
 		switch (item.getItemId()) {
 		case R.id.aboutmenusitem:
 			Intent aboutActivity = new Intent(getApplicationContext(),
@@ -254,14 +250,16 @@ public class StopViewActivity extends Activity {
 		}
 	}
 
-	public void setViewColor(String route) {
+	/* Set color of text with respect to route */
+	private void setViewColor(String route) {
 		int color = Data.getColorFromRouteTag(route);
 		stopTextView.setTextColor(getResources().getColor(color));
 		colorBar.setBackgroundColor(getResources().getColor(color));
 		colorSeperator.setBackgroundColor(getResources().getColor(color));
 	}
 
-	public void refresh(String route, String direction, String stopTag) {
+	/* Gets the latest prediction data */
+	private void refresh(String route, String direction, String stopTag) {
 		new loadPredictionData().execute(route, direction, stopTag);
 	}
 

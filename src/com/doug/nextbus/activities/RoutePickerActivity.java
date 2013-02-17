@@ -40,7 +40,6 @@ public class RoutePickerActivity extends Activity implements
 	private ImageView mapButton;
 	private Context cxt;
 	private TitlePageIndicator titleIndicator;
-	private int position = 0;
 	static {
 		allRoutes = new String[] { "red", "blue", "trolley", "green", "night",
 				"emory" };

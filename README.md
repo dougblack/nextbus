@@ -8,9 +8,13 @@ Vidhur's Planned Changes
 - Removed same route for "other route" popup. [Done]
 - Added support for Emory route [Done, needs verification]
 - Fix support for stops that have different tags for different routes,
-but are the same. (Like fitten_a for blue and fitten for red) [Exploring options]
+but are the same. (Like fitten_a for blue and fitten for red) [Done]
 - Update the JSON data [work in progress]
 - Change from native JSON parser to GSON [Done]
+
+==========
+Random Notes for Documentation
+- Since Heroku puts dynos to sleep when they become inactive and waking them up is a 10 second process, on the main page load a wake up request is made to the server.
 
 ==========
 An Android client for the Georgia Tech Nextbus stop service.
