@@ -80,7 +80,6 @@ public class StopListActivity extends Activity {
 					Stop stop = Data.getStop(route, direction, position);
 					Intent intent = StopViewActivity.createIntent(
 							getApplicationContext(), route, dir, stop);
-
 					startActivity(intent);
 				}
 

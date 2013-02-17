@@ -551,7 +551,7 @@
             "direction": [
                 {
                     "tag": "tep",
-                    "title": "to TEP",
+                    "title": "To TEP",
                     "useForUI": "true",
                     "stop": [
                         {
@@ -567,7 +567,7 @@
                 },
                 {
                     "tag": "hub",
-                    "title": "Transit Hub",
+                    "title": "To Transit Hub",
                     "useForUI": "true",
                     "stop": [
                         {
@@ -601,7 +601,7 @@
                 },
                 {
                     "tag": "gr_to14th",
-                    "title": "to 14th Street",
+                    "title": "To 14th Street",
                     "useForUI": "true",
                     "stop": [
                         {
@@ -839,7 +839,7 @@
                 },
                 {
                     "tag": "hub",
-                    "title": "Transit Hub",
+                    "title": "To Transit Hub",
                     "useForUI": "true",
                     "stop": [
                         {
@@ -994,6 +994,13 @@
                     "stopid": "0022"
                 },
                 {
+                    "tag": "fitten_a",
+                    "title": "Fitten Hall",
+                    "lat": "33.7782737",
+                    "lon": "-84.4041907",
+                    "stopid": "0022"
+                },                
+                {
                     "tag": "8thhemp",
                     "title": "8th St & Hemphill Ave",
                     "lat": "33.7796305",
@@ -1043,8 +1050,8 @@
                     "stopid": "0038"
                 },
                 {
-                    "tag": "Clough",
-                    "title": "Clough",
+                    "tag": "clough",
+                    "title": "Clough Commons",
                     "lat": "33.7755678",
                     "lon": "-84.4024904",
                     "stopid": "0088"
@@ -1067,7 +1074,7 @@
             "direction": [
                 {
                     "tag": "clough",
-                    "title": "Clough",
+                    "title": "To Clough",
                     "useForUI": "true",
                     "stop": [
                         {
@@ -1089,7 +1096,7 @@
                 },
                 {
                     "tag": "fitten",
-                    "title": "Fitten Hall",
+                    "title": "To Fitten Hall",
                     "useForUI": "true",
                     "stop": [
                         {
@@ -1108,7 +1115,7 @@
                             "tag": "765femrt"
                         },
                         {
-                            "tag": "fitten"
+                            "tag": "fitten_a"
                         }
                     ]
                 }

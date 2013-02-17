@@ -32,6 +32,7 @@ import com.doug.nextbus.backend.APIController;
 import com.doug.nextbus.backend.Data;
 import com.doug.nextbus.backend.DataResult.Route.Direction;
 import com.doug.nextbus.backend.DataResult.Route.Stop;
+import com.doug.nextbus.backend.RouteAndDirection;
 import com.doug.nextbus.custom.RainbowArrayAdapter;
 
 /* This activity displays the predictions for a the current stop */
@@ -62,6 +63,7 @@ public class StopViewActivity extends Activity {
 	private String[] arrivals;
 	private long start;
 	private boolean deadCellOnly;
+	private RouteAndDirection[] rads;
 
 	public static Intent createIntent(Context ctx, String route,
 			Direction direction, Stop stop) {
@@ -106,40 +108,37 @@ public class StopViewActivity extends Activity {
 		arrivalList = (ListView) this.findViewById(R.id.arrivalList);
 		arrivalList.setBackgroundColor(getResources().getColor(R.color.black));
 
-		arrivalsList = new ArrayList<String>();
-		// Data.getAllRoutesForStop(stoptag, route);
-		ArrayList<String> arrivalsTextList = new ArrayList<String>();
+		rads = Data.getAllRoutesWithStopTitle(stop, route, directionTag);
 
-		for (String route : arrivalsList) {
-			arrivalsTextList.add(Data.capitalize(route));
-		}
+		arrivalsList = formatArrivals(rads);
 
 		drawableList = new ArrayList<Drawable>();
 		if (arrivalsList.size() <= 0) {
+
 			drawableList.add(getResources().getDrawable(R.drawable.deadcell));
-			arrivalsTextList.add("No other arrivals");
+			arrivalsList.add("No other arrivals");
 			deadCellOnly = true;
 		} else {
 
-			for (String route : arrivalsList) {
+			for (RouteAndDirection rad : rads) {
 				Drawable cellDrawable = null;
 
-				if (route.equals("red")) {
+				if (rad.route.tag.equals("red")) {
 					cellDrawable = getResources().getDrawable(
 							R.drawable.redcell);
-				} else if (route.equals("blue")) {
+				} else if (rad.route.tag.equals("blue")) {
 					cellDrawable = getResources().getDrawable(
 							R.drawable.bluecell);
-				} else if (route.equals("trolley")) {
+				} else if (rad.route.tag.equals("trolley")) {
 					cellDrawable = getResources().getDrawable(
 							R.drawable.yellowcell);
-				} else if (route.equals("green")) {
+				} else if (rad.route.tag.equals("green")) {
 					cellDrawable = getResources().getDrawable(
 							R.drawable.greencell);
-				} else if (route.equals("night")) {
+				} else if (rad.route.tag.equals("night")) {
 					cellDrawable = getResources().getDrawable(
 							R.drawable.nightcell);
-				} else if (route.equals("emory")) {
+				} else if (rad.route.tag.equals("emory")) {
 					cellDrawable = getResources().getDrawable(
 							R.drawable.pinkcell);
 				}
@@ -147,7 +146,7 @@ public class StopViewActivity extends Activity {
 			}
 		}
 
-		arrivals = Data.convertToStringArray(arrivalsTextList);
+		arrivals = Data.convertToStringArray(arrivalsList);
 
 		arrivalList.setAdapter(new RainbowArrayAdapter(getApplicationContext(),
 				R.layout.customarrivallist, arrivals, drawableList,
@@ -161,12 +160,15 @@ public class StopViewActivity extends Activity {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				if (!arrivals[0].equals("No other arrivals")) {
-					Intent intent = new Intent(getApplicationContext(),
-							StopViewActivity.class);
-					intent.putExtra("stopTag", stopTag);
-					intent.putExtra("route", arrivalsList.get(position));
-					intent.putExtra("stop", stop);
-					startActivity(intent);
+					RouteAndDirection rad = rads[position];
+					Stop stop = Data.getStopObjFromRouteAndStopTag(
+							rad.route.tag, stopTag);
+
+					Intent intent2 = StopViewActivity.createIntent(
+							getApplicationContext(), rad.route.tag,
+							rad.direction, stop);
+
+					startActivity(intent2);
 				}
 			}
 		});
@@ -218,6 +220,13 @@ public class StopViewActivity extends Activity {
 
 		refresh(route, directionTag, stopTag);
 
+	}
+
+	public ArrayList<String> formatArrivals(RouteAndDirection[] rADs) {
+		ArrayList<String> al = new ArrayList<String>();
+		for (RouteAndDirection rad : rADs)
+			al.add(rad.toString());
+		return al;
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) {

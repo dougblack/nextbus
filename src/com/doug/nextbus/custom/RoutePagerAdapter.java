@@ -90,6 +90,7 @@ public class RoutePagerAdapter extends PagerAdapter {
 						 * Route has direction so items have to point to
 						 * StopListActivity with correct extras.
 						 */
+
 						Intent intent = StopListActivity.createIntent(ctx,
 								currRouteStr, itemList[position]);
 						ctx.startActivity(intent);

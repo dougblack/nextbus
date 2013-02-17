@@ -6,7 +6,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -17,9 +19,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.doug.nextbus.R;
+import com.doug.nextbus.activities.RoutePickerActivity;
 import com.doug.nextbus.backend.DataResult.Route;
 import com.doug.nextbus.backend.DataResult.Route.Direction;
 import com.doug.nextbus.backend.DataResult.Route.PathStop;
@@ -33,15 +38,53 @@ public class Data {
 	private static DataResult dataResult;
 	final private static HashMap<String, Route> hm;
 	final static String[] stringReturnType = {};
-
+	private static HashMap<String, HashSet<RouteAndDirection>> similar;
 	static {
 		hm = new HashMap<String, Route>();
+		similar = new HashMap<String, HashSet<RouteAndDirection>>();
+
 	}
 
 	/** Reads the data into memory */
 	public static void setConfigData(Context context) {
 		Data.context = context;
 		ReadData();
+
+	}
+
+	public static RouteAndDirection[] getAllRoutesWithStopTitle(
+			String stopTitle, String route, String directionTag) {
+		ArrayList<RouteAndDirection> al = new ArrayList<RouteAndDirection>();
+		Iterator<RouteAndDirection> iter = similar.get(stopTitle).iterator();
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(Data.context);
+
+		boolean onlyActiveRoutes = prefs.getBoolean("showActiveRoutes", false);
+		String[] activeRoutes = RoutePickerActivity.allRoutes;
+		if (onlyActiveRoutes)
+			activeRoutes = APIController.getActiveRoutesList(Data.context);
+
+		while (iter.hasNext()) {
+			RouteAndDirection rad = iter.next();
+			if ((rad.route.tag.equals(route) && rad.direction.tag
+					.equals(directionTag))
+					|| !checkInArray(activeRoutes, rad.route.tag))
+				continue;
+			al.add(rad);
+
+		}
+
+		Collections.sort(al);
+		RouteAndDirection[] rads = {};
+		return al.toArray(rads);
+	}
+
+	public static boolean checkInArray(String[] activeRoutes, String val) {
+		for (String routes : activeRoutes) {
+			if (routes.equals(val))
+				return true;
+		}
+		return false;
 	}
 
 	public static void ReadData() {
@@ -63,6 +106,23 @@ public class Data {
 
 			hm.put(dataResult.route.get(i).tag, dataResult.route.get(i));
 		}
+
+		for (Route route : dataResult.route) {
+			for (Direction direction : route.direction)
+				for (PathStop pathStop : direction.stop) {
+					Stop stop = Data.getStopObjFromRouteAndStopTag(route.tag,
+							pathStop.tag);
+					if (stop == null) {
+						System.out.println("test");
+					}
+					HashSet<RouteAndDirection> hs = similar.get(stop.title) == null ? new HashSet<RouteAndDirection>()
+							: similar.get(stop.title);
+					hs.add(new RouteAndDirection(route, direction));
+					similar.put(stop.title, hs);
+				}
+
+		}
+		System.out.println("temp");
 
 	}
 

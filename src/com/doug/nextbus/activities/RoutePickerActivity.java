@@ -36,7 +36,7 @@ public class RoutePickerActivity extends Activity implements
 	private RoutePagerAdapter pagerAdapter;
 	private ViewPager pager;
 	private ImageView mapButton;
-	private static final String[] allRoutes;
+	public static final String[] allRoutes;
 	private Context cxt;
 
 	static {
@@ -132,7 +132,7 @@ public class RoutePickerActivity extends Activity implements
 
 	/* Updates available routes depending on preference. */
 	private void updateCurrentRoutes() {
-		
+
 		if (onlyActiveRoutes) {
 			currentRoutes = APIController.getActiveRoutesList(cxt);
 		} else {
