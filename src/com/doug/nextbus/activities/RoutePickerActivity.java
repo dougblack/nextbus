@@ -52,6 +52,7 @@ public class RoutePickerActivity extends RoboActivity implements
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.route_picker);
 
+		// Used for waking up the server, done first
 		new WakeupAsyncTask().execute();
 
 		this.ctx = this;
@@ -63,7 +64,7 @@ public class RoutePickerActivity extends RoboActivity implements
 		// Updating available routes depending on preference
 		updateCurrentRoutes();
 
-		// Setup ViewGroup
+		// Setup Pager and Adapter
 		pagerAdapter = new RoutePagerAdapter(currentRoutes, ctx);
 		pager.setAdapter(pagerAdapter);
 
@@ -85,6 +86,7 @@ public class RoutePickerActivity extends RoboActivity implements
 		// Listener for page changing. Basically the left and right swiping
 		titleIndicator
 				.setOnPageChangeListener(new SimpleOnPageChangeListener() {
+					@Override
 					public void onPageSelected(int position) {
 						setViewColor(position);
 					}
@@ -92,6 +94,7 @@ public class RoutePickerActivity extends RoboActivity implements
 
 		// Button and event for switching to MapView
 		mapButton.setOnTouchListener(new OnTouchListener() {
+			@Override
 			public boolean onTouch(View arg0, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_DOWN) {
 					mapButton.setBackgroundColor(getResources().getColor(
