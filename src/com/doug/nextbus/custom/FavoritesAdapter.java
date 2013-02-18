@@ -70,7 +70,16 @@ public class FavoritesAdapter extends BaseAdapter {
 				.setText(Data.capitalize(Data.getFavorite(position).directionTitle));
 		stopFavView
 				.setText(Data.capitalize(Data.getFavorite(position).stopTitle));
+
+		if (!Data.isRouteActive(routeTag)) {
+			routeFavView.setTextColor(ctx.getResources()
+					.getColor(R.color.fade2));
+			directionFavView.setTextColor(ctx.getResources().getColor(
+					R.color.fade2));
+			stopFavView
+					.setTextColor(ctx.getResources().getColor(R.color.fade2));
+		}
+
 		return vi;
 	}
-
 }

@@ -283,6 +283,11 @@ public class Data {
 		return Data.favorites.getSize();
 	}
 
+	public static boolean isRouteActive(String routeTag) {
+		String[] activeRoutes = APIController.getActiveRoutesList(Data.context);
+		return !notInArray(activeRoutes, routeTag);
+	}
+
 	public static Favorite getFavorite(int index) {
 		if (Data.favorites == null)
 			loadFavoritesData();
