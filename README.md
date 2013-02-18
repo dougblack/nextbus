@@ -24,10 +24,24 @@ but are the same. (Like fitten_a for blue and fitten for red)
 Quick Documentation
 -------------
 
+** How to have a working source**
+
+Necessary libraries are:
+
+* Know how to clone from a GitHub repo!
+* RoboGuice: used for depedency injection so there aren't unneeded ```` = (TextView) findViewById(…)```` everywhere.
+    * Already Included in /libs/ and necessary libraries 
+    * [Github Page](https://github.com/roboguice/roboguice)
+    * [Tutorials](https://github.com/roboguice/roboguice/wiki/InjectView)
+* ViewPagerIndicator: used for displaying the information.
+    * Requires to make the project as a library available for this project. Should be in the same workspace.
+    * [GitHub Page](https://github.com/JakeWharton/Android-ViewPagerIndicator)
+
 **Random Notes for Documentation**
 
 - Since Heroku puts dynos to sleep when they become inactive and waking them up is a 10 second process, on the main page load a wake up request is made to the server.
 - Routes, directions, and stops have titles and tags. Titles are displayed to the user because they are the full names. Tags are used for API calls since they are smaller. Example shown at the end of this list.
+- Do not include "android-support-v4.jar" since it is included with the ViewPagerIndicator library.
 
 
 Sample Route/Direction/Stop tag/titles:
