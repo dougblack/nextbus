@@ -34,28 +34,36 @@ import com.doug.nextbus.backend.DataResult.Route.PathStop;
 import com.doug.nextbus.backend.DataResult.Route.Stop;
 import com.google.gson.Gson;
 
-/* This class controls reading and writing local files as well as persisting current state data. */
+/* This class controls reading and writing local files as well as persisting current state data. 
+ * This class is a catch all for the methods I need, I usually come and clean this up a great deal*/
+
 public class Data {
 
 	private static Context context;
+	/** Used for JSON parsing */
 	private static DataResult dataResult;
+	/** Key: routeTag, Value: Route object */
 	final private static HashMap<String, Route> hm;
-	private static HashMap<String, HashSet<RouteDirectionStop>> sharedStops;
+	/** Key: stopTitle, Value: RouteDirectionStop objects that share the stop */
+	final private static HashMap<String, HashSet<RouteDirectionStop>> sharedStops;
+	/** For holding the favorites */
 	private static Favorites favorites;
 
 	final static String[] stringReturnType = {};
+
 	static {
 		hm = new HashMap<String, Route>();
 		sharedStops = new HashMap<String, HashSet<RouteDirectionStop>>();
 	}
 
-	/** Reads the data into memory */
+	/** Reads the data into memory if it already doesn't exist */
 	public static void setConfigData(Context context) {
 		Data.context = context;
 		if (dataResult == null)
 			ReadData();
 	}
 
+	/** Loads route information and populates the necessary data structures */
 	public static void ReadData() {
 		InputStream is = (InputStream) context.getResources().openRawResource(
 				R.raw.routeconfig);
@@ -79,16 +87,19 @@ public class Data {
 
 					Stop stop = route.getStop(pathStop.tag);
 
-					HashSet<RouteDirectionStop> hs = sharedStops
-							.get(stop.title) == null ? new HashSet<RouteDirectionStop>()
-							: sharedStops.get(stop.title);
-					hs.add(new RouteDirectionStop(route, direction, stop));
-					sharedStops.put(stop.title, hs);
+					if (sharedStops.get(stop.title) == null) {
+						sharedStops.put(stop.title,
+								new HashSet<RouteDirectionStop>());
+					}
+
+					sharedStops.get(stop.title).add(
+							new RouteDirectionStop(route, direction, stop));
 				}
 		}
 
 	}
 
+	/** Finds all route/direction/stops with that share the same stop title */
 	public static RouteDirectionStop[] getAllRdsWithStopTitle(String stopTitle,
 			String route, String directionTag) {
 		ArrayList<RouteDirectionStop> rdsList = new ArrayList<RouteDirectionStop>();
@@ -112,7 +123,7 @@ public class Data {
 			RouteDirectionStop rad = iter.next();
 			if ((rad.route.tag.equals(route) && rad.direction.tag
 					.equals(directionTag))
-					|| notInArray(currentRoutes, rad.route.tag))
+					|| isNotInArray(currentRoutes, rad.route.tag))
 				continue;
 			rdsList.add(rad);
 		}
@@ -123,7 +134,7 @@ public class Data {
 		return rdsList.toArray(rads);
 	}
 
-	private static boolean notInArray(String[] activeRoutes, String val) {
+	private static boolean isNotInArray(String[] activeRoutes, String val) {
 		for (String routes : activeRoutes) {
 			if (routes.equals(val))
 				return false;
@@ -251,7 +262,7 @@ public class Data {
 
 	public static boolean isRouteActive(String routeTag) {
 		String[] activeRoutes = APIController.getActiveRoutesList(Data.context);
-		return !notInArray(activeRoutes, routeTag);
+		return !isNotInArray(activeRoutes, routeTag);
 	}
 
 	public static boolean toggleFavorite(Favorite favorite) {

@@ -6,9 +6,9 @@ import com.doug.nextbus.backend.DataResult.Route.Stop;
 
 public class RouteDirectionStop implements Comparable<RouteDirectionStop> {
 
-	public Route route;
-	public Direction direction;
-	public Stop stop;
+	final public Route route;
+	final public Direction direction;
+	final public Stop stop;
 
 	public RouteDirectionStop(Route route, Direction direction, Stop stop) {
 		super();

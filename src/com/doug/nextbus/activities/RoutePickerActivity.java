@@ -37,13 +37,13 @@ public class RoutePickerActivity extends RoboActivity implements
 	@InjectView(R.id.routepagerviewpager) private ViewPager pager;
 	@InjectView(R.id.mapButton) private ImageView mapButton;
 	@InjectView(R.id.routes) private TitlePageIndicator titleIndicator;
-	@InjectView(R.id.favoriteButtonLaunch) private ImageView favoriteButtonLaunch;
+	@InjectView(R.id.favoriteButtonLaunch) private ImageView favoritesLaunchButton;
 
 	public static final String[] allRoutes;
 	private String[] currentRoutes;
-	private boolean onlyActiveRoutes;
 	private RoutePagerAdapter pagerAdapter;
 	private Context cxt;
+	private SharedPreferences prefs;
 
 	static {
 		allRoutes = new String[] { "red", "blue", "trolley", "green", "night",
@@ -60,12 +60,10 @@ public class RoutePickerActivity extends RoboActivity implements
 		cxt = this;
 		Data.setConfigData(cxt);
 
-		SharedPreferences prefs = PreferenceManager
-				.getDefaultSharedPreferences(this);
+		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		prefs.registerOnSharedPreferenceChangeListener(this);
 
 		// Updating available routes depending on preference
-		onlyActiveRoutes = prefs.getBoolean("showActiveRoutes", false);
 		updateCurrentRoutes();
 
 		// Setup ViewGroup
@@ -119,11 +117,10 @@ public class RoutePickerActivity extends RoboActivity implements
 			}
 		});
 
-		favoriteButtonLaunch.setOnClickListener(new OnClickListener() {
+		favoritesLaunchButton.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-
 				Intent intent = new Intent(getApplicationContext(),
 						FavoritesActivity.class);
 				startActivity(intent);
@@ -134,6 +131,8 @@ public class RoutePickerActivity extends RoboActivity implements
 
 	/** Updates available routes depending on show active routes preference. */
 	private void updateCurrentRoutes() {
+		boolean onlyActiveRoutes = prefs.getBoolean("showActiveRoutes", true);
+
 		if (onlyActiveRoutes) {
 			currentRoutes = APIController.getActiveRoutesList(cxt);
 		} else {
@@ -151,12 +150,14 @@ public class RoutePickerActivity extends RoboActivity implements
 		titleIndicator.setFooterColor(getResources().getColor(color));
 	}
 
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.stock_menu, menu);
 		return true;
 	}
 
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.aboutmenusitem:
@@ -174,14 +175,9 @@ public class RoutePickerActivity extends RoboActivity implements
 		}
 	}
 
+	@Override
 	public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-		/*
-		 * Listener for changed preferences, need to update current route and
-		 * pager adapter
-		 */
-
 		if (key.equals("showActiveRoutes")) {
-			onlyActiveRoutes = prefs.getBoolean("showActiveRoutes", true);
 			updateCurrentRoutes();
 
 			pagerAdapter.updateCurrentRoutes(this.currentRoutes);

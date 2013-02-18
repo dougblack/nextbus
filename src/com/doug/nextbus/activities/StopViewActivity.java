@@ -46,7 +46,7 @@ import com.doug.nextbus.custom.OtherArrivalsArrayAdapter;
 public class StopViewActivity extends RoboActivity implements
 		OnSharedPreferenceChangeListener {
 
-	@InjectView(R.id.firstArrival) TextView firstArrival;
+	@InjectView(R.id.firstArrival) private TextView firstArrival;
 	@InjectView(R.id.secondArrival) private TextView secondArrival;
 	@InjectView(R.id.thirdArrival) private TextView thirdArrival;
 	@InjectView(R.id.fourthArrival) private TextView fourthArrival;
@@ -101,6 +101,7 @@ public class StopViewActivity extends RoboActivity implements
 		return intent;
 	}
 
+	@Override
 	public void onCreate(Bundle savedInstance) {
 
 		super.onCreate(savedInstance);
@@ -141,6 +142,7 @@ public class StopViewActivity extends RoboActivity implements
 
 		setViewColor(routeTag);
 
+		// Setting text views to default values
 		firstArrival.setText("");
 		secondArrival.setText("");
 		thirdArrival.setText("");
@@ -232,15 +234,16 @@ public class StopViewActivity extends RoboActivity implements
 
 	}
 
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.stock_menu, menu);
 		return true;
 	}
 
-	/* Gets the latest prediction data */
+	/** Gets the latest prediction data */
 	private void refresh(String route, String direction, String stopTag) {
-		new loadPredictionData(this).execute(route, direction, stopTag);
+		new LoadPredictionAsyncTask(this).execute(route, direction, stopTag);
 	}
 
 	private ArrayList<String> formatArrivals(RouteDirectionStop[] rads) {
@@ -258,6 +261,7 @@ public class StopViewActivity extends RoboActivity implements
 		colorSeperator.setBackgroundColor(getResources().getColor(color));
 	}
 
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.aboutmenusitem:
@@ -275,6 +279,7 @@ public class StopViewActivity extends RoboActivity implements
 		}
 	}
 
+	@Override
 	public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
 
 		if (key.equals("showActiveRoutes")) {
@@ -283,6 +288,7 @@ public class StopViewActivity extends RoboActivity implements
 
 	}
 
+	/** Something here */
 	private class MyOnClickListener implements OnClickListener {
 
 		private Favorite favorite;
@@ -309,12 +315,12 @@ public class StopViewActivity extends RoboActivity implements
 
 	}
 
-	/* Load prediction data asynchronously. */
-	private class loadPredictionData extends
+	/* *Load prediction data asynchronously. */
+	private class LoadPredictionAsyncTask extends
 			AsyncTask<String, Void, ArrayList<String>> {
 		Context ctx;
 
-		public loadPredictionData(Context ctx) {
+		public LoadPredictionAsyncTask(Context ctx) {
 			this.ctx = ctx;
 		}
 

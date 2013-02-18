@@ -17,7 +17,8 @@ public class DataResult {
 
 		public ArrayList<Stop> stop;
 		public ArrayList<Direction> direction;
-		/* for quick access. key: stop tag, value: Stop */
+		
+		/** for quick access. key: stop tag, value: Stop */
 		public Hashtable<String, Stop> stopTagTable;
 
 		public Direction getDefaultDirection() {

@@ -21,7 +21,7 @@ import com.doug.nextbus.custom.FavoritesAdapter;
 
 public class FavoritesActivity extends RoboActivity {
 
-	@InjectView(R.id.stopListView) private ListView stopList;
+	@InjectView(R.id.stopListView) private ListView stopListView;
 	@InjectView(R.id.directionTextView) private TextView directionTextView;
 	@InjectView(R.id.colorbar) private View colorBar;
 	@InjectView(R.id.directionBackButton) private ImageView backButton;
@@ -34,13 +34,18 @@ public class FavoritesActivity extends RoboActivity {
 
 		titleText.setText("RETURN");
 		directionTextView.setText("Favorites");
+
+		/*
+		 * Making the colorbar smaller height, cleaner look. Maybe make new
+		 * layout file?
+		 */
 		colorBar.setLayoutParams(new LinearLayout.LayoutParams(
 				LinearLayout.LayoutParams.WRAP_CONTENT, 3));
 
-		stopList.setAdapter(new FavoritesAdapter(getApplicationContext()));
+		stopListView.setAdapter(new FavoritesAdapter(getApplicationContext()));
 
 		// Event Listeners
-		stopList.setOnItemClickListener(new OnItemClickListener() {
+		stopListView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,

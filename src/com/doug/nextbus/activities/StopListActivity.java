@@ -5,7 +5,6 @@ import roboguice.inject.InjectView;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,7 +28,7 @@ import com.doug.nextbus.backend.DataResult.Route.Stop;
 /* This activity shows a list of stops. */
 public class StopListActivity extends RoboActivity {
 
-	@InjectView(R.id.stopListView) private ListView stopList;
+	@InjectView(R.id.stopListView) private ListView stopListView;
 	@InjectView(R.id.directionTextView) private TextView directionTextView;
 	@InjectView(R.id.colorbar) private View colorBar;
 	@InjectView(R.id.directionBackButton) private ImageView backButton;
@@ -42,6 +41,7 @@ public class StopListActivity extends RoboActivity {
 		return intent;
 	}
 
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
@@ -52,29 +52,26 @@ public class StopListActivity extends RoboActivity {
 
 		if (extras != null) {
 			/* Pull route and direction for extras */
-			final String route = extras.getString("routeTag");
+			final String routeTag = extras.getString("routeTag");
 			final String directionTitle = extras.getString("directionTitle");
 
-			final Route currRoute = Data.getRouteWithTag(route);
-			final String[] stopTitles = currRoute.getStopTitles(directionTitle);
+			final Route route = Data.getRouteWithTag(routeTag);
+			final String[] stopTitles = route.getStopTitles(directionTitle);
+			setDirectionTextViewColor(Data.getColorFromRouteTag(routeTag));
 			directionTextView.setText(Data.capitalize(directionTitle));
 
-			setDirectionTextViewColor(Data.getColorFromRouteTag(route));
-
-			Log.i("Info", "Showing list for route=" + route + " and direction="
-					+ directionTitle);
-
-			stopList.setAdapter(new ArrayAdapter<String>(this,
+			stopListView.setAdapter(new ArrayAdapter<String>(this,
 					android.R.layout.simple_list_item_1, stopTitles));
 
 			/* Handler for a stop cell event listener. */
-			stopList.setOnItemClickListener(new OnItemClickListener() {
+			stopListView.setOnItemClickListener(new OnItemClickListener() {
 				public void onItemClick(AdapterView<?> parent, View view,
 						int position, long id) {
-					Direction dir = currRoute.getDirection(directionTitle);
-					Stop stop = currRoute.getStop(directionTitle, position);
+					Direction direction = route.getDirection(directionTitle);
+					Stop stop = route.getStop(directionTitle, position);
+
 					Intent intent = StopViewActivity.createIntent(
-							getApplicationContext(), route, dir, stop);
+							getApplicationContext(), routeTag, direction, stop);
 					startActivity(intent);
 				}
 
@@ -103,12 +100,14 @@ public class StopListActivity extends RoboActivity {
 		directionTextView.setTextColor(getResources().getColor(color));
 	}
 
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.stock_menu, menu);
 		return true;
 	}
 
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		/* Handle item selection */
 		switch (item.getItemId()) {
