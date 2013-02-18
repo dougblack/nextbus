@@ -72,12 +72,8 @@ public class APIController {
 			// Monday - Friday
 			if ((hour >= 7) && (hour <= 22)) {
 				// 6:45am - 10:45pm
-				activeRoutesList.add("red");
 				activeRoutesList.add("blue");
-			}
-			if ((hour >= 7) && (hour <= 21)) {
-				// 6:15am - 9:45pm
-				activeRoutesList.add("green");
+				activeRoutesList.add("red");
 			}
 			if ((hour >= 5) && (hour <= 22)) {
 				// 5:15am - 11:00pm
@@ -86,6 +82,10 @@ public class APIController {
 			if ((day != 4) && (hour >= 21) || (hour <= 3)) {
 				// 8:45pm - 3:30am
 				activeRoutesList.add("night");
+			}
+			if ((hour >= 7) && (hour <= 21)) {
+				// 6:15am - 9:45pm
+				activeRoutesList.add("green");
 			}
 		} else if (day == 6) {
 			// Saturday

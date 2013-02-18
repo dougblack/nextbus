@@ -43,7 +43,7 @@ public class RoutePickerActivity extends RoboActivity implements
 	public static final String[] allRoutes;
 
 	static {
-		allRoutes = new String[] { "red", "blue", "trolley", "green", "night",
+		allRoutes = new String[] { "blue", "red", "trolley", "night", "green",
 				"emory" };
 	}
 
