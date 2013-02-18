@@ -43,7 +43,10 @@ public class FavoritesActivity extends RoboActivity {
 				LinearLayout.LayoutParams.WRAP_CONTENT, 3));
 
 		stopListView.setAdapter(new FavoritesAdapter(getApplicationContext()));
+		setEventListeners();
+	}
 
+	private void setEventListeners() {
 		// Event Listeners
 		stopListView.setOnItemClickListener(new OnItemClickListener() {
 

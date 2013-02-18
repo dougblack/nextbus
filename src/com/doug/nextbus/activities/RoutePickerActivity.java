@@ -83,6 +83,12 @@ public class RoutePickerActivity extends RoboActivity implements
 		titleIndicator.setViewPager(pager);
 		setViewColor(0);
 
+		setEventListeners();
+
+	}
+
+	private void setEventListeners() {
+
 		// Listener for page changing. Basically the left and right swiping
 		titleIndicator
 				.setOnPageChangeListener(new SimpleOnPageChangeListener() {
@@ -119,7 +125,6 @@ public class RoutePickerActivity extends RoboActivity implements
 				startActivity(intent);
 			}
 		});
-
 	}
 
 	/** Updates available routes depending on show active routes preference. */
@@ -171,9 +176,10 @@ public class RoutePickerActivity extends RoboActivity implements
 			updateCurrentRoutes();
 
 			pagerAdapter.updateCurrentRoutes(this.currentRoutes);
-			pager.setCurrentItem(0);
 			pagerAdapter.notifyDataSetChanged();
-			setViewColor(0);
+
+			int currentItemIndex = pager.getCurrentItem();
+			setViewColor(currentItemIndex);
 		}
 
 	}

@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -102,14 +101,12 @@ public class StopListActivity extends RoboActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.stock_menu, menu);
+		getMenuInflater().inflate(R.menu.stock_menu, menu);
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		/* Handle item selection */
 		switch (item.getItemId()) {
 		case R.id.aboutmenusitem:
 			Intent aboutActivity = new Intent(getApplicationContext(),

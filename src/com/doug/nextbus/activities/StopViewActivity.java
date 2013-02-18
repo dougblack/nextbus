@@ -150,6 +150,10 @@ public class StopViewActivity extends RoboActivity implements
 
 		refresh(routeTag, directionTag, stopTag);
 
+		setEventListeners(favorite);
+	}
+
+	private void setEventListeners(Favorite favorite) {
 		/* Event Listeners */
 		backButton.setOnTouchListener(new OnTouchListener() {
 
