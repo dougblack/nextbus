@@ -24,7 +24,7 @@ but are the same. (Like fitten_a for blue and fitten for red)
 Quick Documentation
 -------------
 
-** How to have a working source**
+**How to have a working source**
 
 Necessary libraries are:
 
