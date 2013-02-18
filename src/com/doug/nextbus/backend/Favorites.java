@@ -2,12 +2,10 @@ package com.doug.nextbus.backend;
 
 import java.util.ArrayList;
 
+// Once I figure out how to use HashSets, then I won't have to do a linear search
 public class Favorites {
 
-	private ArrayList<Favorite> favs;
-	{
-		favs = new ArrayList<Favorite>();
-	}
+	private ArrayList<Favorite> favs = new ArrayList<Favorite>();
 
 	public boolean toggleFavorite(Favorite favorite) {
 		if (favs.remove(favorite)) {

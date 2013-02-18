@@ -1,7 +1,6 @@
 package com.doug.nextbus.custom;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,6 @@ public class FavoritesAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {
-		// TODO Auto-generated method stub
 		return Data.getFavoritesSize();
 	}
 
@@ -39,26 +37,11 @@ public class FavoritesAdapter extends BaseAdapter {
 
 		View vi = convertView;
 		if (convertView == null)
-			vi = View
-					.inflate(ctx, com.doug.nextbus.R.layout.favorite_row, null);
+			vi = View.inflate(ctx, R.layout.favorite_row, null);
 
 		String routeTag = Data.getFavorite(position).routeTag;
 
-		int bg = R.drawable.redcell;
-		if (routeTag.equals("red"))
-			bg = R.drawable.redcell;
-		else if (routeTag.equals("blue"))
-			bg = R.drawable.bluecell;
-		else if (routeTag.equals("green"))
-			bg = R.drawable.greencell;
-		else if (routeTag.equals("trolley"))
-			bg = R.drawable.yellowcell;
-		else if (routeTag.equals("emory"))
-			bg = R.drawable.pinkcell;
-		else if (routeTag.equals("night"))
-			bg = R.drawable.nightcell;
-
-		vi.setBackgroundDrawable(ctx.getResources().getDrawable(bg));
+		vi.setBackgroundDrawable(Data.getDrawableForRouteTag(routeTag));
 
 		TextView routeFavView = (TextView) vi.findViewById(R.id.routeFavView);
 		TextView directionFavView = (TextView) vi

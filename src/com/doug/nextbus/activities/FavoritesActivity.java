@@ -2,7 +2,6 @@ package com.doug.nextbus.activities;
 
 import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MotionEvent;
@@ -34,24 +33,23 @@ public class FavoritesActivity extends RoboActivity {
 		setContentView(R.layout.stop_list);
 
 		titleText.setText("RETURN");
-
 		directionTextView.setText("Favorites");
+		colorBar.setLayoutParams(new LinearLayout.LayoutParams(
+				LinearLayout.LayoutParams.WRAP_CONTENT, 3));
+
 		stopList.setAdapter(new FavoritesAdapter(getApplicationContext()));
 
+		// Event Listeners
 		stopList.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				Favorite favorite = Data.getFavorite(position);
-				Intent intent = StopViewActivity.createIntent(
-						getApplicationContext(), favorite);
-				startActivity(intent);
+				startActivity(StopViewActivity.createIntent(
+						getApplicationContext(), favorite));
 			}
 		});
-
-		colorBar.setLayoutParams(new LinearLayout.LayoutParams(
-				LinearLayout.LayoutParams.WRAP_CONTENT, 3));
 
 		backButton.setOnTouchListener(new OnTouchListener() {
 			public boolean onTouch(View arg0, MotionEvent event) {
@@ -71,8 +69,7 @@ public class FavoritesActivity extends RoboActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.favorites, menu);
+		getMenuInflater().inflate(R.menu.stock_menu, menu);
 		return true;
 	}
 

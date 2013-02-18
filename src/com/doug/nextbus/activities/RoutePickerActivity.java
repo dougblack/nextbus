@@ -158,7 +158,6 @@ public class RoutePickerActivity extends RoboActivity implements
 	}
 
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle item selection
 		switch (item.getItemId()) {
 		case R.id.aboutmenusitem:
 			Intent aboutActivity = new Intent(getApplicationContext(),

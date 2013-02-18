@@ -6,9 +6,12 @@ import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -40,7 +43,8 @@ import com.doug.nextbus.backend.RouteDirectionStop;
 import com.doug.nextbus.custom.OtherArrivalsArrayAdapter;
 
 /* This activity displays the predictions for a the current stop */
-public class StopViewActivity extends RoboActivity {
+public class StopViewActivity extends RoboActivity implements
+		OnSharedPreferenceChangeListener {
 
 	@InjectView(R.id.firstArrival) TextView firstArrival;
 	@InjectView(R.id.secondArrival) private TextView secondArrival;
@@ -85,6 +89,7 @@ public class StopViewActivity extends RoboActivity {
 	}
 
 	public static Intent createIntent(Context ctx, Favorite favorite) {
+
 		Intent intent = new Intent(ctx, StopViewActivity.class);
 		intent.putExtra("routeTag", favorite.routeTag);
 		intent.putExtra("directionTitle", favorite.directionTitle);
@@ -102,6 +107,10 @@ public class StopViewActivity extends RoboActivity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.stop_view);
 
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		prefs.registerOnSharedPreferenceChangeListener(this);
+
 		// Extras
 		Bundle extras = getIntent().getExtras();
 		routeTag = extras.getString("routeTag");
@@ -116,64 +125,28 @@ public class StopViewActivity extends RoboActivity {
 
 		stopTextView.setText(stopTitle);
 
-		rads = Data.getAllRadsWithStopTitle(stopTitle, routeTag, directionTag);
-		tempArrivalsList = formatArrivals(rads);
+		setupArrivals();
 
-		drawableList = new ArrayList<Drawable>();
-		if (tempArrivalsList.size() == 0) {
-			drawableList.add(getResources().getDrawable(R.drawable.deadcell));
-			tempArrivalsList.add("No other arrivals");
-			deadCellOnly = true;
+		Favorite favorite = new Favorite(routeTag, directionTag,
+				directionTitle, stopTag, stopTitle);
+
+		if (Data.isFavorite(favorite)) {
+			favoriteButton
+					.setImageResource(R.drawable.rate_star_big_on_holo_light);
 		} else {
+			favoriteButton
+					.setImageResource(R.drawable.rate_star_big_off_holo_light);
 
-			for (RouteDirectionStop rad : rads) {
-				Drawable cellDrawable = null;
-
-				if (rad.route.tag.equals("red")) {
-					cellDrawable = getResources().getDrawable(
-							R.drawable.redcell);
-				} else if (rad.route.tag.equals("blue")) {
-					cellDrawable = getResources().getDrawable(
-							R.drawable.bluecell);
-				} else if (rad.route.tag.equals("trolley")) {
-					cellDrawable = getResources().getDrawable(
-							R.drawable.yellowcell);
-				} else if (rad.route.tag.equals("green")) {
-					cellDrawable = getResources().getDrawable(
-							R.drawable.greencell);
-				} else if (rad.route.tag.equals("night")) {
-					cellDrawable = getResources().getDrawable(
-							R.drawable.nightcell);
-				} else if (rad.route.tag.equals("emory")) {
-					cellDrawable = getResources().getDrawable(
-							R.drawable.pinkcell);
-				}
-				drawableList.add(cellDrawable);
-			}
 		}
 
-		arrivalsArray = Data.convertToStringArray(tempArrivalsList);
+		setViewColor(routeTag);
 
-		arrivalList.setAdapter(new OtherArrivalsArrayAdapter(
-				getApplicationContext(), R.layout.arrival_list, arrivalsArray,
-				drawableList, deadCellOnly, rads));
+		firstArrival.setText("");
+		secondArrival.setText("");
+		thirdArrival.setText("");
+		fourthArrival.setText("");
 
-		/*
-		 * Listener for arrival drawer thing. If a cell is clicked, open the
-		 * stop for that route
-		 */
-		arrivalList.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				if (!arrivalsArray[0].equals("No other arrivals")) {
-					RouteDirectionStop rad = rads[position];
-					Intent intent = StopViewActivity.createIntent(
-							getApplicationContext(), rad.route.tag,
-							rad.direction, rad.stop);
-					startActivity(intent);
-				}
-			}
-		});
+		refresh(routeTag, directionTag, stopTag);
 
 		/* Event Listeners */
 		backButton.setOnTouchListener(new OnTouchListener() {
@@ -191,18 +164,6 @@ public class StopViewActivity extends RoboActivity {
 				return true;
 			}
 		});
-
-		Favorite favorite = new Favorite(routeTag, directionTag,
-				directionTitle, stopTag, stopTitle);
-
-		if (Data.isFavorite(favorite)) {
-			favoriteButton
-					.setImageResource(R.drawable.rate_star_big_on_holo_light);
-		} else {
-			favoriteButton
-					.setImageResource(R.drawable.rate_star_big_off_holo_light);
-
-		}
 
 		favoriteButton.setOnClickListener(new MyOnClickListener(favorite));
 
@@ -225,14 +186,49 @@ public class StopViewActivity extends RoboActivity {
 			}
 		});
 
-		setViewColor(routeTag);
+	}
 
-		firstArrival.setText("");
-		secondArrival.setText("");
-		thirdArrival.setText("");
-		fourthArrival.setText("");
+	public void setupArrivals() {
+		rads = Data.getAllRdsWithStopTitle(stopTitle, routeTag, directionTag);
+		tempArrivalsList = formatArrivals(rads);
 
-		refresh(routeTag, directionTag, stopTag);
+		drawableList = new ArrayList<Drawable>();
+		if (tempArrivalsList.size() == 0) {
+			drawableList.add(getResources().getDrawable(R.drawable.deadcell));
+			tempArrivalsList.add("No other arrivals");
+			deadCellOnly = true;
+		} else {
+
+			for (RouteDirectionStop rad : rads) {
+				Drawable cellDrawable = Data
+						.getDrawableForRouteTag(rad.route.tag);
+				drawableList.add(cellDrawable);
+			}
+		}
+
+		arrivalsArray = Data.convertToStringArray(tempArrivalsList);
+
+		arrivalList.setAdapter(new OtherArrivalsArrayAdapter(
+				getApplicationContext(), R.layout.arrival_list, arrivalsArray,
+				drawableList, deadCellOnly, rads));
+
+		arrivalList.setOnItemClickListener(null);
+		/*
+		 * Listener for arrival drawer thing. If a cell is clicked, open the
+		 * stop for that route
+		 */
+		arrivalList.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				if (!arrivalsArray[0].equals("No other arrivals")) {
+					RouteDirectionStop rad = rads[position];
+					Intent intent = StopViewActivity.createIntent(
+							getApplicationContext(), rad.route.tag,
+							rad.direction, rad.stop);
+					startActivity(intent);
+				}
+			}
+		});
 
 	}
 
@@ -277,6 +273,14 @@ public class StopViewActivity extends RoboActivity {
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+
+	public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+
+		if (key.equals("showActiveRoutes")) {
+			this.setupArrivals();
+		}
+
 	}
 
 	private class MyOnClickListener implements OnClickListener {
@@ -359,4 +363,5 @@ public class StopViewActivity extends RoboActivity {
 			}
 		}
 	}
+
 }

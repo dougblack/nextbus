@@ -22,6 +22,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -88,22 +89,22 @@ public class Data {
 
 	}
 
-	public static RouteDirectionStop[] getAllRadsWithStopTitle(
-			String stopTitle, String route, String directionTag) {
-		ArrayList<RouteDirectionStop> radsList = new ArrayList<RouteDirectionStop>();
+	public static RouteDirectionStop[] getAllRdsWithStopTitle(String stopTitle,
+			String route, String directionTag) {
+		ArrayList<RouteDirectionStop> rdsList = new ArrayList<RouteDirectionStop>();
 
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(Data.context);
 		boolean onlyActiveRoutes = prefs.getBoolean("showActiveRoutes", false);
 
 		// Get the default list of routes and overwrite if active routes is true
-		String[] activeRoutes = RoutePickerActivity.allRoutes;
+		String[] currentRoutes = RoutePickerActivity.allRoutes;
 		if (onlyActiveRoutes)
-			activeRoutes = APIController.getActiveRoutesList(Data.context);
+			currentRoutes = APIController.getActiveRoutesList(Data.context);
 
 		/*
-		 * Iterate through route and direction if the rad matches the given
-		 * route/direction or is not in the activeRoutes the continue
+		 * Iterate through route and direction if the rds matches the given
+		 * route/direction or is not in the activeRoutes then continue
 		 */
 		Iterator<RouteDirectionStop> iter = sharedStops.get(stopTitle)
 				.iterator();
@@ -111,15 +112,15 @@ public class Data {
 			RouteDirectionStop rad = iter.next();
 			if ((rad.route.tag.equals(route) && rad.direction.tag
 					.equals(directionTag))
-					|| notInArray(activeRoutes, rad.route.tag))
+					|| notInArray(currentRoutes, rad.route.tag))
 				continue;
-			radsList.add(rad);
+			rdsList.add(rad);
 		}
 
 		// Sorting to put the reds, blues, etc together
-		Collections.sort(radsList);
+		Collections.sort(rdsList);
 		RouteDirectionStop[] rads = {};
-		return radsList.toArray(rads);
+		return rdsList.toArray(rads);
 	}
 
 	private static boolean notInArray(String[] activeRoutes, String val) {
@@ -150,6 +151,24 @@ public class Data {
 			color = R.color.pink;
 		}
 		return color;
+	}
+
+	public static Drawable getDrawableForRouteTag(String routeTag) {
+		int bg = R.drawable.redcell; // default
+		if (routeTag.equals("red"))
+			bg = R.drawable.redcell;
+		else if (routeTag.equals("blue"))
+			bg = R.drawable.bluecell;
+		else if (routeTag.equals("green"))
+			bg = R.drawable.greencell;
+		else if (routeTag.equals("trolley"))
+			bg = R.drawable.yellowcell;
+		else if (routeTag.equals("emory"))
+			bg = R.drawable.pinkcell;
+		else if (routeTag.equals("night"))
+			bg = R.drawable.nightcell;
+		return context.getResources().getDrawable(bg);
+
 	}
 
 	/* Capitalize a string */
@@ -230,7 +249,34 @@ public class Data {
 
 	}
 
-	public static void saveFavoriteData() {
+	public static boolean isRouteActive(String routeTag) {
+		String[] activeRoutes = APIController.getActiveRoutesList(Data.context);
+		return !notInArray(activeRoutes, routeTag);
+	}
+
+	public static boolean toggleFavorite(Favorite favorite) {
+		if (Data.favorites == null)
+			loadFavoritesData();
+		boolean ret = favorites.toggleFavorite(favorite);
+		saveFavoriteData();
+		return ret;
+
+	}
+
+	private static void loadFavoritesData() {
+
+		try {
+			FileInputStream fis = context.openFileInput("favorites.txt");
+			Reader reader = new InputStreamReader(fis);
+			Data.favorites = new Gson().fromJson(reader, Favorites.class);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		Data.favorites = new Favorites();
+
+	}
+
+	private static void saveFavoriteData() {
 
 		try {
 			String toSave = new Gson().toJson(Data.favorites);
@@ -249,28 +295,6 @@ public class Data {
 
 	}
 
-	public static void loadFavoritesData() {
-
-		try {
-			FileInputStream fis = context.openFileInput("favorites.txt");
-			Reader reader = new InputStreamReader(fis);
-			Data.favorites = new Gson().fromJson(reader, Favorites.class);
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-		Data.favorites = new Favorites();
-
-	}
-
-	public static boolean toggleFavorite(Favorite favorite) {
-		if (Data.favorites == null)
-			loadFavoritesData();
-		boolean ret = favorites.toggleFavorite(favorite);
-		saveFavoriteData();
-		return ret;
-
-	}
-
 	public static boolean isFavorite(Favorite favorite) {
 		if (Data.favorites == null)
 			loadFavoritesData();
@@ -281,11 +305,6 @@ public class Data {
 		if (Data.favorites == null)
 			loadFavoritesData();
 		return Data.favorites.getSize();
-	}
-
-	public static boolean isRouteActive(String routeTag) {
-		String[] activeRoutes = APIController.getActiveRoutesList(Data.context);
-		return !notInArray(activeRoutes, routeTag);
 	}
 
 	public static Favorite getFavorite(int index) {
