@@ -19,9 +19,9 @@ but are the same. (Like fitten_a for blue and fitten for red) [Done]
 
 **My preferences for code are:**
 
-- Annotate @Overrides to keep help understand the purpose of a method.
-- Move getter/setters/trivial override methods to bottom of file.
 - Prefer smaller, more compact code.
+- Move getter/setters/trivial override methods to bottom of file.
+- Annotate @Overrides to keep help understand the purpose of a method.
 
 ***
 
@@ -34,20 +34,21 @@ Quick Documentation
 
 **Activities**
 
-- Route Picker
-- Stop List
-- Stop View
-- Favorites
-- Preferences
-- Credits
-- Map View 
+- Route Picker: Shows stops if a route only has one direction. Otherwise shows the direction options for routes with more than one direction, which when selected creates an Stop List intent. 
+- Stop List: If a route has more than one direction, this is used to display the stops available for a certain direction.
+- Stop View: Shows the predicted times for a route/direction/stop.
+- Favorites: Displays the favorited route/direction/stops and when selected creates a Stop View for predictions.
+- Preferences: Uses native Android preferences activity.
+- Credits: Simple list view with contact information.
+- Map View: Shows the routes overlayed on a map. 
 
 **Backend**
 
-- API Controller
-- Data
+- API Controller: Used to interact with the API for prediction data.
+- Data: Used for save/loading information about route/direction/stop from JSON.
 
-==========
+***
+
 Old README Below
 
 An Android client for the Georgia Tech Nextbus stop service.
