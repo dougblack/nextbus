@@ -3,19 +3,17 @@ GT NextBus
 
 **Planned Changes**
 
-- Change static modifiers to private [Done]
-- Removed same route for "other route" popup. [Done]
-- Added support for Emory route [Done]
-- Fix support for stops that have different tags for different routes,
-but are the same. (Like fitten_a for blue and fitten for red) [Done]
-- Change from native JSON parser to GSON [Done]
-- Fix Other Arrival Cells [Done]
-- Fix times for buses [Done, needs verification]
-- Update the JSON data [work in progress]
-- Implement warning for when the API is down?
-- Add support for Pause/onResume
-
-***
+- [x] Change static modifiers to private.
+- [x] Removed same route for "other route" popup
+- [x] Added support for Emory route
+- [x] Fix support for stops that have different tags for different routes,
+but are the same. (Like fitten_a for blue and fitten for red)
+- [x] Change from native JSON parser to GSON
+- [x] Fix Other Arrival Cells
+- [?] Fix times for buses
+- [?] Update the JSON data [work in progress]
+- [ ] Implement warning for when the API is down?
+- [ ] Add support for Pause/onResume
 
 **My preferences for code are:**
 
@@ -23,14 +21,23 @@ but are the same. (Like fitten_a for blue and fitten for red) [Done]
 - Move getter/setters/trivial override methods to bottom of file.
 - Annotate @Overrides to keep help understand the purpose of a method.
 
-***
-
 Quick Documentation
 -------------
 
 **Random Notes for Documentation**
 
 - Since Heroku puts dynos to sleep when they become inactive and waking them up is a 10 second process, on the main page load a wake up request is made to the server.
+- Routes, directions, and stops have titles and tags. Titles are displayed to the user because they are the full names. Tags are used for API calls since they are smaller. Example shown at the end of this list.
+
+
+Sample Route/Direction/Stop tag/titles:
+
+    RouteTitle: "Red" [Not used]
+    RouteTag: "red"    
+    DirectionTitle: "To Transit Hub"
+    DirectionTag: "hub"    
+    StopTitle: "Recreation Center"
+    StopTag: "recctr"
 
 **Activities**
 
@@ -47,9 +54,8 @@ Quick Documentation
 - API Controller: Used to interact with the API for prediction data.
 - Data: Used for save/loading information about route/direction/stop from JSON.
 
-***
-
 Old README Below
+-------------
 
 An Android client for the Georgia Tech Nextbus stop service.
 

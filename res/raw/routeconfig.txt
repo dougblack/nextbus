@@ -578,7 +578,7 @@
                 },
                 {
                     "tag": "hub",
-                    "title": "Transit Hub",
+                    "title": "To Transit Hub",
                     "useForUI": "true",
                     "stop": [
                         {
