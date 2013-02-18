@@ -18,21 +18,6 @@ public class FavoritesAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public int getCount() {
-		return Data.getFavoritesSize();
-	}
-
-	@Override
-	public Object getItem(int position) {
-		return position;
-	}
-
-	@Override
-	public long getItemId(int position) {
-		return position;
-	}
-
-	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 
 		View vi = convertView;
@@ -67,5 +52,20 @@ public class FavoritesAdapter extends BaseAdapter {
 		}
 
 		return vi;
+	}
+
+	@Override
+	public int getCount() {
+		return Data.getFavoritesSize();
+	}
+
+	@Override
+	public Object getItem(int position) {
+		return position;
+	}
+
+	@Override
+	public long getItemId(int position) {
+		return position;
 	}
 }

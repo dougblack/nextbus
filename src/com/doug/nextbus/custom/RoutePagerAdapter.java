@@ -26,26 +26,13 @@ public class RoutePagerAdapter extends PagerAdapter {
 	private String[] currentRoutes;
 	private final Context ctx;
 
-	public RoutePagerAdapter(String[] currentRoutes, Context cxt) {
+	public RoutePagerAdapter(String[] currentRoutes, Context ctx) {
 		this.currentRoutes = currentRoutes;
-		this.ctx = cxt;
+		this.ctx = ctx;
 	}
 
-	public void destroyItem(View container, int position, Object view) {
-		if (view instanceof ListView) {
-			((ViewPager) container).removeView((ListView) view);
-		} else {
-			((ViewPager) container).removeView((TextView) view);
-		}
-
-	}
-
-	public int getCount() {
-		if (currentRoutes.length > 0) {
-			return currentRoutes.length;
-		} else {
-			return 1;
-		}
+	public void updateCurrentRoutes(String[] currentRoutes) {
+		this.currentRoutes = currentRoutes;
 	}
 
 	/*
@@ -54,12 +41,12 @@ public class RoutePagerAdapter extends PagerAdapter {
 	 * correct activity based on which item in the list view is selected.
 	 */
 	public Object instantiateItem(View container, int position) {
-
+	
 		if (currentRoutes.length > 0) {
 			final int listPosition = position;
 			final String routeTag = currentRoutes[listPosition];
 			final Route currRoute = Data.getRouteWithTag(routeTag);
-
+	
 			String[] itemListTemp = new String[] {};
 			final boolean thisRouteHasDirection = currRoute.direction.size() != 1;
 			if (thisRouteHasDirection) {
@@ -69,16 +56,16 @@ public class RoutePagerAdapter extends PagerAdapter {
 				// Route doesn't have direction so list view contains stops
 				itemListTemp = currRoute.getStopTitles(currRoute
 						.getDefaultDirection().title);
-
+	
 			}
-
+	
 			final String[] itemList = itemListTemp;
-
+	
 			ListView stopList = new ListView(ctx);
 			stopList.setAdapter(new ArrayAdapter<String>(ctx,
 					android.R.layout.simple_list_item_1, itemList));
 			stopList.setOnItemClickListener(new OnItemClickListener() {
-
+	
 				public void onItemClick(AdapterView<?> parent, View view,
 						int position, long id) {
 					if (thisRouteHasDirection) {
@@ -86,7 +73,7 @@ public class RoutePagerAdapter extends PagerAdapter {
 						 * Route has direction so items have to point to
 						 * StopListActivity with correct extras.
 						 */
-
+	
 						Intent intent = StopListActivity.createIntent(ctx,
 								routeTag, itemList[position]);
 						ctx.startActivity(intent);
@@ -101,15 +88,15 @@ public class RoutePagerAdapter extends PagerAdapter {
 								.getStopFromDefaultDirection(position);
 						Intent intent = StopViewActivity.createIntent(ctx,
 								routeTag, defaultDirection, stop);
-
+	
 						ctx.startActivity(intent);
 					}
 				}
-
+	
 			});
-
+	
 			((ViewPager) container).addView(stopList, 0);
-
+	
 			return stopList;
 		} else {
 			TextView noRoutes = new TextView(ctx);
@@ -123,11 +110,31 @@ public class RoutePagerAdapter extends PagerAdapter {
 		}
 	}
 
+	@Override
+	public void destroyItem(View container, int position, Object view) {
+		if (view instanceof ListView) {
+			((ViewPager) container).removeView((ListView) view);
+		} else {
+			((ViewPager) container).removeView((TextView) view);
+		}
+
+	}
+
+	@Override
+	public int getCount() {
+		if (currentRoutes.length > 0) {
+			return currentRoutes.length;
+		} else {
+			return 1;
+		}
+	}
+
 	/* Necessary code to force the view to update */
 	public int getItemPosition(Object object) {
 		return POSITION_NONE;
 	}
 
+	@Override
 	public boolean isViewFromObject(View view, Object object) {
 		if (object instanceof ListView) {
 			return view == ((ListView) object);
@@ -135,16 +142,13 @@ public class RoutePagerAdapter extends PagerAdapter {
 		return view == ((TextView) object);
 	}
 
+	@Override
 	public String getPageTitle(int position) {
 		if (currentRoutes.length > 0) {
 			return Data.capitalize(currentRoutes[position]);
 		} else {
 			return "No routes";
 		}
-	}
-
-	public void updateCurrentRoutes(String[] currentRoutes) {
-		this.currentRoutes = currentRoutes;
 	}
 
 }

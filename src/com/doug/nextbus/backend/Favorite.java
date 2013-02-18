@@ -1,6 +1,7 @@
 package com.doug.nextbus.backend;
 
 public class Favorite {
+
 	public String routeTag;
 	public String directionTag;
 	public String directionTitle;
@@ -8,17 +9,17 @@ public class Favorite {
 	public String stopTitle;
 
 	public Favorite(String routeTag, String directionTag,
-			String directionTitle, String stoptag, String stopTitle) {
-		super();
+			String directionTitle, String stopTag, String stopTitle) {
 		this.routeTag = routeTag;
 		this.directionTag = directionTag;
 		this.directionTitle = directionTitle;
-		this.stopTag = stoptag;
+		this.stopTag = stopTag;
 		this.stopTitle = stopTitle;
 	}
 
 	@Override
 	public boolean equals(Object o) {
+		// Returning false if Object o is not of type Favorite class
 		if (!(o.getClass().equals(Favorite.class))) {
 			return false;
 		}
