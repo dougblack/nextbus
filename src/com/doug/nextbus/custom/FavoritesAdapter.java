@@ -1,4 +1,4 @@
-package com.doug.nextbus.activities;
+package com.doug.nextbus.custom;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;

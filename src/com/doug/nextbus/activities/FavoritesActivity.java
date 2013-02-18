@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.doug.nextbus.R;
 import com.doug.nextbus.backend.Data;
 import com.doug.nextbus.backend.Favorite;
+import com.doug.nextbus.custom.FavoritesAdapter;
 
 public class FavoritesActivity extends RoboActivity {
 

@@ -166,8 +166,7 @@ public class APIController {
 				// 2:30pm - 6:30pm
 				activeRoutesList.add("trolley");
 			}
-			if ((hour >= 20 && time.minute >= 45)
-					|| (hour <= 3 && time.minute <= 30)) {
+			if ((hour >= 20) || (hour <= 3)) {
 				// 8:45pm - 3:30am
 				activeRoutesList.add("night");
 
