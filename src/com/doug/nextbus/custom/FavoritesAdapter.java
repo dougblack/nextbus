@@ -2,6 +2,7 @@ package com.doug.nextbus.custom;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -50,7 +51,7 @@ public class FavoritesAdapter extends BaseAdapter {
 			bg = R.drawable.bluecell;
 		else if (routeTag.equals("green"))
 			bg = R.drawable.greencell;
-		else if (routeTag.equals("yellow"))
+		else if (routeTag.equals("trolley"))
 			bg = R.drawable.yellowcell;
 		else if (routeTag.equals("emory"))
 			bg = R.drawable.pinkcell;
@@ -71,7 +72,9 @@ public class FavoritesAdapter extends BaseAdapter {
 		stopFavView
 				.setText(Data.capitalize(Data.getFavorite(position).stopTitle));
 
-		if (!Data.isRouteActive(routeTag)) {
+		if (PreferenceManager.getDefaultSharedPreferences(ctx).getBoolean(
+				"showActiveRoutes", false)
+				&& !Data.isRouteActive(routeTag)) {
 			routeFavView.setTextColor(ctx.getResources()
 					.getColor(R.color.fade2));
 			directionFavView.setTextColor(ctx.getResources().getColor(
