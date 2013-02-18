@@ -37,14 +37,14 @@ public class RoutePickerActivity extends RoboActivity implements
 	@InjectView(R.id.favoriteButtonLaunch) private ImageView favoritesLaunchButton;
 
 	private Context ctx;
-	private SharedPreferences prefs;
 	private String[] currentRoutes;
+	private SharedPreferences prefs;
 	private RoutePagerAdapter pagerAdapter;
-	public static final String[] allRoutes;
+	public static final String[] defaultAllRoutes;
 
 	static {
-		allRoutes = new String[] { "blue", "red", "trolley", "night", "green",
-				"emory" };
+		defaultAllRoutes = new String[] { "blue", "red", "trolley", "night",
+				"green", "emory" };
 	}
 
 	public void onCreate(Bundle savedInstance) {
@@ -133,7 +133,7 @@ public class RoutePickerActivity extends RoboActivity implements
 		if (onlyActiveRoutes) {
 			currentRoutes = APIController.getActiveRoutesList(ctx);
 		} else {
-			currentRoutes = allRoutes;
+			currentRoutes = defaultAllRoutes;
 		}
 	}
 
@@ -175,11 +175,11 @@ public class RoutePickerActivity extends RoboActivity implements
 		if (key.equals("showActiveRoutes")) {
 			updateCurrentRoutes();
 
-			pagerAdapter.updateCurrentRoutes(this.currentRoutes);
+			pagerAdapter.updateRoutes(this.currentRoutes);
 			pagerAdapter.notifyDataSetChanged();
 
-			int currentItemIndex = pager.getCurrentItem();
-			setViewColor(currentItemIndex);
+			// Making sure the right color is chosen for the view
+			setViewColor(pager.getCurrentItem());
 		}
 
 	}

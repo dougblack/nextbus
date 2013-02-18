@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 public class DataResult {
-	public ArrayList<Route> route;
+	protected ArrayList<Route> route;
 	final static String[] stringReturnType = {};
 
 	public class Route {
@@ -16,12 +16,20 @@ public class DataResult {
 		// String lonMax;
 
 		/** All of the stops in this route */
-		public ArrayList<Stop> stop;
+		protected ArrayList<Stop> stop;
 
-		public ArrayList<Direction> direction;
+		protected ArrayList<Direction> direction;
 
 		/** key: stop tag, value: Stop */
-		public Hashtable<String, Stop> stopTagTable;
+		protected Hashtable<String, Stop> stopTagTable;
+
+		public boolean hasManyDirections() {
+			if (direction.size() > 1)
+				return true;
+			else
+				return false;
+
+		}
 
 		public Direction getDefaultDirection() {
 			return direction.get(0);
@@ -99,7 +107,7 @@ public class DataResult {
 		}
 
 		public class PathStop {
-			public String tag;
+			protected String tag;
 		}
 
 		public class Stop {

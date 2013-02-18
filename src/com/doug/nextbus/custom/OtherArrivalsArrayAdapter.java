@@ -47,7 +47,7 @@ public class OtherArrivalsArrayAdapter extends ArrayAdapter<String> {
 	}
 
 	private String htmlFormatted(RouteDirectionStop rad) {
-		if (rad.route.direction.size() > 1)
+		if (rad.route.hasManyDirections())
 			return rad.route.title + " <small> <font color='#A0A0A0'> ("
 					+ rad.direction.title + ") </font> </small>";
 		else

@@ -109,7 +109,7 @@ public class Data {
 		boolean onlyActiveRoutes = prefs.getBoolean("showActiveRoutes", false);
 
 		// Get the default list of routes and overwrite if active routes is true
-		String[] currentRoutes = RoutePickerActivity.allRoutes;
+		String[] currentRoutes = RoutePickerActivity.defaultAllRoutes;
 		if (onlyActiveRoutes)
 			currentRoutes = APIController.getActiveRoutesList(Data.context);
 

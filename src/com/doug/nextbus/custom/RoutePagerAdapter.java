@@ -23,16 +23,16 @@ import com.doug.nextbus.backend.DataResult.Route.Stop;
 /* The adapter for the swiping between route pages for the RoutePickerActivity */
 public class RoutePagerAdapter extends PagerAdapter {
 
-	private String[] currentRoutes;
+	private String[] routes;
 	private final Context ctx;
 
-	public RoutePagerAdapter(String[] currentRoutes, Context ctx) {
-		this.currentRoutes = currentRoutes;
+	public RoutePagerAdapter(String[] routes, Context ctx) {
+		this.routes = routes;
 		this.ctx = ctx;
 	}
 
-	public void updateCurrentRoutes(String[] currentRoutes) {
-		this.currentRoutes = currentRoutes;
+	public void updateRoutes(String[] routes) {
+		this.routes = routes;
 	}
 
 	/*
@@ -43,7 +43,7 @@ public class RoutePagerAdapter extends PagerAdapter {
 	public Object instantiateItem(View container, int position) {
 
 		// If there are not routes, return a cell saying there are no routes
-		if (currentRoutes.length == 0) {
+		if (routes.length == 0) {
 			TextView noRoutes = new TextView(ctx);
 			noRoutes.setText("No active routes");
 			noRoutes.setGravity(Gravity.CENTER);
@@ -57,18 +57,18 @@ public class RoutePagerAdapter extends PagerAdapter {
 		// At this point there are routes, so list view as necessary
 
 		final int listPosition = position;
-		final String routeTag = currentRoutes[listPosition];
-		final Route currRoute = Data.getRouteWithTag(routeTag);
-		final boolean thisRouteHasDirection = currRoute.direction.size() != 1;
+		final String routeTag = routes[listPosition];
+		final Route currentRoute = Data.getRouteWithTag(routeTag);
+		final boolean hasMultipleDirections = currentRoute.hasManyDirections();
 
 		// For populating the list view
 		String[] itemListTemp = new String[] {};
-		if (thisRouteHasDirection) {
+		if (hasMultipleDirections) {
 			// Populate list with direction titles
-			itemListTemp = currRoute.getDirectionTitles();
+			itemListTemp = currentRoute.getDirectionTitles();
 		} else {
 			// Populate with stop titles
-			itemListTemp = currRoute.getStopTitles(currRoute
+			itemListTemp = currentRoute.getStopTitles(currentRoute
 					.getDefaultDirection().title);
 		}
 
@@ -82,7 +82,7 @@ public class RoutePagerAdapter extends PagerAdapter {
 
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				if (thisRouteHasDirection) {
+				if (hasMultipleDirections) {
 					/*
 					 * Route has direction so items have to point to
 					 * StopListActivity with correct extras.
@@ -96,9 +96,10 @@ public class RoutePagerAdapter extends PagerAdapter {
 					 * Route doesn't have direction so items have to point to
 					 * StopViewActivity with correct extras.
 					 */
-					Direction defaultDirection = currRoute
+					Direction defaultDirection = currentRoute
 							.getDefaultDirection();
-					Stop stop = currRoute.getStopFromDefaultDirection(position);
+					Stop stop = currentRoute
+							.getStopFromDefaultDirection(position);
 					Intent intent = StopViewActivity.createIntent(ctx,
 							routeTag, defaultDirection, stop);
 
@@ -125,8 +126,8 @@ public class RoutePagerAdapter extends PagerAdapter {
 
 	@Override
 	public int getCount() {
-		if (currentRoutes.length > 0) {
-			return currentRoutes.length;
+		if (routes.length > 0) {
+			return routes.length;
 		} else {
 			return 1;
 		}
@@ -147,8 +148,8 @@ public class RoutePagerAdapter extends PagerAdapter {
 
 	@Override
 	public String getPageTitle(int position) {
-		if (currentRoutes.length > 0) {
-			return Data.capitalize(currentRoutes[position]);
+		if (routes.length > 0) {
+			return Data.capitalize(routes[position]);
 		} else {
 			return "No routes";
 		}
