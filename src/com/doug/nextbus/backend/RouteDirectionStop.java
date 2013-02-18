@@ -4,13 +4,13 @@ import com.doug.nextbus.backend.DataResult.Route;
 import com.doug.nextbus.backend.DataResult.Route.Direction;
 import com.doug.nextbus.backend.DataResult.Route.Stop;
 
-public class RouteAndDirection implements Comparable<RouteAndDirection> {
+public class RouteDirectionStop implements Comparable<RouteDirectionStop> {
 
 	public Route route;
 	public Direction direction;
 	public Stop stop;
 
-	public RouteAndDirection(Route route, Direction direction, Stop stop) {
+	public RouteDirectionStop(Route route, Direction direction, Stop stop) {
 		super();
 		this.route = route;
 		this.direction = direction;
@@ -27,7 +27,7 @@ public class RouteAndDirection implements Comparable<RouteAndDirection> {
 	}
 
 	@Override
-	public int compareTo(RouteAndDirection another) {
+	public int compareTo(RouteDirectionStop another) {
 		return toString().compareTo(another.toString());
 	}
 

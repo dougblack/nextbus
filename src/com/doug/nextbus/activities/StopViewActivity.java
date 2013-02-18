@@ -20,6 +20,7 @@ import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -34,7 +35,8 @@ import com.doug.nextbus.backend.APIController;
 import com.doug.nextbus.backend.Data;
 import com.doug.nextbus.backend.DataResult.Route.Direction;
 import com.doug.nextbus.backend.DataResult.Route.Stop;
-import com.doug.nextbus.backend.RouteAndDirection;
+import com.doug.nextbus.backend.Favorite;
+import com.doug.nextbus.backend.RouteDirectionStop;
 import com.doug.nextbus.custom.OtherArrivalsArrayAdapter;
 
 /* This activity displays the predictions for a the current stop */
@@ -47,6 +49,7 @@ public class StopViewActivity extends RoboActivity {
 	@InjectView(R.id.stopTextView) private TextView stopTextView;
 	@InjectView(R.id.arrivalsDrawer) private SlidingDrawer arrivalDrawer;
 	@InjectView(R.id.backButton) private ImageView backButton;
+	@InjectView(R.id.favoriteButton) private ImageView favoriteButton;
 
 	@InjectView(R.id.colorbar) private View colorBar;
 	@InjectView(R.id.colorSeperator) private View colorSeperator;
@@ -66,7 +69,7 @@ public class StopViewActivity extends RoboActivity {
 	private String[] arrivalsArray;
 	private long start;
 	private boolean deadCellOnly;
-	private RouteAndDirection[] rads;
+	private RouteDirectionStop[] rads;
 
 	public static Intent createIntent(Context ctx, String routeTag,
 			Direction direction, Stop stop) {
@@ -78,9 +81,19 @@ public class StopViewActivity extends RoboActivity {
 		intent.putExtra("stopTag", stop.tag);
 		// Closes all instances of the same activity
 		// intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
 		return intent;
+	}
 
+	public static Intent createIntent(Context ctx, Favorite favorite) {
+		Intent intent = new Intent(ctx, StopViewActivity.class);
+		intent.putExtra("routeTag", favorite.routeTag);
+		intent.putExtra("directionTitle", favorite.directionTitle);
+		intent.putExtra("directionTag", favorite.directionTag);
+		intent.putExtra("stopTitle", favorite.stopTitle);
+		intent.putExtra("stopTag", favorite.stopTag);
+		// Closes all instances of the same activity
+		// intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		return intent;
 	}
 
 	public void onCreate(Bundle savedInstance) {
@@ -113,7 +126,7 @@ public class StopViewActivity extends RoboActivity {
 			deadCellOnly = true;
 		} else {
 
-			for (RouteAndDirection rad : rads) {
+			for (RouteDirectionStop rad : rads) {
 				Drawable cellDrawable = null;
 
 				if (rad.route.tag.equals("red")) {
@@ -153,7 +166,7 @@ public class StopViewActivity extends RoboActivity {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				if (!arrivalsArray[0].equals("No other arrivals")) {
-					RouteAndDirection rad = rads[position];
+					RouteDirectionStop rad = rads[position];
 					Intent intent = StopViewActivity.createIntent(
 							getApplicationContext(), rad.route.tag,
 							rad.direction, rad.stop);
@@ -164,6 +177,7 @@ public class StopViewActivity extends RoboActivity {
 
 		/* Event Listeners */
 		backButton.setOnTouchListener(new OnTouchListener() {
+
 			public boolean onTouch(View arg0, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_DOWN) {
 					backButton.setBackgroundColor(getResources().getColor(
@@ -177,6 +191,20 @@ public class StopViewActivity extends RoboActivity {
 				return true;
 			}
 		});
+
+		Favorite favorite = new Favorite(routeTag, directionTag,
+				directionTitle, stopTag, stopTitle);
+
+		if (Data.isFavorite(favorite)) {
+			favoriteButton
+					.setImageResource(R.drawable.rate_star_big_on_holo_light);
+		} else {
+			favoriteButton
+					.setImageResource(R.drawable.rate_star_big_off_holo_light);
+
+		}
+
+		favoriteButton.setOnClickListener(new MyOnClickListener(favorite));
 
 		refreshButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -219,9 +247,9 @@ public class StopViewActivity extends RoboActivity {
 		new loadPredictionData(this).execute(route, direction, stopTag);
 	}
 
-	private ArrayList<String> formatArrivals(RouteAndDirection[] rads) {
+	private ArrayList<String> formatArrivals(RouteDirectionStop[] rads) {
 		ArrayList<String> radsList = new ArrayList<String>();
-		for (RouteAndDirection rad : rads)
+		for (RouteDirectionStop rad : rads)
 			radsList.add(rad.toString());
 		return radsList;
 	}
@@ -249,6 +277,32 @@ public class StopViewActivity extends RoboActivity {
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+
+	private class MyOnClickListener implements OnClickListener {
+
+		private Favorite favorite;
+
+		public MyOnClickListener(Favorite favorite) {
+			this.favorite = favorite;
+		}
+
+		@Override
+		public void onClick(View v) {
+			boolean ret = Data.toggleFavorite(favorite);
+			if (ret) {
+				((ImageButton) v)
+						.setImageResource(R.drawable.rate_star_big_on_holo_light);
+				Toast.makeText(getApplicationContext(), "Added to Favorites",
+						Toast.LENGTH_SHORT).show();
+			} else {
+				((ImageButton) v)
+						.setImageResource(R.drawable.rate_star_big_off_holo_light);
+				Toast.makeText(getApplicationContext(),
+						"Removed from Favorites", Toast.LENGTH_SHORT).show();
+			}
+		}
+
 	}
 
 	/* Load prediction data asynchronously. */

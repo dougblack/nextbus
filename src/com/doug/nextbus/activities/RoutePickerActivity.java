@@ -15,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.ImageView;
@@ -36,6 +37,7 @@ public class RoutePickerActivity extends RoboActivity implements
 	@InjectView(R.id.routepagerviewpager) private ViewPager pager;
 	@InjectView(R.id.mapButton) private ImageView mapButton;
 	@InjectView(R.id.routes) private TitlePageIndicator titleIndicator;
+	@InjectView(R.id.favoriteButtonLaunch) private ImageView favoriteButtonLaunch;
 
 	public static final String[] allRoutes;
 	private String[] currentRoutes;
@@ -114,6 +116,17 @@ public class RoutePickerActivity extends RoboActivity implements
 					return true;
 				}
 				return true;
+			}
+		});
+
+		favoriteButtonLaunch.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				Intent intent = new Intent(getApplicationContext(),
+						FavoritesActivity.class);
+				startActivity(intent);
 			}
 		});
 

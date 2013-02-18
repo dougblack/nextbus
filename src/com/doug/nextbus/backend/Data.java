@@ -1,6 +1,9 @@
 package com.doug.nextbus.backend;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -36,12 +39,13 @@ public class Data {
 	private static Context context;
 	private static DataResult dataResult;
 	final private static HashMap<String, Route> hm;
-	private static HashMap<String, HashSet<RouteAndDirection>> sharedStops;
+	private static HashMap<String, HashSet<RouteDirectionStop>> sharedStops;
+	private static Favorites favorites;
 
 	final static String[] stringReturnType = {};
 	static {
 		hm = new HashMap<String, Route>();
-		sharedStops = new HashMap<String, HashSet<RouteAndDirection>>();
+		sharedStops = new HashMap<String, HashSet<RouteDirectionStop>>();
 	}
 
 	/** Reads the data into memory */
@@ -74,18 +78,19 @@ public class Data {
 
 					Stop stop = route.getStop(pathStop.tag);
 
-					HashSet<RouteAndDirection> hs = sharedStops.get(stop.title) == null ? new HashSet<RouteAndDirection>()
+					HashSet<RouteDirectionStop> hs = sharedStops
+							.get(stop.title) == null ? new HashSet<RouteDirectionStop>()
 							: sharedStops.get(stop.title);
-					hs.add(new RouteAndDirection(route, direction, stop));
+					hs.add(new RouteDirectionStop(route, direction, stop));
 					sharedStops.put(stop.title, hs);
 				}
 		}
 
 	}
 
-	public static RouteAndDirection[] getAllRadsWithStopTitle(String stopTitle,
-			String route, String directionTag) {
-		ArrayList<RouteAndDirection> radsList = new ArrayList<RouteAndDirection>();
+	public static RouteDirectionStop[] getAllRadsWithStopTitle(
+			String stopTitle, String route, String directionTag) {
+		ArrayList<RouteDirectionStop> radsList = new ArrayList<RouteDirectionStop>();
 
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(Data.context);
@@ -100,10 +105,10 @@ public class Data {
 		 * Iterate through route and direction if the rad matches the given
 		 * route/direction or is not in the activeRoutes the continue
 		 */
-		Iterator<RouteAndDirection> iter = sharedStops.get(stopTitle)
+		Iterator<RouteDirectionStop> iter = sharedStops.get(stopTitle)
 				.iterator();
 		while (iter.hasNext()) {
-			RouteAndDirection rad = iter.next();
+			RouteDirectionStop rad = iter.next();
 			if ((rad.route.tag.equals(route) && rad.direction.tag
 					.equals(directionTag))
 					|| notInArray(activeRoutes, rad.route.tag))
@@ -113,7 +118,7 @@ public class Data {
 
 		// Sorting to put the reds, blues, etc together
 		Collections.sort(radsList);
-		RouteAndDirection[] rads = {};
+		RouteDirectionStop[] rads = {};
 		return radsList.toArray(rads);
 	}
 
@@ -225,4 +230,62 @@ public class Data {
 
 	}
 
+	public static void saveFavoriteData() {
+
+		try {
+			String toSave = new Gson().toJson(Data.favorites);
+			FileOutputStream fos = Data.context.openFileOutput("favorites.txt",
+					Context.MODE_PRIVATE);
+			fos.write(toSave.getBytes());
+			fos.close();
+
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	public static void loadFavoritesData() {
+
+		try {
+			FileInputStream fis = context.openFileInput("favorites.txt");
+			Reader reader = new InputStreamReader(fis);
+			Data.favorites = new Gson().fromJson(reader, Favorites.class);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		Data.favorites = new Favorites();
+
+	}
+
+	public static boolean toggleFavorite(Favorite favorite) {
+		if (Data.favorites == null)
+			loadFavoritesData();
+		boolean ret = favorites.toggleFavorite(favorite);
+		saveFavoriteData();
+		return ret;
+
+	}
+
+	public static boolean isFavorite(Favorite favorite) {
+		if (Data.favorites == null)
+			loadFavoritesData();
+		return Data.favorites.contains(favorite);
+	}
+
+	public static int getFavoritesSize() {
+		if (Data.favorites == null)
+			loadFavoritesData();
+		return Data.favorites.getSize();
+	}
+
+	public static Favorite getFavorite(int index) {
+		if (Data.favorites == null)
+			loadFavoritesData();
+		return Data.favorites.getFavorite(index);
+	}
 }

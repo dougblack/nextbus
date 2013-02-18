@@ -13,7 +13,7 @@
         android:label="@string/app_name"
         android:theme="@style/Theme.DarkTheme" >
         <activity
-            android:name=".activities.RoutePickerActivity"
+            android:name="com.doug.nextbus.activities.RoutePickerActivity"
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
@@ -24,32 +24,36 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.StopListActivity"
+            android:name="com.doug.nextbus.activities.StopListActivity"
             android:configChanges="orientation"
             android:label="Stop List"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".activities.StopViewActivity"
+            android:name="com.doug.nextbus.activities.StopViewActivity"
             android:configChanges="orientation"
             android:label="Stop View"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".activities.CreditsActivity"
+            android:name="com.doug.nextbus.activities.CreditsActivity"
             android:configChanges="orientation"
             android:label="About"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".activities.PreferencesActivity"
+            android:name="com.doug.nextbus.activities.PreferencesActivity"
             android:label="Preferences"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".activities.MapViewActivity"
+            android:name="com.doug.nextbus.activities.MapViewActivity"
             android:label="Map Activity"
             android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.doug.nextbus.activities.FavoritesActivity"
+            android:label="@string/title_activity_favorites" >
         </activity>
     </application>
 

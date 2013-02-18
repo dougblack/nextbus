@@ -50,6 +50,19 @@
             android:layout_height="50dp"
             android:gravity="center"
             android:padding="10dp" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="1dp"
+            android:layout_height="fill_parent"
+            android:background="@color/dividercolor" />
+
+        <ImageButton
+            android:id="@+id/favoriteButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@null"
+            android:src="@drawable/rate_star_big_on_holo_light" />
     </LinearLayout>
 
     <RelativeLayout

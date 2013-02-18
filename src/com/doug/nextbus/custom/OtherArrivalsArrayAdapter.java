@@ -2,7 +2,7 @@ package com.doug.nextbus.custom;
 
 import java.util.ArrayList;
 
-import com.doug.nextbus.backend.RouteAndDirection;
+import com.doug.nextbus.backend.RouteDirectionStop;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -19,11 +19,11 @@ public class OtherArrivalsArrayAdapter extends ArrayAdapter<String> {
 
 	private ArrayList<Drawable> drawableList;
 	boolean deadCellOnly;
-	RouteAndDirection[] rads;
+	RouteDirectionStop[] rads;
 
 	public OtherArrivalsArrayAdapter(Context context, int textViewResourceId,
 			String[] data, ArrayList<Drawable> cellDrawables,
-			boolean deadCellOnly, RouteAndDirection[] rads) {
+			boolean deadCellOnly, RouteDirectionStop[] rads) {
 
 		super(context, textViewResourceId, data);
 		drawableList = cellDrawables;
@@ -46,7 +46,7 @@ public class OtherArrivalsArrayAdapter extends ArrayAdapter<String> {
 		return view;
 	}
 
-	private String htmlFormatted(RouteAndDirection rad) {
+	private String htmlFormatted(RouteDirectionStop rad) {
 		if (rad.route.direction.size() > 1)
 			return rad.route.title + " <small> <font color='#A0A0A0'> ("
 					+ rad.direction.title + ") </font> </small>";
