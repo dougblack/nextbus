@@ -15,10 +15,12 @@ public class DataResult {
 		// String lonMin;
 		// String lonMax;
 
+		/** All of the stops in this route */
 		public ArrayList<Stop> stop;
+
 		public ArrayList<Direction> direction;
-		
-		/** for quick access. key: stop tag, value: Stop */
+
+		/** key: stop tag, value: Stop */
 		public Hashtable<String, Stop> stopTagTable;
 
 		public Direction getDefaultDirection() {
@@ -35,10 +37,10 @@ public class DataResult {
 		}
 
 		public String[] getDirectionTitles() {
-			ArrayList<String> dirTitles = new ArrayList<String>();
+			ArrayList<String> directionTitles = new ArrayList<String>();
 			for (Direction dir : direction)
-				dirTitles.add(dir.title);
-			return dirTitles.toArray(stringReturnType);
+				directionTitles.add(dir.title);
+			return directionTitles.toArray(stringReturnType);
 		}
 
 		public Stop getStop(String stopTag) {
@@ -47,13 +49,11 @@ public class DataResult {
 
 		public String[] getStopTitles(String directionTitle) {
 			ArrayList<String> al = new ArrayList<String>();
-			for (int i = 0; i < direction.size(); i++) {
-				if (direction.get(i).title.equals(directionTitle)) {
-					Direction currDirection = direction.get(i);
 
-					for (int j = 0; j < currDirection.stop.size(); j++) {
-						PathStop pStop = currDirection.stop.get(j);
-						Stop stop = stopTagTable.get(pStop.tag);
+			for (Direction dir : direction) {
+				if (dir.title.equals(directionTitle)) {
+					for (PathStop pathStop : dir.stop) {
+						Stop stop = stopTagTable.get(pathStop.tag);
 						al.add(stop.title);
 					}
 				}

@@ -41,64 +41,9 @@ public class RoutePagerAdapter extends PagerAdapter {
 	 * correct activity based on which item in the list view is selected.
 	 */
 	public Object instantiateItem(View container, int position) {
-	
-		if (currentRoutes.length > 0) {
-			final int listPosition = position;
-			final String routeTag = currentRoutes[listPosition];
-			final Route currRoute = Data.getRouteWithTag(routeTag);
-	
-			String[] itemListTemp = new String[] {};
-			final boolean thisRouteHasDirection = currRoute.direction.size() != 1;
-			if (thisRouteHasDirection) {
-				// If route has directions, populate list with them
-				itemListTemp = currRoute.getDirectionTitles();
-			} else {
-				// Route doesn't have direction so list view contains stops
-				itemListTemp = currRoute.getStopTitles(currRoute
-						.getDefaultDirection().title);
-	
-			}
-	
-			final String[] itemList = itemListTemp;
-	
-			ListView stopList = new ListView(ctx);
-			stopList.setAdapter(new ArrayAdapter<String>(ctx,
-					android.R.layout.simple_list_item_1, itemList));
-			stopList.setOnItemClickListener(new OnItemClickListener() {
-	
-				public void onItemClick(AdapterView<?> parent, View view,
-						int position, long id) {
-					if (thisRouteHasDirection) {
-						/*
-						 * Route has direction so items have to point to
-						 * StopListActivity with correct extras.
-						 */
-	
-						Intent intent = StopListActivity.createIntent(ctx,
-								routeTag, itemList[position]);
-						ctx.startActivity(intent);
-					} else {
-						/*
-						 * Route doesn't have direction so items have to point
-						 * to StopViewActivity with correct extras.
-						 */
-						Direction defaultDirection = currRoute
-								.getDefaultDirection();
-						Stop stop = currRoute
-								.getStopFromDefaultDirection(position);
-						Intent intent = StopViewActivity.createIntent(ctx,
-								routeTag, defaultDirection, stop);
-	
-						ctx.startActivity(intent);
-					}
-				}
-	
-			});
-	
-			((ViewPager) container).addView(stopList, 0);
-	
-			return stopList;
-		} else {
+
+		// If there are not routes, return a cell saying there are no routes
+		if (currentRoutes.length == 0) {
 			TextView noRoutes = new TextView(ctx);
 			noRoutes.setText("No active routes");
 			noRoutes.setGravity(Gravity.CENTER);
@@ -108,6 +53,64 @@ public class RoutePagerAdapter extends PagerAdapter {
 			((ViewPager) container).addView(noRoutes, 0);
 			return noRoutes;
 		}
+
+		// At this point there are routes, so list view as necessary
+
+		final int listPosition = position;
+		final String routeTag = currentRoutes[listPosition];
+		final Route currRoute = Data.getRouteWithTag(routeTag);
+		final boolean thisRouteHasDirection = currRoute.direction.size() != 1;
+
+		// For populating the list view
+		String[] itemListTemp = new String[] {};
+		if (thisRouteHasDirection) {
+			// Populate list with direction titles
+			itemListTemp = currRoute.getDirectionTitles();
+		} else {
+			// Populate with stop titles
+			itemListTemp = currRoute.getStopTitles(currRoute
+					.getDefaultDirection().title);
+		}
+
+		final String[] itemList = itemListTemp;
+
+		ListView itemListView = new ListView(ctx);
+
+		itemListView.setAdapter(new ArrayAdapter<String>(ctx,
+				android.R.layout.simple_list_item_1, itemList));
+		itemListView.setOnItemClickListener(new OnItemClickListener() {
+
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				if (thisRouteHasDirection) {
+					/*
+					 * Route has direction so items have to point to
+					 * StopListActivity with correct extras.
+					 */
+
+					Intent intent = StopListActivity.createIntent(ctx,
+							routeTag, itemList[position]);
+					ctx.startActivity(intent);
+				} else {
+					/*
+					 * Route doesn't have direction so items have to point to
+					 * StopViewActivity with correct extras.
+					 */
+					Direction defaultDirection = currRoute
+							.getDefaultDirection();
+					Stop stop = currRoute.getStopFromDefaultDirection(position);
+					Intent intent = StopViewActivity.createIntent(ctx,
+							routeTag, defaultDirection, stop);
+
+					ctx.startActivity(intent);
+				}
+			}
+
+		});
+
+		((ViewPager) container).addView(itemListView, 0);
+		return itemListView;
+
 	}
 
 	@Override
