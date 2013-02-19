@@ -1,9 +1,10 @@
 package com.doug.nextbus.backend;
 
-import com.doug.nextbus.backend.DataResult.Route;
-import com.doug.nextbus.backend.DataResult.Route.Direction;
-import com.doug.nextbus.backend.DataResult.Route.Stop;
+import com.doug.nextbus.backend.JSONDataResult.Route;
+import com.doug.nextbus.backend.JSONDataResult.Route.Direction;
+import com.doug.nextbus.backend.JSONDataResult.Route.Stop;
 
+/** Stores a specific route, direction, and stop */
 public class RouteDirectionStop implements Comparable<RouteDirectionStop> {
 
 	final public Route route;

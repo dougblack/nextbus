@@ -26,9 +26,15 @@ public class APIController {
 
 	private static String createURL(String route, String direction, String stop) {
 		// final String localHost = "http://10.0.2.2:3000/bus/";
-		final String remoteHost = "http://desolate-escarpment-6039.herokuapp.com/bus/";
-		String url = String.format("%sget?route=%s&direction=%s&stop=%s",
-				remoteHost, route, direction, stop);
+
+		// final String remoteHost =
+		// "http://desolate-escarpment-6039.herokuapp.com/bus/";
+		final String pythonHost = "http://quiet-fjord-4717.herokuapp.com/";
+		// String url = String.format("%sget?route=%s&direction=%s&stop=%s",
+		// remoteHost, route, direction, stop);
+
+		String url = "http://quiet-fjord-4717.herokuapp.com/" + route + "/"
+				+ direction + "/" + stop;
 
 		return url;
 
@@ -43,13 +49,12 @@ public class APIController {
 			PredictionResult result = new Gson().fromJson(reader,
 					PredictionResult.class);
 			return result.predictions;
-
 		} catch (Exception e) {
 			e.printStackTrace();
 			Log.d("error", e.getClass().toString());
 		}
 		ArrayList<String> al = new ArrayList<String>();
-		al.add("-1");
+		al.add("-1"); // Returning -1 if there was an error
 		return al;
 
 	}
@@ -59,12 +64,12 @@ public class APIController {
 	 * schedule.
 	 */
 	public static String[] getActiveRoutesList(Context context) {
-	
+
 		ArrayList<String> activeRoutesList = new ArrayList<String>();
-	
+
 		Time time = new Time();
 		time.switchTimezone("EST");
-	
+
 		time.setToNow();
 		int hour = time.hour;
 		int day = time.weekDay;
@@ -102,20 +107,20 @@ public class APIController {
 			if ((hour >= 20) || (hour <= 3)) {
 				// 8:45pm - 3:30am
 				activeRoutesList.add("night");
-	
+
 			}
 		}
-	
+
 		String[] strings = {};
 		return activeRoutesList.toArray(strings);
-	
+
 	}
 
 	/* Gets bus locations from the Georgia Tech mobile app. */
 	public static ArrayList<String[]> getBusLocations() {
-	
+
 		String busLocUrl = "http://m.gatech.edu/proxy/walkpath.cip.gatech.edu/bus_position.php";
-	
+
 		ArrayList<Object> busLocations = new ArrayList<Object>();
 		JSONArray busLocationsJSON = null;
 		try {
@@ -125,14 +130,14 @@ public class APIController {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-	
+
 		try {
 			return parseLocationResults(busLocationsJSON);
 		} catch (JSONException e) {
 			e.printStackTrace();
 			return new ArrayList<String[]>();
 		}
-	
+
 	}
 
 	private static String readAll(Reader rd) throws IOException {

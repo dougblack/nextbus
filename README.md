@@ -19,7 +19,7 @@ GT NextBus
 **My preferences for code are:**
 
 - Prefer smaller, more compact code.
-- Move getter/setters/trivial override methods to bottom of file.
+- Move getter/setters/trivial/overrided methods to bottom of file.
 - Annotate @Overrides to keep help understand the purpose of a method.
 - If there are multiple Event Listeners being created in the onCreate method, move them to a separate "eventListeners(args)" to keep the onCreate method clean.
 
@@ -30,7 +30,6 @@ Quick Documentation
 
 Necessary libraries are:
 
-* Know how to clone from a GitHub repo!
 * RoboGuice: used for depedency injection so there aren't unneeded ```` = (TextView) findViewById(…)```` everywhere.
     * Already included in /libs/ and necessary dependent libraries 
     * [Github Page](https://github.com/roboguice/roboguice)
@@ -46,7 +45,7 @@ Necessary libraries are:
 - Do not include "android-support-v4.jar" since it is included with the ViewPagerIndicator library.
 - Routes, directions, and stops have titles and tags. Titles are displayed to the user because they are the full names. Tags are used for API calls since they are smaller. Example shown at the end of this list. Except Route titles are not used because they are too long to display properly. In that case, use the capitalize method to convert the tag into an appropriate format for display.
 - There are inconsistencies in stop tags for different routes. For example, Red and Blue both haave a stop at Fitten but for the tags are "fitten" and "fitten_a" for Red and Blue routes, respectively. There are other stops with similar pattern, like for northave and northave_a, and Student Center is sometimes referred to as studcentr and centrstud. This might be a limitation of the NextBus API, but it's an inconvenience for us.
-- A route may use one stop in multiple directions. For example, the Midnight Rambler (Night), stops at the Transit Hub twice for its two directions (To Clough Commons and To Fitten). So the user should be able to select the direction and 
+- A route may use one stop in multiple directions. For example, the Midnight Rambler (Night), stops at the Transit Hub twice for two directions (To Clough Commons and To Fitten). So the user should be able to select the direction and 
 
 Sample Route/Direction/Stop tag/titles:
 

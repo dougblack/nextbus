@@ -56,7 +56,7 @@ public class RoutePickerActivity extends RoboActivity implements
 		new WakeupAsyncTask().execute();
 
 		this.ctx = this;
-		Data.setConfigData(ctx);
+		Data.setConfig(ctx);
 
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		prefs.registerOnSharedPreferenceChangeListener(this);

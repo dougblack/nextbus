@@ -3,7 +3,7 @@ package com.doug.nextbus.backend;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-public class DataResult {
+public class JSONDataResult {
 	protected ArrayList<Route> route;
 	final static String[] stringReturnType = {};
 

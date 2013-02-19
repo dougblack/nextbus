@@ -22,20 +22,6 @@
         android:enabled="false"
         android:title="Upcoming features" >
 
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:enabled="false"
-            android:key="enableFavoriteStops"
-            android:summary="Allow stops to be saved as favorites"
-            android:title="Enable favorite stops" />
-
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:enabled="false"
-            android:key="useColloquialNames"
-            android:summary="Allows renaming of stops to user-supplied names"
-            android:title="Use colloquial names" />
-
     </PreferenceCategory>
 
 </PreferenceScreen>

@@ -20,9 +20,9 @@ import android.widget.TextView;
 
 import com.doug.nextbus.R;
 import com.doug.nextbus.backend.Data;
-import com.doug.nextbus.backend.DataResult.Route;
-import com.doug.nextbus.backend.DataResult.Route.Direction;
-import com.doug.nextbus.backend.DataResult.Route.Stop;
+import com.doug.nextbus.backend.JSONDataResult.Route;
+import com.doug.nextbus.backend.JSONDataResult.Route.Direction;
+import com.doug.nextbus.backend.JSONDataResult.Route.Stop;
 
 /* This activity shows a list of stops. */
 public class StopListActivity extends RoboActivity {

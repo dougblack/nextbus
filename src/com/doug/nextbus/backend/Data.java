@@ -28,10 +28,10 @@ import android.util.Log;
 
 import com.doug.nextbus.R;
 import com.doug.nextbus.activities.RoutePickerActivity;
-import com.doug.nextbus.backend.DataResult.Route;
-import com.doug.nextbus.backend.DataResult.Route.Direction;
-import com.doug.nextbus.backend.DataResult.Route.PathStop;
-import com.doug.nextbus.backend.DataResult.Route.Stop;
+import com.doug.nextbus.backend.JSONDataResult.Route;
+import com.doug.nextbus.backend.JSONDataResult.Route.Direction;
+import com.doug.nextbus.backend.JSONDataResult.Route.PathStop;
+import com.doug.nextbus.backend.JSONDataResult.Route.Stop;
 import com.google.gson.Gson;
 
 /* This class controls reading and writing local files as well as persisting current state data. 
@@ -39,9 +39,9 @@ import com.google.gson.Gson;
 
 public class Data {
 
-	private static Context context;
+	private static Context ctx;
 	/** Used for JSON parsing */
-	private static DataResult dataResult;
+	private static JSONDataResult jsonDataResult;
 	/** Key: routeTag, Value: Route object */
 	final private static HashMap<String, Route> hm;
 	/** Key: stopTitle, Value: RouteDirectionStop objects that share the stop */
@@ -57,27 +57,27 @@ public class Data {
 	}
 
 	/** Reads the data into memory if it already doesn't exist */
-	public static void setConfigData(Context context) {
-		Data.context = context;
-		if (dataResult == null)
-			ReadData();
+	public static void setConfig(Context ctx) {
+		Data.ctx = ctx;
+		if (jsonDataResult == null)
+			readData();
 	}
 
 	/** Loads route information and populates the necessary data structures */
-	public static void ReadData() {
-		InputStream is = (InputStream) context.getResources().openRawResource(
+	public static void readData() {
+		InputStream is = (InputStream) ctx.getResources().openRawResource(
 				R.raw.routeconfig);
 		Reader reader = new InputStreamReader(is);
 		try {
-			dataResult = new Gson().fromJson(reader, DataResult.class);
+			jsonDataResult = new Gson().fromJson(reader, JSONDataResult.class);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
 
-		for (Route route : dataResult.route) {
+		for (Route route : jsonDataResult.route) {
 			for (Stop stop : route.stop) {
 				if (route.stopTagTable == null)
-					route.stopTagTable = new Hashtable<String, DataResult.Route.Stop>();
+					route.stopTagTable = new Hashtable<String, JSONDataResult.Route.Stop>();
 				route.stopTagTable.put(stop.tag, stop);
 			}
 			hm.put(route.tag, route);
@@ -105,13 +105,13 @@ public class Data {
 		ArrayList<RouteDirectionStop> rdsList = new ArrayList<RouteDirectionStop>();
 
 		SharedPreferences prefs = PreferenceManager
-				.getDefaultSharedPreferences(Data.context);
+				.getDefaultSharedPreferences(Data.ctx);
 		boolean onlyActiveRoutes = prefs.getBoolean("showActiveRoutes", false);
 
 		// Get the default list of routes and overwrite if active routes is true
 		String[] currentRoutes = RoutePickerActivity.defaultAllRoutes;
 		if (onlyActiveRoutes)
-			currentRoutes = APIController.getActiveRoutesList(Data.context);
+			currentRoutes = APIController.getActiveRoutesList(Data.ctx);
 
 		/*
 		 * Iterate through route and direction if the rds matches the given
@@ -178,7 +178,7 @@ public class Data {
 			bg = R.drawable.pinkcell;
 		else if (routeTag.equals("night"))
 			bg = R.drawable.nightcell;
-		return context.getResources().getDrawable(bg);
+		return ctx.getResources().getDrawable(bg);
 
 	}
 
@@ -209,16 +209,16 @@ public class Data {
 		InputStream is = null;
 
 		if (route.equals("red")) {
-			is = (InputStream) context.getResources().openRawResource(
+			is = (InputStream) ctx.getResources().openRawResource(
 					R.raw.redroute);
 		} else if (route.equals("blue")) {
-			is = (InputStream) context.getResources().openRawResource(
+			is = (InputStream) ctx.getResources().openRawResource(
 					R.raw.blueroute);
 		} else if (route.equals("green")) {
-			is = (InputStream) context.getResources().openRawResource(
+			is = (InputStream) ctx.getResources().openRawResource(
 					R.raw.greenroute);
 		} else if (route.equals("trolley")) {
-			is = (InputStream) context.getResources().openRawResource(
+			is = (InputStream) ctx.getResources().openRawResource(
 					R.raw.trolleyroute);
 		}
 		BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -261,7 +261,7 @@ public class Data {
 	}
 
 	public static boolean isRouteActive(String routeTag) {
-		String[] activeRoutes = APIController.getActiveRoutesList(Data.context);
+		String[] activeRoutes = APIController.getActiveRoutesList(Data.ctx);
 		return !isNotInArray(activeRoutes, routeTag);
 	}
 
@@ -277,7 +277,7 @@ public class Data {
 	private static void loadFavoritesData() {
 
 		try {
-			FileInputStream fis = context.openFileInput("favorites.txt");
+			FileInputStream fis = ctx.openFileInput("favorites.txt");
 			Reader reader = new InputStreamReader(fis);
 			Data.favorites = new Gson().fromJson(reader, Favorites.class);
 		} catch (Exception e) {
@@ -291,7 +291,7 @@ public class Data {
 
 		try {
 			String toSave = new Gson().toJson(Data.favorites);
-			FileOutputStream fos = Data.context.openFileOutput("favorites.txt",
+			FileOutputStream fos = Data.ctx.openFileOutput("favorites.txt",
 					Context.MODE_PRIVATE);
 			fos.write(toSave.getBytes());
 			fos.close();
