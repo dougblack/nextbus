@@ -27,14 +27,13 @@ public class APIController {
 	private static String createURL(String route, String direction, String stop) {
 		// final String localHost = "http://10.0.2.2:3000/bus/";
 
-		// final String remoteHost =
-		// "http://desolate-escarpment-6039.herokuapp.com/bus/";
-		final String pythonHost = "http://quiet-fjord-4717.herokuapp.com/";
-		// String url = String.format("%sget?route=%s&direction=%s&stop=%s",
-		// remoteHost, route, direction, stop);
+		final String remoteHost = "http://desolate-escarpment-6039.herokuapp.com/bus/";
+		// final String pythonHost = "http://quiet-fjord-4717.herokuapp.com/";
+		String url = String.format("%sget?route=%s&direction=%s&stop=%s",
+				remoteHost, route, direction, stop);
 
-		String url = "http://quiet-fjord-4717.herokuapp.com/" + route + "/"
-				+ direction + "/" + stop;
+		// String url = "http://quiet-fjord-4717.herokuapp.com/" + route + "/"
+		// + direction + "/" + stop;
 
 		return url;
 

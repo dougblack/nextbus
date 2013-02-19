@@ -32,11 +32,14 @@ public class StopListActivity extends RoboActivity {
 	@InjectView(R.id.colorbar) private View colorBar;
 	@InjectView(R.id.directionBackButton) private ImageView backButton;
 
+	final private static String ROUTE_TAG_KEY = "routeTag";
+	final private static String DIRECTION_TITLE_KEY = "directionTitle";
+
 	public static Intent createIntent(Context ctx, String routeTag,
 			String directionTitle) {
 		Intent intent = new Intent(ctx, StopListActivity.class);
-		intent.putExtra("routeTag", routeTag);
-		intent.putExtra("directionTitle", directionTitle);
+		intent.putExtra(ROUTE_TAG_KEY, routeTag);
+		intent.putExtra(DIRECTION_TITLE_KEY, directionTitle);
 		return intent;
 	}
 

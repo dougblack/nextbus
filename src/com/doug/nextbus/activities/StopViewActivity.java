@@ -62,6 +62,12 @@ public class StopViewActivity extends RoboActivity implements
 	@InjectView(R.id.drawerTextView) private TextView drawerHandleTextView;
 	@InjectView(R.id.arrivalList) private ListView arrivalList;
 
+	final private static String ROUTE_TAG_KEY = "routeTag";
+	final private static String DIRECTION_TITLE_KEY = "directionTitle";
+	final private static String DIRECTION_TAG_KEY = "directionTag";
+	final private static String STOP_TITLE_KEY = "stopTitle";
+	final private static String STOP_TAG_KEY = "stopTag";
+
 	private String routeTag;
 	private String directionTitle;
 	private String directionTag;
@@ -78,11 +84,11 @@ public class StopViewActivity extends RoboActivity implements
 	public static Intent createIntent(Context ctx, String routeTag,
 			Direction direction, Stop stop) {
 		Intent intent = new Intent(ctx, StopViewActivity.class);
-		intent.putExtra("routeTag", routeTag);
-		intent.putExtra("directionTitle", direction.title);
-		intent.putExtra("directionTag", direction.tag);
-		intent.putExtra("stopTitle", stop.title);
-		intent.putExtra("stopTag", stop.tag);
+		intent.putExtra(ROUTE_TAG_KEY, routeTag);
+		intent.putExtra(DIRECTION_TITLE_KEY, direction.title);
+		intent.putExtra(DIRECTION_TAG_KEY, direction.tag);
+		intent.putExtra(STOP_TITLE_KEY, stop.title);
+		intent.putExtra(STOP_TAG_KEY, stop.tag);
 		// Closes all instances of the same activity
 		// intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		return intent;
@@ -91,11 +97,11 @@ public class StopViewActivity extends RoboActivity implements
 	public static Intent createIntent(Context ctx, Favorite favorite) {
 
 		Intent intent = new Intent(ctx, StopViewActivity.class);
-		intent.putExtra("routeTag", favorite.routeTag);
-		intent.putExtra("directionTitle", favorite.directionTitle);
-		intent.putExtra("directionTag", favorite.directionTag);
-		intent.putExtra("stopTitle", favorite.stopTitle);
-		intent.putExtra("stopTag", favorite.stopTag);
+		intent.putExtra(ROUTE_TAG_KEY, favorite.routeTag);
+		intent.putExtra(DIRECTION_TITLE_KEY, favorite.directionTitle);
+		intent.putExtra(DIRECTION_TAG_KEY, favorite.directionTag);
+		intent.putExtra(STOP_TITLE_KEY, favorite.stopTitle);
+		intent.putExtra(STOP_TAG_KEY, favorite.stopTag);
 		// Closes all instances of the same activity
 		// intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		return intent;
@@ -114,11 +120,11 @@ public class StopViewActivity extends RoboActivity implements
 
 		// Extras
 		Bundle extras = getIntent().getExtras();
-		routeTag = extras.getString("routeTag");
-		directionTitle = extras.getString("directionTitle");
-		directionTag = extras.getString("directionTag");
-		stopTitle = extras.getString("stopTitle");
-		stopTag = extras.getString("stopTag");
+		routeTag = extras.getString(ROUTE_TAG_KEY);
+		directionTitle = extras.getString(DIRECTION_TITLE_KEY);
+		directionTag = extras.getString(DIRECTION_TAG_KEY);
+		stopTitle = extras.getString(STOP_TITLE_KEY);
+		stopTag = extras.getString(STOP_TAG_KEY);
 
 		deadCellOnly = false;
 
