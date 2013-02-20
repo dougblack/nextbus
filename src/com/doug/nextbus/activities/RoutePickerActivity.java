@@ -53,7 +53,7 @@ public class RoutePickerActivity extends RoboActivity implements
 		// Used for waking up the server, done first
 		new WakeupAsyncTask().execute();
 
-		Data.setConfig(getApplicationContext());
+		Data.setConfig(this);
 
 		mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 		mPrefs.registerOnSharedPreferenceChangeListener(this);
@@ -61,9 +61,8 @@ public class RoutePickerActivity extends RoboActivity implements
 		// Updating available routes depending on preference
 		updateCurrentRoutes();
 
-		// Setup Pager and Adapter
-		mPagerAdapter = new RoutePagerAdapter(getApplicationContext(),
-				mCurrentRoutes);
+		// Setup Pager and Adapter, make sure passing this
+		mPagerAdapter = new RoutePagerAdapter(this, mCurrentRoutes);
 		pager.setAdapter(mPagerAdapter);
 
 		// Setup ViewGroup Indicator
@@ -129,8 +128,7 @@ public class RoutePickerActivity extends RoboActivity implements
 	private void updateCurrentRoutes() {
 		boolean onlyActiveRoutes = mPrefs.getBoolean("showActiveRoutes", true);
 		if (onlyActiveRoutes) {
-			mCurrentRoutes = APIController
-					.getActiveRoutesList(getApplicationContext());
+			mCurrentRoutes = APIController.getActiveRoutesList(this);
 		} else {
 			mCurrentRoutes = DEFAULT_ALL_ROUTES;
 		}
@@ -156,12 +154,11 @@ public class RoutePickerActivity extends RoboActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.aboutmenusitem:
-			Intent aboutActivity = new Intent(getApplicationContext(),
-					CreditsActivity.class);
+			Intent aboutActivity = new Intent(this, CreditsActivity.class);
 			startActivity(aboutActivity);
 			return true;
 		case R.id.preferencesmenuitem:
-			Intent preferenceActivity = new Intent(getApplicationContext(),
+			Intent preferenceActivity = new Intent(this,
 					PreferencesActivity.class);
 			startActivity(preferenceActivity);
 			return true;
