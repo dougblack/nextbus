@@ -199,6 +199,7 @@
                 android:id="@+id/colorBand"
                 android:layout_width="fill_parent"
                 android:layout_height="5dp"
+                android:gravity="center"
                 android:orientation="horizontal" >
 
                 <View
