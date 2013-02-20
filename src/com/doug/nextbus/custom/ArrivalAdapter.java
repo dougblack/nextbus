@@ -19,16 +19,16 @@ public class ArrivalAdapter extends BaseAdapter {
 	public ArrivalAdapter(Context ctx, RouteDirectionStop[] rads) {
 		this.ctx = ctx;
 		this.rads = rads;
-
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View vi = convertView;
 
-		if (convertView == null)
+		if (convertView == null) {
 			vi = View.inflate(ctx, R.layout.arrival_row, null);
-
+		}
+		// If no RADs, then return the dead cell
 		if (rads.length == 0) {
 			vi.setBackgroundDrawable(ctx.getResources().getDrawable(
 					R.drawable.deadcell));

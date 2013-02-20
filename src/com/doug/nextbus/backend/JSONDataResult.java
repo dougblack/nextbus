@@ -23,7 +23,7 @@ public class JSONDataResult {
 		/** key: stop tag, value: Stop */
 		protected Hashtable<String, Stop> stopTagTable;
 
-		public boolean hasManyDirections() {
+		public boolean hasMultipleDirections() {
 			if (direction.size() > 1)
 				return true;
 			else

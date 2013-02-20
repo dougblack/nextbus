@@ -45,11 +45,9 @@ public class CreditsActivity extends Activity {
 				if (event.getAction() == MotionEvent.ACTION_DOWN) {
 					backButton.setBackgroundColor(getResources().getColor(
 							R.color.black));
-					return true;
 				} else if (event.getAction() == MotionEvent.ACTION_UP) {
 					backButton.setBackgroundColor(0);
 					finish();
-					return true;
 				}
 				return true;
 			}

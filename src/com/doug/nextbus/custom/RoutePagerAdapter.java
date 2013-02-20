@@ -23,12 +23,12 @@ import com.doug.nextbus.backend.JSONDataResult.Route.Stop;
 /** The adapter for the swiping between route pages for the RoutePickerActivity */
 public class RoutePagerAdapter extends PagerAdapter {
 
-	private String[] routes;
 	private final Context ctx;
+	private String[] routes;
 
-	public RoutePagerAdapter(String[] routes, Context ctx) {
-		this.routes = routes;
+	public RoutePagerAdapter(Context ctx, String[] routes) {
 		this.ctx = ctx;
+		this.routes = routes;
 	}
 
 	/** How to update the routes at runtime, calls notifyDataSetChanged() */
@@ -60,7 +60,8 @@ public class RoutePagerAdapter extends PagerAdapter {
 		final int listPosition = position;
 		final String routeTag = routes[listPosition];
 		final Route currentRoute = Data.getRouteWithTag(routeTag);
-		final boolean hasMultipleDirections = currentRoute.hasManyDirections();
+		final boolean hasMultipleDirections = currentRoute
+				.hasMultipleDirections();
 
 		// For populating the list view
 		String[] itemListTemp = new String[] {};
@@ -76,7 +77,6 @@ public class RoutePagerAdapter extends PagerAdapter {
 		final String[] itemList = itemListTemp;
 
 		ListView itemListView = new ListView(ctx);
-
 		itemListView.setAdapter(new ArrayAdapter<String>(ctx,
 				android.R.layout.simple_list_item_1, itemList));
 		itemListView.setOnItemClickListener(new OnItemClickListener() {
@@ -85,16 +85,16 @@ public class RoutePagerAdapter extends PagerAdapter {
 					int position, long id) {
 				if (hasMultipleDirections) {
 					/*
-					 * Route has direction so items have to point to
-					 * StopListActivity with correct extras.
+					 * Route has multiple direction, items start
+					 * StopListActivity
 					 */
 					Intent intent = StopListActivity.createIntent(ctx,
 							routeTag, itemList[position]);
 					ctx.startActivity(intent);
 				} else {
 					/*
-					 * Route doesn't have direction so items have to point to
-					 * StopViewActivity with correct extras.
+					 * Route doesn't have multiple direction, items start
+					 * StopViewActivity
 					 */
 					Direction defaultDirection = currentRoute
 							.getDefaultDirection();
@@ -102,7 +102,6 @@ public class RoutePagerAdapter extends PagerAdapter {
 							.getStopFromDefaultDirection(position);
 					Intent intent = StopViewActivity.createIntent(ctx,
 							routeTag, defaultDirection, stop);
-
 					ctx.startActivity(intent);
 				}
 			}
@@ -133,7 +132,7 @@ public class RoutePagerAdapter extends PagerAdapter {
 		}
 	}
 
-	/* Necessary code to force the view to update */
+	/** Necessary code to force the view to update */
 	public int getItemPosition(Object object) {
 		return POSITION_NONE;
 	}

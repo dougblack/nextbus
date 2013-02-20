@@ -14,11 +14,6 @@ public class WakeupAsyncTask extends AsyncTask<Void, Void, Void> {
 
 	@Override
 	protected Void doInBackground(Void... params) {
-		wakeupRequest();
-		return null;
-	}
-
-	public static void wakeupRequest() {
 		String target = "http://desolate-escarpment-6039.herokuapp.com/metacritic_review/";
 		try {
 			URL url = new URL(target);
@@ -29,12 +24,13 @@ public class WakeupAsyncTask extends AsyncTask<Void, Void, Void> {
 			// opening a connection to wake up dyno
 			urlConnection.getInputStream();
 
-			return;
+			return null;
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			Log.d("error", e.getClass().toString());
 		}
-
+		return null;
 	}
+
 }

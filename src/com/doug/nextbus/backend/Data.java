@@ -34,8 +34,11 @@ import com.doug.nextbus.backend.JSONDataResult.Route.PathStop;
 import com.doug.nextbus.backend.JSONDataResult.Route.Stop;
 import com.google.gson.Gson;
 
-/* This class controls reading and writing local files as well as persisting current state data. 
- * This class is a catch all for the methods I need, I usually come and clean this up a great deal*/
+/**
+ * This class controls reading and writing local files as well as persisting
+ * current state data. This class is a catch all for the methods I need, I
+ * usually come and clean this up a great deal
+ */
 
 public class Data {
 
@@ -64,7 +67,7 @@ public class Data {
 	}
 
 	/** Loads route information and populates the necessary data structures */
-	public static void readData() {
+	private static void readData() {
 		InputStream is = (InputStream) ctx.getResources().openRawResource(
 				R.raw.routeconfig);
 		Reader reader = new InputStreamReader(is);
@@ -101,7 +104,7 @@ public class Data {
 
 	/** Finds all route/direction/stops with that share the same stop title */
 	public static RouteDirectionStop[] getAllRdsWithStopTitle(String stopTitle,
-			String route, String directionTag) {
+			String routeTag, String directionTag) {
 		ArrayList<RouteDirectionStop> rdsList = new ArrayList<RouteDirectionStop>();
 
 		SharedPreferences prefs = PreferenceManager
@@ -121,21 +124,22 @@ public class Data {
 				.iterator();
 		while (iter.hasNext()) {
 			RouteDirectionStop rad = iter.next();
-			if ((rad.route.tag.equals(route) && rad.direction.tag
+			if ((rad.route.tag.equals(routeTag) && rad.direction.tag
 					.equals(directionTag))
 					|| isNotInArray(currentRoutes, rad.route.tag))
 				continue;
 			rdsList.add(rad);
 		}
 
-		// Sorting to put the reds, blues, etc together
+		// Sorting to put the blues, reds, etc together
 		Collections.sort(rdsList);
 		RouteDirectionStop[] rads = {};
 		return rdsList.toArray(rads);
 	}
 
-	private static boolean isNotInArray(String[] activeRoutes, String val) {
-		for (String routes : activeRoutes) {
+	/** Returns true if val is not in array, false it is in the array */
+	private static boolean isNotInArray(String[] arr, String val) {
+		for (String routes : arr) {
 			if (routes.equals(val))
 				return false;
 		}
@@ -147,7 +151,7 @@ public class Data {
 	}
 
 	public static int getColorFromRouteTag(String routeTag) {
-		int color = 0;
+		int color = 0; // default color
 		if (routeTag.equals("red")) {
 			color = R.color.red;
 		} else if (routeTag.equals("blue")) {
@@ -165,7 +169,7 @@ public class Data {
 	}
 
 	public static Drawable getDrawableForRouteTag(String routeTag) {
-		int bg = R.drawable.redcell; // default
+		int bg = R.drawable.redcell; // default cell type
 		if (routeTag.equals("red"))
 			bg = R.drawable.redcell;
 		else if (routeTag.equals("blue"))
@@ -182,7 +186,7 @@ public class Data {
 
 	}
 
-	/* Capitalize a string */
+	/** Capitalize a string */
 	public static String capitalize(String route) {
 
 		char[] chars = route.toLowerCase(Locale.getDefault()).toCharArray();
@@ -249,7 +253,7 @@ public class Data {
 
 	}
 
-	public static String[] convertToStringArray(ArrayList<String> list) {
+	private static String[] convertToStringArray(ArrayList<String> list) {
 
 		String[] ret = new String[list.size()];
 		Iterator<String> iterator = list.iterator();
@@ -275,7 +279,6 @@ public class Data {
 	}
 
 	private static void loadFavoritesData() {
-
 		try {
 			FileInputStream fis = ctx.openFileInput("favorites.txt");
 			Reader reader = new InputStreamReader(fis);
@@ -288,7 +291,6 @@ public class Data {
 	}
 
 	private static void saveFavoriteData() {
-
 		try {
 			String toSave = new Gson().toJson(Data.favorites);
 			FileOutputStream fos = Data.ctx.openFileOutput("favorites.txt",
@@ -297,13 +299,10 @@ public class Data {
 			fos.close();
 
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
 
 	public static boolean isFavorite(Favorite favorite) {

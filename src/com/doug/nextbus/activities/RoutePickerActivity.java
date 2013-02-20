@@ -65,7 +65,7 @@ public class RoutePickerActivity extends RoboActivity implements
 		updateCurrentRoutes();
 
 		// Setup Pager and Adapter
-		pagerAdapter = new RoutePagerAdapter(currentRoutes, ctx);
+		pagerAdapter = new RoutePagerAdapter(ctx, currentRoutes);
 		pager.setAdapter(pagerAdapter);
 
 		// Setup ViewGroup Indicator
