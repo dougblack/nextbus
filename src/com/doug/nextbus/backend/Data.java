@@ -27,7 +27,6 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.doug.nextbus.R;
-import com.doug.nextbus.activities.RoutePickerActivity;
 import com.doug.nextbus.backend.JSONDataResult.Route;
 import com.doug.nextbus.backend.JSONDataResult.Route.Direction;
 import com.doug.nextbus.backend.JSONDataResult.Route.PathStop;
@@ -52,12 +51,15 @@ public class Data {
 	/** For holding the favorites */
 	private static Favorites sFavorites;
 
-	public static final String SHOW_ACTIVE_ROUTES_PREF = "showActiveRoutes";
-	final static String[] stringReturnType = {};
+	public static final String SHOW_ACTIVE_ROUTES_PREF;
+	public static final String[] DEFAULT_ALL_ROUTES;
 
 	static {
 		sRouteData = new HashMap<String, Route>();
 		sSharedStops = new HashMap<String, HashSet<RouteDirectionStop>>();
+		DEFAULT_ALL_ROUTES = new String[] { "blue", "red", "trolley", "night",
+				"green", "emory" };
+		SHOW_ACTIVE_ROUTES_PREF = "showActiveRoutes";
 	}
 
 	/** Reads the data into memory if it already doesn't exist */
@@ -114,7 +116,7 @@ public class Data {
 				Data.SHOW_ACTIVE_ROUTES_PREF, false);
 
 		// Get the default list of routes and overwrite if active routes is true
-		String[] currentRoutes = RoutePickerActivity.DEFAULT_ALL_ROUTES;
+		String[] currentRoutes = Data.DEFAULT_ALL_ROUTES;
 		if (onlyActiveRoutes)
 			currentRoutes = APIController.getActiveRoutesList(Data.sCtx);
 

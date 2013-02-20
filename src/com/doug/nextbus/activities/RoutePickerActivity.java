@@ -38,12 +38,6 @@ public class RoutePickerActivity extends RoboActivity implements
 	private String[] mCurrentRoutes;
 	private SharedPreferences mPrefs;
 	private RoutePagerAdapter mPagerAdapter;
-	public static final String[] DEFAULT_ALL_ROUTES;
-
-	static {
-		DEFAULT_ALL_ROUTES = new String[] { "blue", "red", "trolley", "night",
-				"green", "emory" };
-	}
 
 	public void onCreate(Bundle savedInstance) {
 		super.onCreate(savedInstance);
@@ -131,7 +125,7 @@ public class RoutePickerActivity extends RoboActivity implements
 		if (onlyActiveRoutes) {
 			mCurrentRoutes = APIController.getActiveRoutesList(this);
 		} else {
-			mCurrentRoutes = DEFAULT_ALL_ROUTES;
+			mCurrentRoutes = Data.DEFAULT_ALL_ROUTES;
 		}
 	}
 

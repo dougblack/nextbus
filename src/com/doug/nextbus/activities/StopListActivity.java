@@ -64,7 +64,6 @@ public class StopListActivity extends RoboActivity {
 			stopListView.setAdapter(new ArrayAdapter<String>(this,
 					android.R.layout.simple_list_item_1, stopTitles));
 
-			/* Handler for a stop cell event listener. */
 			stopListView.setOnItemClickListener(new OnItemClickListener() {
 				public void onItemClick(AdapterView<?> parent, View view,
 						int position, long id) {
