@@ -29,7 +29,6 @@
             android:textStyle="bold" />
 
         <View
-            android:id="@+id/divider"
             android:layout_width="1dp"
             android:layout_height="fill_parent"
             android:background="@color/dividercolor" />
@@ -38,14 +37,10 @@
             android:id="@+id/mapButton"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_alignBottom="@+id/textView1"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
             android:padding="12dp"
             android:src="@drawable/ic_dialog_map" />
 
         <View
-            android:id="@+id/divider"
             android:layout_width="1dp"
             android:layout_height="fill_parent"
             android:background="@color/dividercolor" />

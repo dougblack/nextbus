@@ -19,8 +19,6 @@
             android:id="@+id/creditsBackButton"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
             android:padding="10dp"
             android:src="@drawable/back_arrow" />
 
