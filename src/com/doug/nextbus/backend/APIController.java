@@ -186,8 +186,9 @@ public class APIController {
 		URL url = new URL(target);
 
 		URLConnection urlConnection = url.openConnection();
-		urlConnection.setConnectTimeout(750);
-		urlConnection.setReadTimeout(1500);
+		int time = 2000;
+		urlConnection.setConnectTimeout(time);
+		urlConnection.setReadTimeout(time * 2);
 
 		urlConnection.setRequestProperty("Accept", "application/json");
 

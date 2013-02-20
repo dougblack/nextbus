@@ -203,6 +203,7 @@
                     android:layout_height="fill_parent" />
 
                 <View
+                    android:id="@+id/footer_redcell"
                     android:layout_width="50dp"
                     android:layout_height="fill_parent"
                     android:background="@color/red" />
@@ -212,6 +213,7 @@
                     android:layout_height="fill_parent" />
 
                 <View
+                    android:id="@+id/footer_yellowcell"
                     android:layout_width="50dp"
                     android:layout_height="fill_parent"
                     android:background="@color/yellow" />
@@ -221,6 +223,7 @@
                     android:layout_height="fill_parent" />
 
                 <View
+                    android:id="@+id/footer_bluecell"
                     android:layout_width="50dp"
                     android:layout_height="fill_parent"
                     android:background="@color/blue" />
@@ -230,6 +233,7 @@
                     android:layout_height="fill_parent" />
 
                 <View
+                    android:id="@+id/footer_greencell"
                     android:layout_width="50dp"
                     android:layout_height="fill_parent"
                     android:background="@color/green" />

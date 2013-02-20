@@ -67,7 +67,6 @@ public class StopViewActivity extends RoboActivity implements
 	final private static String DIRECTION_TAG_KEY = "directionTag";
 	final private static String STOP_TITLE_KEY = "stopTitle";
 	final private static String STOP_TAG_KEY = "stopTag";
-	final private static String RETURN_TO_FAVORITES = "returnToFavorites";
 
 	private String mRouteTag;
 	private String mDirectionTitle;
@@ -99,7 +98,6 @@ public class StopViewActivity extends RoboActivity implements
 		intent.putExtra(DIRECTION_TAG_KEY, favorite.directionTag);
 		intent.putExtra(STOP_TITLE_KEY, favorite.stopTitle);
 		intent.putExtra(STOP_TAG_KEY, favorite.stopTag);
-		intent.putExtra(RETURN_TO_FAVORITES, true);
 		// Closes all instances of the same activity
 		// intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		return intent;
@@ -125,9 +123,6 @@ public class StopViewActivity extends RoboActivity implements
 		mStopTag = extras.getString(STOP_TAG_KEY);
 
 		stopTextView.setText(mStopTitle);
-
-		if (extras.getBoolean(RETURN_TO_FAVORITES))
-			titleTextView.setText("FAVORITES");
 
 		setupArrivals();
 

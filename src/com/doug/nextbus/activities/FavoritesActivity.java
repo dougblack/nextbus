@@ -32,7 +32,7 @@ public class FavoritesActivity extends RoboActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.stop_list);
 
-		titleText.setText("RETURN");
+		titleText.setText("FAVORITES");
 		directionTextView.setText("Favorites");
 
 		/*
