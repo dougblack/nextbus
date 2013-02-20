@@ -11,7 +11,6 @@ import com.doug.nextbus.R;
 import com.doug.nextbus.backend.Data;
 import com.doug.nextbus.backend.RouteDirectionStop;
 
-/* Array adapter for multicolored cells */
 public class OtherRoutesAdapter extends BaseAdapter {
 
 	final RouteDirectionStop[] rads;

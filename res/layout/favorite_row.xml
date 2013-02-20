@@ -25,7 +25,7 @@
 
         <TextView
             android:id="@+id/routeFavView"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="0dp"
             android:layout_weight=".5"
@@ -33,21 +33,15 @@
             android:textColor="@color/indicatorcolor"
             android:textSize="16sp" />
 
-        <RelativeLayout
+        <TextView
+            android:id="@+id/directionFavView"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight=".5" >
-
-            <TextView
-                android:id="@+id/directionFavView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="4dp"
-                android:text="(Clockwise)"
-                android:textColor="@color/indicatorcolor"
-                android:textSize="14sp" />
-        </RelativeLayout>
+            android:layout_height="wrap_content"
+            android:layout_marginRight="4dp"
+            android:layout_weight=".5"
+            android:text="(Clockwise)"
+            android:textColor="@color/indicatorcolor"
+            android:textSize="14sp" />
     </LinearLayout>
 
 </LinearLayout>

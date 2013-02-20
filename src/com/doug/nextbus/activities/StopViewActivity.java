@@ -191,6 +191,21 @@ public class StopViewActivity extends RoboActivity implements
 			}
 		});
 
+		arrivalList.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				if (rads.length == 0) {
+					return;
+				}
+				Intent intent = StopListActivity.createIntent(
+						getApplicationContext(), rads[position].route.tag,
+						rads[position].direction.title);
+				startActivity(intent);
+
+			}
+
+		});
+
 	}
 
 	public void setupArrivals() {

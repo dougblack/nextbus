@@ -54,8 +54,8 @@ public class StopListActivity extends RoboActivity {
 
 		if (extras != null) {
 			/* Pull route and direction for extras */
-			final String routeTag = extras.getString("routeTag");
-			final String directionTitle = extras.getString("directionTitle");
+			final String routeTag = extras.getString(ROUTE_TAG_KEY);
+			final String directionTitle = extras.getString(DIRECTION_TITLE_KEY);
 
 			final Route route = Data.getRouteWithTag(routeTag);
 			final String[] stopTitles = route.getStopTitles(directionTitle);
