@@ -11,12 +11,12 @@ import com.doug.nextbus.R;
 import com.doug.nextbus.backend.Data;
 import com.doug.nextbus.backend.RouteDirectionStop;
 
-public class OtherRoutesAdapter extends BaseAdapter {
+public class ArrivalAdapter extends BaseAdapter {
 
-	final RouteDirectionStop[] rads;
-	final Context ctx;
+	final private RouteDirectionStop[] rads;
+	final private Context ctx;
 
-	public OtherRoutesAdapter(Context ctx, RouteDirectionStop[] rads) {
+	public ArrivalAdapter(Context ctx, RouteDirectionStop[] rads) {
 		this.ctx = ctx;
 		this.rads = rads;
 
@@ -27,7 +27,7 @@ public class OtherRoutesAdapter extends BaseAdapter {
 		View vi = convertView;
 
 		if (convertView == null)
-			vi = View.inflate(ctx, R.layout.other_routes_row, null);
+			vi = View.inflate(ctx, R.layout.arrival_row, null);
 
 		if (rads.length == 0) {
 			vi.setBackgroundDrawable(ctx.getResources().getDrawable(

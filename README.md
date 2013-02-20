@@ -9,12 +9,15 @@ GT NextBus
 - [x] Fix support for stops that have different tags but are the same. (i.e. "fitten_a" for Blue and "fitten" for Red)
 - [x] Migrate from native JSON parser to GSON
 - [x] Fix "Other Route" Cells
+- [x] Made the SlidingDrawer use a BaseAdapter instead of an ArrayAdapter
 - [?] Fix times for buses in JSON
 - [?] Update the JSON data [work in progress]
 - [ ] Implement warning for when the API is down?
 - [ ] Add support for Pause/onResume
 - [ ] Have preferred order of routes?
 - [ ] Include static schedules for Grocery? Emory?
+- [ ] Fix on touch and release color effects
+- [ ] Make some sort of delete/reorder list for favorites
 
 **My preferences for code are:**
 

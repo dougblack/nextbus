@@ -20,7 +20,7 @@ import com.doug.nextbus.backend.JSONDataResult.Route;
 import com.doug.nextbus.backend.JSONDataResult.Route.Direction;
 import com.doug.nextbus.backend.JSONDataResult.Route.Stop;
 
-/* The adapter for the swiping between route pages for the RoutePickerActivity */
+/** The adapter for the swiping between route pages for the RoutePickerActivity */
 public class RoutePagerAdapter extends PagerAdapter {
 
 	private String[] routes;
@@ -31,8 +31,10 @@ public class RoutePagerAdapter extends PagerAdapter {
 		this.ctx = ctx;
 	}
 
+	/** How to update the routes at runtime, calls notifyDataSetChanged() */
 	public void updateRoutes(String[] routes) {
 		this.routes = routes;
+		notifyDataSetChanged();
 	}
 
 	/*
@@ -55,7 +57,6 @@ public class RoutePagerAdapter extends PagerAdapter {
 		}
 
 		// At this point there are routes, so list view as necessary
-
 		final int listPosition = position;
 		final String routeTag = routes[listPosition];
 		final Route currentRoute = Data.getRouteWithTag(routeTag);
@@ -87,7 +88,6 @@ public class RoutePagerAdapter extends PagerAdapter {
 					 * Route has direction so items have to point to
 					 * StopListActivity with correct extras.
 					 */
-
 					Intent intent = StopListActivity.createIntent(ctx,
 							routeTag, itemList[position]);
 					ctx.startActivity(intent);

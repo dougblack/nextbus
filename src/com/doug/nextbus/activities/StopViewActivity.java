@@ -39,7 +39,7 @@ import com.doug.nextbus.backend.Favorite;
 import com.doug.nextbus.backend.JSONDataResult.Route.Direction;
 import com.doug.nextbus.backend.JSONDataResult.Route.Stop;
 import com.doug.nextbus.backend.RouteDirectionStop;
-import com.doug.nextbus.custom.OtherRoutesAdapter;
+import com.doug.nextbus.custom.ArrivalAdapter;
 
 /* This activity displays the predictions for a the current stop */
 public class StopViewActivity extends RoboActivity implements
@@ -121,8 +121,6 @@ public class StopViewActivity extends RoboActivity implements
 		directionTag = extras.getString(DIRECTION_TAG_KEY);
 		stopTitle = extras.getString(STOP_TITLE_KEY);
 		stopTag = extras.getString(STOP_TAG_KEY);
-
-		arrivalList.setBackgroundColor(getResources().getColor(R.color.black));
 
 		stopTextView.setText(stopTitle);
 
@@ -208,11 +206,12 @@ public class StopViewActivity extends RoboActivity implements
 
 	}
 
+	/** Gets Rds with stopTitle, exclude Rds with routeTag and directionTag */
 	public void setupArrivals() {
 		rads = Data.getAllRdsWithStopTitle(stopTitle, routeTag, directionTag);
 
-		arrivalList.setAdapter(new OtherRoutesAdapter(getApplicationContext(),
-				rads));
+		arrivalList
+				.setAdapter(new ArrivalAdapter(getApplicationContext(), rads));
 
 		arrivalList.setOnItemClickListener(null);
 		/*

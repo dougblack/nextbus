@@ -174,10 +174,7 @@ public class RoutePickerActivity extends RoboActivity implements
 	public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
 		if (key.equals("showActiveRoutes")) {
 			updateCurrentRoutes();
-
 			pagerAdapter.updateRoutes(this.currentRoutes);
-			pagerAdapter.notifyDataSetChanged();
-
 			// Making sure the right color is chosen for the view
 			setViewColor(pager.getCurrentItem());
 		}

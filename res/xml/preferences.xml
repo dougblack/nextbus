@@ -18,10 +18,4 @@
             android:title="Use GPS location" />
     </PreferenceCategory> -->
 
-    <PreferenceCategory
-        android:enabled="false"
-        android:title="Upcoming features" >
-
-    </PreferenceCategory>
-
 </PreferenceScreen>

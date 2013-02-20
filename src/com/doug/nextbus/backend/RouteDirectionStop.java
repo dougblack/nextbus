@@ -12,7 +12,6 @@ public class RouteDirectionStop implements Comparable<RouteDirectionStop> {
 	final public Stop stop;
 
 	public RouteDirectionStop(Route route, Direction direction, Stop stop) {
-		super();
 		this.route = route;
 		this.direction = direction;
 		this.stop = stop;
