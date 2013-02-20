@@ -123,27 +123,18 @@ public class Data {
 		Iterator<RouteDirectionStop> iter = sharedStops.get(stopTitle)
 				.iterator();
 		while (iter.hasNext()) {
-			RouteDirectionStop rad = iter.next();
-			if ((rad.route.tag.equals(routeTag) && rad.direction.tag
+			RouteDirectionStop rds = iter.next();
+			if ((rds.route.tag.equals(routeTag) && rds.direction.tag
 					.equals(directionTag))
-					|| isNotInArray(currentRoutes, rad.route.tag))
+					|| !isInArray(currentRoutes, rds.route.tag))
 				continue;
-			rdsList.add(rad);
+			rdsList.add(rds);
 		}
 
 		// Sorting to put the blues, reds, etc together
 		Collections.sort(rdsList);
-		RouteDirectionStop[] rads = {};
-		return rdsList.toArray(rads);
-	}
-
-	/** Returns true if val is not in array, false it is in the array */
-	private static boolean isNotInArray(String[] arr, String val) {
-		for (String routes : arr) {
-			if (routes.equals(val))
-				return false;
-		}
-		return true;
+		RouteDirectionStop[] rdsArray = {};
+		return rdsList.toArray(rdsArray);
 	}
 
 	public static Route getRouteWithTag(String routeTag) {
@@ -266,7 +257,15 @@ public class Data {
 
 	public static boolean isRouteActive(String routeTag) {
 		String[] activeRoutes = APIController.getActiveRoutesList(Data.ctx);
-		return !isNotInArray(activeRoutes, routeTag);
+		return isInArray(activeRoutes, routeTag);
+	}
+
+	public static boolean isInArray(String[] arr, String str) {
+		for (String route : arr) {
+			if (route.equals(str))
+				return true;
+		}
+		return false;
 	}
 
 	public static boolean toggleFavorite(Favorite favorite) {
@@ -285,9 +284,8 @@ public class Data {
 			Data.favorites = new Gson().fromJson(reader, Favorites.class);
 		} catch (Exception e) {
 			System.out.println(e);
+			Data.favorites = new Favorites();
 		}
-		Data.favorites = new Favorites();
-
 	}
 
 	private static void saveFavoriteData() {

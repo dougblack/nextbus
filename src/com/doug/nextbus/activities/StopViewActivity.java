@@ -76,7 +76,7 @@ public class StopViewActivity extends RoboActivity implements
 	private String stopTag;
 
 	private String[] arrivalsArray;
-	private RouteDirectionStop[] rds;
+	private RouteDirectionStop[] rdsArray;
 
 	public static Intent createIntent(Context ctx, String routeTag,
 			Direction direction, Stop stop) {
@@ -192,12 +192,12 @@ public class StopViewActivity extends RoboActivity implements
 		arrivalList.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				if (rds.length == 0) {
+				if (rdsArray.length == 0) {
 					return;
 				}
 				Intent intent = StopListActivity.createIntent(
-						getApplicationContext(), rds[position].route.tag,
-						rds[position].direction.title);
+						getApplicationContext(), rdsArray[position].route.tag,
+						rdsArray[position].direction.title);
 				startActivity(intent);
 
 			}
@@ -208,10 +208,10 @@ public class StopViewActivity extends RoboActivity implements
 
 	/** Gets Rds with stopTitle, exclude Rds with routeTag and directionTag */
 	public void setupArrivals() {
-		rds = Data.getAllRdsWithStopTitle(stopTitle, routeTag, directionTag);
+		rdsArray = Data.getAllRdsWithStopTitle(stopTitle, routeTag, directionTag);
 
 		arrivalList
-				.setAdapter(new ArrivalAdapter(getApplicationContext(), rds));
+				.setAdapter(new ArrivalAdapter(getApplicationContext(), rdsArray));
 
 		arrivalList.setOnItemClickListener(null);
 		/*
@@ -222,10 +222,10 @@ public class StopViewActivity extends RoboActivity implements
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				if (!arrivalsArray[0].equals("No other arrivals")) {
-					RouteDirectionStop rad = rds[position];
+					RouteDirectionStop rds = rdsArray[position];
 					Intent intent = StopViewActivity.createIntent(
-							getApplicationContext(), rad.route.tag,
-							rad.direction, rad.stop);
+							getApplicationContext(), rds.route.tag,
+							rds.direction, rds.stop);
 					startActivity(intent);
 				}
 			}

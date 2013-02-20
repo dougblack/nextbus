@@ -39,13 +39,17 @@ public class FavoritesAdapter extends BaseAdapter {
 		boolean showActiveRoutes = PreferenceManager
 				.getDefaultSharedPreferences(ctx).getBoolean(
 						"showActiveRoutes", false);
+
 		// Gray out routes that are not active if showActiveRoutes is set
+		int color = ctx.getResources().getColor(R.color.white);
+		// default is white
 		if (showActiveRoutes && !Data.isRouteActive(favorite.routeTag)) {
-			int fadedColor = ctx.getResources().getColor(R.color.fade2);
-			routeFavView.setTextColor(fadedColor);
-			directionFavView.setTextColor(fadedColor);
-			stopFavView.setTextColor(fadedColor);
+			color = ctx.getResources().getColor(R.color.fade2);
 		}
+
+		routeFavView.setTextColor(color);
+		directionFavView.setTextColor(color);
+		stopFavView.setTextColor(color);
 
 		return vi;
 	}
