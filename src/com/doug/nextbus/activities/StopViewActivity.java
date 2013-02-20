@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -36,11 +35,11 @@ import android.widget.Toast;
 import com.doug.nextbus.R;
 import com.doug.nextbus.backend.APIController;
 import com.doug.nextbus.backend.Data;
+import com.doug.nextbus.backend.Favorite;
 import com.doug.nextbus.backend.JSONDataResult.Route.Direction;
 import com.doug.nextbus.backend.JSONDataResult.Route.Stop;
-import com.doug.nextbus.backend.Favorite;
 import com.doug.nextbus.backend.RouteDirectionStop;
-import com.doug.nextbus.custom.OtherArrivalsArrayAdapter;
+import com.doug.nextbus.custom.OtherRoutesAdapter;
 
 /* This activity displays the predictions for a the current stop */
 public class StopViewActivity extends RoboActivity implements
@@ -74,11 +73,8 @@ public class StopViewActivity extends RoboActivity implements
 	private String stopTitle;
 	private String stopTag;
 
-	private ArrayList<Drawable> drawableList;
-	private ArrayList<String> tempArrivalsList;
 	private String[] arrivalsArray;
 	private long start;
-	private boolean deadCellOnly;
 	private RouteDirectionStop[] rads;
 
 	public static Intent createIntent(Context ctx, String routeTag,
@@ -126,8 +122,6 @@ public class StopViewActivity extends RoboActivity implements
 		stopTitle = extras.getString(STOP_TITLE_KEY);
 		stopTag = extras.getString(STOP_TAG_KEY);
 
-		deadCellOnly = false;
-
 		arrivalList.setBackgroundColor(getResources().getColor(R.color.black));
 
 		stopTextView.setText(stopTitle);
@@ -160,7 +154,6 @@ public class StopViewActivity extends RoboActivity implements
 	}
 
 	private void setEventListeners(Favorite favorite) {
-		/* Event Listeners */
 		backButton.setOnTouchListener(new OnTouchListener() {
 
 			public boolean onTouch(View arg0, MotionEvent event) {
@@ -177,7 +170,7 @@ public class StopViewActivity extends RoboActivity implements
 			}
 		});
 
-		favoriteButton.setOnClickListener(new MyOnClickListener(favorite));
+		favoriteButton.setOnClickListener(new CustomOnClickListener(favorite));
 
 		refreshButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -202,27 +195,9 @@ public class StopViewActivity extends RoboActivity implements
 
 	public void setupArrivals() {
 		rads = Data.getAllRdsWithStopTitle(stopTitle, routeTag, directionTag);
-		tempArrivalsList = formatArrivals(rads);
 
-		drawableList = new ArrayList<Drawable>();
-		if (tempArrivalsList.size() == 0) {
-			drawableList.add(getResources().getDrawable(R.drawable.deadcell));
-			tempArrivalsList.add("No other arrivals");
-			deadCellOnly = true;
-		} else {
-
-			for (RouteDirectionStop rad : rads) {
-				Drawable cellDrawable = Data
-						.getDrawableForRouteTag(rad.route.tag);
-				drawableList.add(cellDrawable);
-			}
-		}
-
-		arrivalsArray = Data.convertToStringArray(tempArrivalsList);
-
-		arrivalList.setAdapter(new OtherArrivalsArrayAdapter(
-				getApplicationContext(), R.layout.arrival_list, arrivalsArray,
-				drawableList, deadCellOnly, rads));
+		arrivalList.setAdapter(new OtherRoutesAdapter(getApplicationContext(),
+				rads));
 
 		arrivalList.setOnItemClickListener(null);
 		/*
@@ -256,14 +231,7 @@ public class StopViewActivity extends RoboActivity implements
 		new LoadPredictionAsyncTask(this).execute(route, direction, stopTag);
 	}
 
-	private ArrayList<String> formatArrivals(RouteDirectionStop[] rads) {
-		ArrayList<String> radsList = new ArrayList<String>();
-		for (RouteDirectionStop rad : rads)
-			radsList.add(rad.toString());
-		return radsList;
-	}
-
-	/* Set color of text with respect to route */
+	/** Set color of text with respect to route */
 	private void setViewColor(String route) {
 		int color = Data.getColorFromRouteTag(route);
 		stopTextView.setTextColor(getResources().getColor(color));
@@ -298,12 +266,12 @@ public class StopViewActivity extends RoboActivity implements
 
 	}
 
-	/** Something here */
-	private class MyOnClickListener implements OnClickListener {
+	/** Custom OnClickListener so the favorite class could be passed to it. */
+	private class CustomOnClickListener implements OnClickListener {
 
 		private Favorite favorite;
 
-		public MyOnClickListener(Favorite favorite) {
+		public CustomOnClickListener(Favorite favorite) {
 			this.favorite = favorite;
 		}
 
@@ -355,7 +323,6 @@ public class StopViewActivity extends RoboActivity implements
 			long end = System.currentTimeMillis() - start;
 			Log.i("TIME", "Received and processed prediction in: " + end + "ms");
 
-			drawableList = new ArrayList<Drawable>();
 			if (predictions.size() == 0 || predictions.get(0).equals("error")) {
 				firstArrival.setText("--");
 				secondArrival.setText("");
