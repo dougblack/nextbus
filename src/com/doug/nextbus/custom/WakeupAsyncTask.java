@@ -24,8 +24,6 @@ public class WakeupAsyncTask extends AsyncTask<Void, Void, Void> {
 			// opening a connection to wake up dyno
 			urlConnection.getInputStream();
 
-			return null;
-
 		} catch (Exception e) {
 			e.printStackTrace();
 			Log.d("error", e.getClass().toString());

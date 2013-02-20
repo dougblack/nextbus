@@ -28,24 +28,24 @@ public class ArrivalAdapter extends BaseAdapter {
 		if (convertView == null) {
 			vi = View.inflate(ctx, R.layout.arrival_row, null);
 		}
-		// If no RADs, then return the dead cell
-		if (rads.length == 0) {
-			vi.setBackgroundDrawable(ctx.getResources().getDrawable(
-					R.drawable.deadcell));
-			return vi;
-		}
 
 		TextView routeFavView = (TextView) vi.findViewById(R.id.routeFavView);
 		TextView directionFavView = (TextView) vi
 				.findViewById(R.id.directionFavView);
 
-		routeFavView.setText(Data.capitalize(rads[position].route.tag));
-		directionFavView.setText(Data
-				.capitalize(rads[position].direction.title));
+		// If no RADs, then return the dead cell
+		if (rads.length == 0) {
+			vi.setBackgroundDrawable(ctx.getResources().getDrawable(
+					R.drawable.deadcell));
+			routeFavView.setText("None");
+			directionFavView.setText("");
+			return vi;
+		}
 
-		Drawable drawable = Data
-				.getDrawableForRouteTag(rads[position].route.tag);
-
+		RouteDirectionStop rad = rads[position];
+		routeFavView.setText(Data.capitalize(rad.route.tag));
+		directionFavView.setText(Data.capitalize(rad.direction.title));
+		Drawable drawable = Data.getDrawableForRouteTag(rad.route.tag);
 		vi.setBackgroundDrawable(drawable);
 
 		return vi;

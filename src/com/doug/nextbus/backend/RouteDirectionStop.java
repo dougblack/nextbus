@@ -6,7 +6,6 @@ import com.doug.nextbus.backend.JSONDataResult.Route.Stop;
 
 /** Stores a specific route, direction, and stop */
 public class RouteDirectionStop implements Comparable<RouteDirectionStop> {
-
 	final public Route route;
 	final public Direction direction;
 	final public Stop stop;
@@ -23,7 +22,6 @@ public class RouteDirectionStop implements Comparable<RouteDirectionStop> {
 			return route.title + " (" + direction.title + ")";
 		else
 			return route.title;
-
 	}
 
 	@Override

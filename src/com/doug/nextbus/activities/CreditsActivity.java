@@ -30,7 +30,6 @@ public class CreditsActivity extends Activity {
 	static ImageView backButton;
 
 	public void onCreate(Bundle savedInstance) {
-
 		super.onCreate(savedInstance);
 		setContentView(R.layout.credits);
 

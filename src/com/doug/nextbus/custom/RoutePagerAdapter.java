@@ -80,7 +80,6 @@ public class RoutePagerAdapter extends PagerAdapter {
 		itemListView.setAdapter(new ArrayAdapter<String>(ctx,
 				android.R.layout.simple_list_item_1, itemList));
 		itemListView.setOnItemClickListener(new OnItemClickListener() {
-
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				if (hasMultipleDirections) {
@@ -128,7 +127,7 @@ public class RoutePagerAdapter extends PagerAdapter {
 		if (routes.length > 0) {
 			return routes.length;
 		} else {
-			return 1;
+			return 1; // return 1 for deadcell if no routes
 		}
 	}
 

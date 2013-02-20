@@ -55,6 +55,7 @@ public class JSONDataResult {
 			return stopTagTable.get(stopTag);
 		}
 
+		/** Gets all the titles of stops for a given direction */
 		public String[] getStopTitles(String directionTitle) {
 			ArrayList<String> al = new ArrayList<String>();
 

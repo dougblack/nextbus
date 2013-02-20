@@ -11,7 +11,6 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -50,15 +49,17 @@ public class StopViewActivity extends RoboActivity implements
 	@InjectView(R.id.thirdArrival) private TextView thirdArrival;
 	@InjectView(R.id.fourthArrival) private TextView fourthArrival;
 	@InjectView(R.id.stopTextView) private TextView stopTextView;
-	@InjectView(R.id.arrivalsDrawer) private SlidingDrawer arrivalDrawer;
+	@InjectView(R.id.drawerTextView) private TextView drawerHandleTextView;
+	@InjectView(R.id.titleText) private TextView titleTextView;
+
 	@InjectView(R.id.backButton) private ImageView backButton;
+	@InjectView(R.id.refreshButton) private ImageView refreshButton;
 	@InjectView(R.id.favoriteButton) private ImageView favoriteButton;
+	@InjectView(R.id.routeviewprogressbar) private ProgressBar routeViewProgressBar;
 
 	@InjectView(R.id.colorbar) private View colorBar;
 	@InjectView(R.id.colorSeperator) private View colorSeperator;
-	@InjectView(R.id.routeviewprogressbar) private ProgressBar routeViewProgressBar;
-	@InjectView(R.id.refreshButton) private ImageView refreshButton;
-	@InjectView(R.id.drawerTextView) private TextView drawerHandleTextView;
+	@InjectView(R.id.arrivalsDrawer) private SlidingDrawer arrivalsDrawer;
 	@InjectView(R.id.arrivalList) private ListView arrivalList;
 
 	final private static String ROUTE_TAG_KEY = "routeTag";
@@ -66,6 +67,7 @@ public class StopViewActivity extends RoboActivity implements
 	final private static String DIRECTION_TAG_KEY = "directionTag";
 	final private static String STOP_TITLE_KEY = "stopTitle";
 	final private static String STOP_TAG_KEY = "stopTag";
+	final private static String RETURN_TO_FAVORITES = "returnToFavorites";
 
 	private String routeTag;
 	private String directionTitle;
@@ -74,8 +76,7 @@ public class StopViewActivity extends RoboActivity implements
 	private String stopTag;
 
 	private String[] arrivalsArray;
-	private long start;
-	private RouteDirectionStop[] rads;
+	private RouteDirectionStop[] rds;
 
 	public static Intent createIntent(Context ctx, String routeTag,
 			Direction direction, Stop stop) {
@@ -98,6 +99,7 @@ public class StopViewActivity extends RoboActivity implements
 		intent.putExtra(DIRECTION_TAG_KEY, favorite.directionTag);
 		intent.putExtra(STOP_TITLE_KEY, favorite.stopTitle);
 		intent.putExtra(STOP_TAG_KEY, favorite.stopTag);
+		intent.putExtra(RETURN_TO_FAVORITES, true);
 		// Closes all instances of the same activity
 		// intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		return intent;
@@ -124,19 +126,10 @@ public class StopViewActivity extends RoboActivity implements
 
 		stopTextView.setText(stopTitle);
 
+		if (extras.getBoolean(RETURN_TO_FAVORITES))
+			titleTextView.setText("FAVORITES");
+
 		setupArrivals();
-
-		Favorite favorite = new Favorite(routeTag, directionTag,
-				directionTitle, stopTag, stopTitle);
-
-		if (Data.isFavorite(favorite)) {
-			favoriteButton
-					.setImageResource(R.drawable.rate_star_big_on_holo_light);
-		} else {
-			favoriteButton
-					.setImageResource(R.drawable.rate_star_big_off_holo_light);
-
-		}
 
 		setViewColor(routeTag);
 
@@ -145,6 +138,15 @@ public class StopViewActivity extends RoboActivity implements
 		secondArrival.setText("");
 		thirdArrival.setText("");
 		fourthArrival.setText("");
+
+		Favorite favorite = new Favorite(routeTag, directionTag,
+				directionTitle, stopTag, stopTitle);
+
+		int star = R.drawable.rate_star_big_off_holo_light;
+		if (Data.isFavorite(favorite)) {
+			star = R.drawable.rate_star_big_on_holo_light;
+		}
+		favoriteButton.setImageResource(star);
 
 		refresh(routeTag, directionTag, stopTag);
 
@@ -175,13 +177,13 @@ public class StopViewActivity extends RoboActivity implements
 			}
 		});
 
-		arrivalDrawer.setOnDrawerOpenListener(new OnDrawerOpenListener() {
+		arrivalsDrawer.setOnDrawerOpenListener(new OnDrawerOpenListener() {
 			public void onDrawerOpened() {
 				drawerHandleTextView.setText(stopTitle);
 			}
 		});
 
-		arrivalDrawer.setOnDrawerCloseListener(new OnDrawerCloseListener() {
+		arrivalsDrawer.setOnDrawerCloseListener(new OnDrawerCloseListener() {
 			public void onDrawerClosed() {
 				drawerHandleTextView.setText("OTHER ROUTES");
 			}
@@ -190,12 +192,12 @@ public class StopViewActivity extends RoboActivity implements
 		arrivalList.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				if (rads.length == 0) {
+				if (rds.length == 0) {
 					return;
 				}
 				Intent intent = StopListActivity.createIntent(
-						getApplicationContext(), rads[position].route.tag,
-						rads[position].direction.title);
+						getApplicationContext(), rds[position].route.tag,
+						rds[position].direction.title);
 				startActivity(intent);
 
 			}
@@ -206,10 +208,10 @@ public class StopViewActivity extends RoboActivity implements
 
 	/** Gets Rds with stopTitle, exclude Rds with routeTag and directionTag */
 	public void setupArrivals() {
-		rads = Data.getAllRdsWithStopTitle(stopTitle, routeTag, directionTag);
+		rds = Data.getAllRdsWithStopTitle(stopTitle, routeTag, directionTag);
 
 		arrivalList
-				.setAdapter(new ArrivalAdapter(getApplicationContext(), rads));
+				.setAdapter(new ArrivalAdapter(getApplicationContext(), rds));
 
 		arrivalList.setOnItemClickListener(null);
 		/*
@@ -220,7 +222,7 @@ public class StopViewActivity extends RoboActivity implements
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				if (!arrivalsArray[0].equals("No other arrivals")) {
-					RouteDirectionStop rad = rads[position];
+					RouteDirectionStop rad = rds[position];
 					Intent intent = StopViewActivity.createIntent(
 							getApplicationContext(), rad.route.tag,
 							rad.direction, rad.stop);
@@ -316,7 +318,6 @@ public class StopViewActivity extends RoboActivity implements
 
 		/* Get the data. */
 		protected ArrayList<String> doInBackground(String... values) {
-			start = System.currentTimeMillis();
 			ArrayList<String> predictions = APIController.getPrediction(
 					values[0], values[1], values[2]);
 			return predictions;
@@ -331,9 +332,6 @@ public class StopViewActivity extends RoboActivity implements
 						.show();
 				predictions.clear();
 			}
-
-			long end = System.currentTimeMillis() - start;
-			Log.i("TIME", "Received and processed prediction in: " + end + "ms");
 
 			if (predictions.size() == 0 || predictions.get(0).equals("error")) {
 				firstArrival.setText("--");

@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.doug.nextbus.R;
 import com.doug.nextbus.backend.Data;
+import com.doug.nextbus.backend.Favorite;
 
 public class FavoritesAdapter extends BaseAdapter {
 	Context ctx;
@@ -18,37 +19,32 @@ public class FavoritesAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-
-		View vi = convertView;
-		if (convertView == null)
+	public View getView(int position, View vi, ViewGroup parent) {
+		if (vi == null)
 			vi = View.inflate(ctx, R.layout.favorite_row, null);
 
-		String routeTag = Data.getFavorite(position).routeTag;
+		Favorite favorite = Data.getFavorite(position);
 
-		vi.setBackgroundDrawable(Data.getDrawableForRouteTag(routeTag));
+		vi.setBackgroundDrawable(Data.getDrawableForRouteTag(favorite.routeTag));
 
 		TextView routeFavView = (TextView) vi.findViewById(R.id.routeFavView);
 		TextView directionFavView = (TextView) vi
 				.findViewById(R.id.directionFavView);
 		TextView stopFavView = (TextView) vi.findViewById(R.id.stopFavView);
 
-		routeFavView
-				.setText(Data.capitalize(Data.getFavorite(position).routeTag));
-		directionFavView
-				.setText(Data.capitalize(Data.getFavorite(position).directionTitle));
-		stopFavView
-				.setText(Data.capitalize(Data.getFavorite(position).stopTitle));
+		routeFavView.setText(Data.capitalize(favorite.routeTag));
+		directionFavView.setText(favorite.directionTitle);
+		stopFavView.setText(favorite.stopTitle);
 
-		if (PreferenceManager.getDefaultSharedPreferences(ctx).getBoolean(
-				"showActiveRoutes", false)
-				&& !Data.isRouteActive(routeTag)) {
-			routeFavView.setTextColor(ctx.getResources()
-					.getColor(R.color.fade2));
-			directionFavView.setTextColor(ctx.getResources().getColor(
-					R.color.fade2));
-			stopFavView
-					.setTextColor(ctx.getResources().getColor(R.color.fade2));
+		boolean showActiveRoutes = PreferenceManager
+				.getDefaultSharedPreferences(ctx).getBoolean(
+						"showActiveRoutes", false);
+		// Gray out routes that are not active if showActiveRoutes is set
+		if (showActiveRoutes && !Data.isRouteActive(favorite.routeTag)) {
+			int fadedColor = ctx.getResources().getColor(R.color.fade2);
+			routeFavView.setTextColor(fadedColor);
+			directionFavView.setTextColor(fadedColor);
+			stopFavView.setTextColor(fadedColor);
 		}
 
 		return vi;

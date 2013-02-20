@@ -47,10 +47,7 @@ public class FavoritesActivity extends RoboActivity {
 	}
 
 	private void setEventListeners() {
-		// Event Listeners
 		stopListView.setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				Favorite favorite = Data.getFavorite(position);
