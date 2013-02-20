@@ -23,17 +23,17 @@ import com.doug.nextbus.backend.JSONDataResult.Route.Stop;
 /** The adapter for the swiping between route pages for the RoutePickerActivity */
 public class RoutePagerAdapter extends PagerAdapter {
 
-	private final Context ctx;
-	private String[] routes;
+	private final Context mCtx;
+	private String[] mRoutes;
 
 	public RoutePagerAdapter(Context ctx, String[] routes) {
-		this.ctx = ctx;
-		this.routes = routes;
+		this.mCtx = ctx;
+		this.mRoutes = routes;
 	}
 
 	/** How to update the routes at runtime, calls notifyDataSetChanged() */
 	public void updateRoutes(String[] routes) {
-		this.routes = routes;
+		this.mRoutes = routes;
 		notifyDataSetChanged();
 	}
 
@@ -45,20 +45,20 @@ public class RoutePagerAdapter extends PagerAdapter {
 	public Object instantiateItem(View container, int position) {
 
 		// If there are not routes, return a cell saying there are no routes
-		if (routes.length == 0) {
-			TextView noRoutes = new TextView(ctx);
+		if (mRoutes.length == 0) {
+			TextView noRoutes = new TextView(mCtx);
 			noRoutes.setText("No active routes");
 			noRoutes.setGravity(Gravity.CENTER);
 			noRoutes.setTextSize(40);
 			noRoutes.setTypeface(null, 1);
-			noRoutes.setTextColor(ctx.getResources().getColor(R.color.white));
+			noRoutes.setTextColor(mCtx.getResources().getColor(R.color.white));
 			((ViewPager) container).addView(noRoutes, 0);
 			return noRoutes;
 		}
 
 		// At this point there are routes, so list view as necessary
 		final int listPosition = position;
-		final String routeTag = routes[listPosition];
+		final String routeTag = mRoutes[listPosition];
 		final Route currentRoute = Data.getRouteWithTag(routeTag);
 		final boolean hasMultipleDirections = currentRoute
 				.hasMultipleDirections();
@@ -76,8 +76,8 @@ public class RoutePagerAdapter extends PagerAdapter {
 
 		final String[] itemList = itemListTemp;
 
-		ListView itemListView = new ListView(ctx);
-		itemListView.setAdapter(new ArrayAdapter<String>(ctx,
+		ListView itemListView = new ListView(mCtx);
+		itemListView.setAdapter(new ArrayAdapter<String>(mCtx,
 				android.R.layout.simple_list_item_1, itemList));
 		itemListView.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
@@ -87,9 +87,9 @@ public class RoutePagerAdapter extends PagerAdapter {
 					 * Route has multiple direction, items start
 					 * StopListActivity
 					 */
-					Intent intent = StopListActivity.createIntent(ctx,
+					Intent intent = StopListActivity.createIntent(mCtx,
 							routeTag, itemList[position]);
-					ctx.startActivity(intent);
+					mCtx.startActivity(intent);
 				} else {
 					/*
 					 * Route doesn't have multiple direction, items start
@@ -99,9 +99,9 @@ public class RoutePagerAdapter extends PagerAdapter {
 							.getDefaultDirection();
 					Stop stop = currentRoute
 							.getStopFromDefaultDirection(position);
-					Intent intent = StopViewActivity.createIntent(ctx,
+					Intent intent = StopViewActivity.createIntent(mCtx,
 							routeTag, defaultDirection, stop);
-					ctx.startActivity(intent);
+					mCtx.startActivity(intent);
 				}
 			}
 
@@ -124,8 +124,8 @@ public class RoutePagerAdapter extends PagerAdapter {
 
 	@Override
 	public int getCount() {
-		if (routes.length > 0) {
-			return routes.length;
+		if (mRoutes.length > 0) {
+			return mRoutes.length;
 		} else {
 			return 1; // return 1 for deadcell if no routes
 		}
@@ -146,8 +146,8 @@ public class RoutePagerAdapter extends PagerAdapter {
 
 	@Override
 	public String getPageTitle(int position) {
-		if (routes.length > 0) {
-			return Data.capitalize(routes[position]);
+		if (mRoutes.length > 0) {
+			return Data.capitalize(mRoutes[position]);
 		} else {
 			return "No routes";
 		}

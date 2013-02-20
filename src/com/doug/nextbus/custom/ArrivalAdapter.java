@@ -13,12 +13,12 @@ import com.doug.nextbus.backend.RouteDirectionStop;
 
 public class ArrivalAdapter extends BaseAdapter {
 
-	final private Context ctx;
-	final private RouteDirectionStop[] rdsArray;
+	final private Context mCtx;
+	final private RouteDirectionStop[] mRdsArray;
 
 	public ArrivalAdapter(Context ctx, RouteDirectionStop[] rdsArray) {
-		this.ctx = ctx;
-		this.rdsArray = rdsArray;
+		this.mCtx = ctx;
+		this.mRdsArray = rdsArray;
 	}
 
 	@Override
@@ -26,7 +26,7 @@ public class ArrivalAdapter extends BaseAdapter {
 		View vi = convertView;
 
 		if (convertView == null) {
-			vi = View.inflate(ctx, R.layout.arrival_row, null);
+			vi = View.inflate(mCtx, R.layout.arrival_row, null);
 		}
 
 		TextView routeFavView = (TextView) vi.findViewById(R.id.routeFavView);
@@ -34,15 +34,15 @@ public class ArrivalAdapter extends BaseAdapter {
 				.findViewById(R.id.directionFavView);
 
 		// If no rds, then return the dead cell
-		if (rdsArray.length == 0) {
-			vi.setBackgroundDrawable(ctx.getResources().getDrawable(
+		if (mRdsArray.length == 0) {
+			vi.setBackgroundDrawable(mCtx.getResources().getDrawable(
 					R.drawable.deadcell));
 			routeFavView.setText("None");
 			directionFavView.setText("");
 			return vi;
 		}
 
-		RouteDirectionStop rds = rdsArray[position];
+		RouteDirectionStop rds = mRdsArray[position];
 		routeFavView.setText(Data.capitalize(rds.route.tag));
 		directionFavView.setText(Data.capitalize(rds.direction.title));
 		Drawable drawable = Data.getDrawableForRouteTag(rds.route.tag);
@@ -53,8 +53,8 @@ public class ArrivalAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {
-		if (rdsArray.length != 0)
-			return rdsArray.length;
+		if (mRdsArray.length != 0)
+			return mRdsArray.length;
 		else
 			return 1;
 	}

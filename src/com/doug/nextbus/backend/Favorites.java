@@ -5,28 +5,28 @@ import java.util.ArrayList;
 // Once I figure out how to use HashSets with GSON, then I won't have to do a linear search
 public class Favorites {
 
-	private ArrayList<Favorite> favs = new ArrayList<Favorite>();
+	private ArrayList<Favorite> mFavs = new ArrayList<Favorite>();
 
 	/** Returns true if favorite was added, false if removed */
 	public boolean toggleFavorite(Favorite favorite) {
-		if (favs.remove(favorite)) {
+		if (mFavs.remove(favorite)) {
 			return false;
 		} else {
-			favs.add(favorite);
+			mFavs.add(favorite);
 			return true;
 		}
 	}
 
 	public boolean contains(Favorite favorite) {
-		return favs.contains(favorite);
+		return mFavs.contains(favorite);
 	}
 
 	public Favorite getFavorite(int index) {
-		return favs.get(index);
+		return mFavs.get(index);
 	}
 
 	public int getSize() {
-		return favs.size();
+		return mFavs.size();
 	}
 
 }

@@ -12,39 +12,39 @@ import com.doug.nextbus.backend.Data;
 import com.doug.nextbus.backend.Favorite;
 
 public class FavoritesAdapter extends BaseAdapter {
-	Context ctx;
+	private Context mCtx;
 
 	public FavoritesAdapter(Context ctx) {
-		this.ctx = ctx;
+		this.mCtx = ctx;
 	}
 
 	@Override
 	public View getView(int position, View vi, ViewGroup parent) {
-		if (vi == null)
-			vi = View.inflate(ctx, R.layout.favorite_row, null);
-
-		Favorite favorite = Data.getFavorite(position);
-
-		vi.setBackgroundDrawable(Data.getDrawableForRouteTag(favorite.routeTag));
+		if (vi == null) {
+			vi = View.inflate(mCtx, R.layout.favorite_row, null);
+		}
 
 		TextView routeFavView = (TextView) vi.findViewById(R.id.routeFavView);
 		TextView directionFavView = (TextView) vi
 				.findViewById(R.id.directionFavView);
 		TextView stopFavView = (TextView) vi.findViewById(R.id.stopFavView);
 
+		Favorite favorite = Data.getFavorite(position);
+		vi.setBackgroundDrawable(Data.getDrawableForRouteTag(favorite.routeTag));
+
 		routeFavView.setText(Data.capitalize(favorite.routeTag));
 		directionFavView.setText(favorite.directionTitle);
 		stopFavView.setText(favorite.stopTitle);
 
 		boolean showActiveRoutes = PreferenceManager
-				.getDefaultSharedPreferences(ctx).getBoolean(
+				.getDefaultSharedPreferences(mCtx).getBoolean(
 						"showActiveRoutes", false);
 
 		// Gray out routes that are not active if showActiveRoutes is set
-		int color = ctx.getResources().getColor(R.color.white);
+		int color = mCtx.getResources().getColor(R.color.white);
 		// default is white
 		if (showActiveRoutes && !Data.isRouteActive(favorite.routeTag)) {
-			color = ctx.getResources().getColor(R.color.fade2);
+			color = mCtx.getResources().getColor(R.color.fade2);
 		}
 
 		routeFavView.setTextColor(color);

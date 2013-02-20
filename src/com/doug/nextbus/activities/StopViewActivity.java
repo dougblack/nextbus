@@ -69,14 +69,14 @@ public class StopViewActivity extends RoboActivity implements
 	final private static String STOP_TAG_KEY = "stopTag";
 	final private static String RETURN_TO_FAVORITES = "returnToFavorites";
 
-	private String routeTag;
-	private String directionTitle;
-	private String directionTag;
-	private String stopTitle;
-	private String stopTag;
+	private String mRouteTag;
+	private String mDirectionTitle;
+	private String mDirectionTag;
+	private String mStopTitle;
+	private String mStopTag;
 
-	private String[] arrivalsArray;
-	private RouteDirectionStop[] rdsArray;
+	private String[] mArrivalsArray;
+	private RouteDirectionStop[] mRdsArray;
 
 	public static Intent createIntent(Context ctx, String routeTag,
 			Direction direction, Stop stop) {
@@ -118,20 +118,20 @@ public class StopViewActivity extends RoboActivity implements
 
 		// Extras
 		Bundle extras = getIntent().getExtras();
-		routeTag = extras.getString(ROUTE_TAG_KEY);
-		directionTitle = extras.getString(DIRECTION_TITLE_KEY);
-		directionTag = extras.getString(DIRECTION_TAG_KEY);
-		stopTitle = extras.getString(STOP_TITLE_KEY);
-		stopTag = extras.getString(STOP_TAG_KEY);
+		mRouteTag = extras.getString(ROUTE_TAG_KEY);
+		mDirectionTitle = extras.getString(DIRECTION_TITLE_KEY);
+		mDirectionTag = extras.getString(DIRECTION_TAG_KEY);
+		mStopTitle = extras.getString(STOP_TITLE_KEY);
+		mStopTag = extras.getString(STOP_TAG_KEY);
 
-		stopTextView.setText(stopTitle);
+		stopTextView.setText(mStopTitle);
 
 		if (extras.getBoolean(RETURN_TO_FAVORITES))
 			titleTextView.setText("FAVORITES");
 
 		setupArrivals();
 
-		setViewColor(routeTag);
+		setViewColor(mRouteTag);
 
 		// Setting text views to default values
 		firstArrival.setText("");
@@ -139,8 +139,8 @@ public class StopViewActivity extends RoboActivity implements
 		thirdArrival.setText("");
 		fourthArrival.setText("");
 
-		Favorite favorite = new Favorite(routeTag, directionTag,
-				directionTitle, stopTag, stopTitle);
+		Favorite favorite = new Favorite(mRouteTag, mDirectionTag,
+				mDirectionTitle, mStopTag, mStopTitle);
 
 		int star = R.drawable.rate_star_big_off_holo_light;
 		if (Data.isFavorite(favorite)) {
@@ -148,7 +148,7 @@ public class StopViewActivity extends RoboActivity implements
 		}
 		favoriteButton.setImageResource(star);
 
-		refresh(routeTag, directionTag, stopTag);
+		refresh(mRouteTag, mDirectionTag, mStopTag);
 
 		setEventListeners(favorite);
 	}
@@ -173,13 +173,13 @@ public class StopViewActivity extends RoboActivity implements
 		refreshButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				routeViewProgressBar.setVisibility(View.VISIBLE);
-				refresh(routeTag, directionTag, stopTag);
+				refresh(mRouteTag, mDirectionTag, mStopTag);
 			}
 		});
 
 		arrivalsDrawer.setOnDrawerOpenListener(new OnDrawerOpenListener() {
 			public void onDrawerOpened() {
-				drawerHandleTextView.setText(stopTitle);
+				drawerHandleTextView.setText(mStopTitle);
 			}
 		});
 
@@ -192,12 +192,12 @@ public class StopViewActivity extends RoboActivity implements
 		arrivalList.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				if (rdsArray.length == 0) {
+				if (mRdsArray.length == 0) {
 					return;
 				}
 				Intent intent = StopListActivity.createIntent(
-						getApplicationContext(), rdsArray[position].route.tag,
-						rdsArray[position].direction.title);
+						getApplicationContext(), mRdsArray[position].route.tag,
+						mRdsArray[position].direction.title);
 				startActivity(intent);
 
 			}
@@ -208,10 +208,11 @@ public class StopViewActivity extends RoboActivity implements
 
 	/** Gets Rds with stopTitle, exclude Rds with routeTag and directionTag */
 	public void setupArrivals() {
-		rdsArray = Data.getAllRdsWithStopTitle(stopTitle, routeTag, directionTag);
+		mRdsArray = Data.getAllRdsWithStopTitle(mStopTitle, mRouteTag,
+				mDirectionTag);
 
-		arrivalList
-				.setAdapter(new ArrivalAdapter(getApplicationContext(), rdsArray));
+		arrivalList.setAdapter(new ArrivalAdapter(getApplicationContext(),
+				mRdsArray));
 
 		arrivalList.setOnItemClickListener(null);
 		/*
@@ -221,8 +222,8 @@ public class StopViewActivity extends RoboActivity implements
 		arrivalList.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				if (!arrivalsArray[0].equals("No other arrivals")) {
-					RouteDirectionStop rds = rdsArray[position];
+				if (!mArrivalsArray[0].equals("No other arrivals")) {
+					RouteDirectionStop rds = mRdsArray[position];
 					Intent intent = StopViewActivity.createIntent(
 							getApplicationContext(), rds.route.tag,
 							rds.direction, rds.stop);

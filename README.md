@@ -22,6 +22,7 @@ GT NextBus
 **My preferences for code are:**
 
 - Prefer smaller, more compact code.
+- Try to follow the [Android Code Style Documentation](http://source.android.com/source/code-style.html) as much as possible.
 - Move getter/setters/trivial/overrided methods to bottom of file.
 - Annotate @Overrides to keep help understand the purpose of a method.
 - If there are multiple Event Listeners being created in the onCreate method, move them to a separate "eventListeners(args)" to keep the onCreate method clean.
@@ -58,6 +59,19 @@ Sample Route/Direction/Stop tag/titles:
     DirectionTag: "hub"    
     StopTitle: "Recreation Center"
     StopTag: "recctr"
+    
+Sample Coding Style:
+
+````
+public class MyClass {
+    public static final int SOME_CONSTANT = 42;
+    public int publicField;
+    private static MyClass sSingleton;
+    int mPackagePrivate;
+    private int mPrivate;
+    protected int mProtected;
+}
+````
 
 **Activities**
 

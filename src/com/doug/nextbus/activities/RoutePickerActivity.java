@@ -2,7 +2,6 @@ package com.doug.nextbus.activities;
 
 import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -36,14 +35,13 @@ public class RoutePickerActivity extends RoboActivity implements
 	@InjectView(R.id.routes) private TitlePageIndicator titleIndicator;
 	@InjectView(R.id.favoriteButtonLaunch) private ImageView favoritesLaunchButton;
 
-	private Context ctx;
-	private String[] currentRoutes;
-	private SharedPreferences prefs;
-	private RoutePagerAdapter pagerAdapter;
-	public static final String[] defaultAllRoutes;
+	private String[] mCurrentRoutes;
+	private SharedPreferences mPrefs;
+	private RoutePagerAdapter mPagerAdapter;
+	public static final String[] DEFAULT_ALL_ROUTES;
 
 	static {
-		defaultAllRoutes = new String[] { "blue", "red", "trolley", "night",
+		DEFAULT_ALL_ROUTES = new String[] { "blue", "red", "trolley", "night",
 				"green", "emory" };
 	}
 
@@ -55,18 +53,18 @@ public class RoutePickerActivity extends RoboActivity implements
 		// Used for waking up the server, done first
 		new WakeupAsyncTask().execute();
 
-		this.ctx = this;
-		Data.setConfig(ctx);
+		Data.setConfig(getApplicationContext());
 
-		prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		prefs.registerOnSharedPreferenceChangeListener(this);
+		mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		mPrefs.registerOnSharedPreferenceChangeListener(this);
 
 		// Updating available routes depending on preference
 		updateCurrentRoutes();
 
 		// Setup Pager and Adapter
-		pagerAdapter = new RoutePagerAdapter(ctx, currentRoutes);
-		pager.setAdapter(pagerAdapter);
+		mPagerAdapter = new RoutePagerAdapter(getApplicationContext(),
+				mCurrentRoutes);
+		pager.setAdapter(mPagerAdapter);
 
 		// Setup ViewGroup Indicator
 		titleIndicator.setFooterIndicatorStyle(IndicatorStyle.Underline);
@@ -129,19 +127,20 @@ public class RoutePickerActivity extends RoboActivity implements
 
 	/** Updates available routes depending on show active routes preference. */
 	private void updateCurrentRoutes() {
-		boolean onlyActiveRoutes = prefs.getBoolean("showActiveRoutes", true);
+		boolean onlyActiveRoutes = mPrefs.getBoolean("showActiveRoutes", true);
 		if (onlyActiveRoutes) {
-			currentRoutes = APIController.getActiveRoutesList(ctx);
+			mCurrentRoutes = APIController
+					.getActiveRoutesList(getApplicationContext());
 		} else {
-			currentRoutes = defaultAllRoutes;
+			mCurrentRoutes = DEFAULT_ALL_ROUTES;
 		}
 	}
 
 	/** Updates text color depending on the position of view page */
 	private void setViewColor(int position) {
 		int color = R.color.orange; // default color
-		if (currentRoutes.length > 0) { // if there are active routes
-			color = Data.getColorFromRouteTag(currentRoutes[position]);
+		if (mCurrentRoutes.length > 0) { // if there are active routes
+			color = Data.getColorFromRouteTag(mCurrentRoutes[position]);
 		}
 		titleIndicator.setSelectedColor(getResources().getColor(color));
 		titleIndicator.setFooterColor(getResources().getColor(color));
@@ -157,11 +156,12 @@ public class RoutePickerActivity extends RoboActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.aboutmenusitem:
-			Intent aboutActivity = new Intent(ctx, CreditsActivity.class);
+			Intent aboutActivity = new Intent(getApplicationContext(),
+					CreditsActivity.class);
 			startActivity(aboutActivity);
 			return true;
 		case R.id.preferencesmenuitem:
-			Intent preferenceActivity = new Intent(ctx,
+			Intent preferenceActivity = new Intent(getApplicationContext(),
 					PreferencesActivity.class);
 			startActivity(preferenceActivity);
 			return true;
@@ -174,7 +174,7 @@ public class RoutePickerActivity extends RoboActivity implements
 	public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
 		if (key.equals("showActiveRoutes")) {
 			updateCurrentRoutes();
-			pagerAdapter.updateRoutes(this.currentRoutes);
+			mPagerAdapter.updateRoutes(this.mCurrentRoutes);
 			// Making sure the right color is chosen for the view
 			setViewColor(pager.getCurrentItem());
 		}

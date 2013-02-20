@@ -42,33 +42,33 @@ import com.google.gson.Gson;
 
 public class Data {
 
-	private static Context ctx;
+	private static Context sCtx;
 	/** Used for JSON parsing */
 	private static JSONDataResult jsonDataResult;
 	/** Key: routeTag, Value: Route object */
-	final private static HashMap<String, Route> hm;
+	final private static HashMap<String, Route> sRouteData;
 	/** Key: stopTitle, Value: RouteDirectionStop objects that share the stop */
-	final private static HashMap<String, HashSet<RouteDirectionStop>> sharedStops;
+	final private static HashMap<String, HashSet<RouteDirectionStop>> sSharedStops;
 	/** For holding the favorites */
-	private static Favorites favorites;
+	private static Favorites sFavorites;
 
 	final static String[] stringReturnType = {};
 
 	static {
-		hm = new HashMap<String, Route>();
-		sharedStops = new HashMap<String, HashSet<RouteDirectionStop>>();
+		sRouteData = new HashMap<String, Route>();
+		sSharedStops = new HashMap<String, HashSet<RouteDirectionStop>>();
 	}
 
 	/** Reads the data into memory if it already doesn't exist */
 	public static void setConfig(Context ctx) {
-		Data.ctx = ctx;
+		Data.sCtx = ctx;
 		if (jsonDataResult == null)
 			readData();
 	}
 
 	/** Loads route information and populates the necessary data structures */
 	private static void readData() {
-		InputStream is = (InputStream) ctx.getResources().openRawResource(
+		InputStream is = (InputStream) sCtx.getResources().openRawResource(
 				R.raw.routeconfig);
 		Reader reader = new InputStreamReader(is);
 		try {
@@ -83,19 +83,19 @@ public class Data {
 					route.stopTagTable = new Hashtable<String, JSONDataResult.Route.Stop>();
 				route.stopTagTable.put(stop.tag, stop);
 			}
-			hm.put(route.tag, route);
+			sRouteData.put(route.tag, route);
 
 			for (Direction direction : route.direction)
 				for (PathStop pathStop : direction.stop) {
 
 					Stop stop = route.getStop(pathStop.tag);
 
-					if (sharedStops.get(stop.title) == null) {
-						sharedStops.put(stop.title,
+					if (sSharedStops.get(stop.title) == null) {
+						sSharedStops.put(stop.title,
 								new HashSet<RouteDirectionStop>());
 					}
 
-					sharedStops.get(stop.title).add(
+					sSharedStops.get(stop.title).add(
 							new RouteDirectionStop(route, direction, stop));
 				}
 		}
@@ -108,19 +108,19 @@ public class Data {
 		ArrayList<RouteDirectionStop> rdsList = new ArrayList<RouteDirectionStop>();
 
 		SharedPreferences prefs = PreferenceManager
-				.getDefaultSharedPreferences(Data.ctx);
+				.getDefaultSharedPreferences(Data.sCtx);
 		boolean onlyActiveRoutes = prefs.getBoolean("showActiveRoutes", false);
 
 		// Get the default list of routes and overwrite if active routes is true
-		String[] currentRoutes = RoutePickerActivity.defaultAllRoutes;
+		String[] currentRoutes = RoutePickerActivity.DEFAULT_ALL_ROUTES;
 		if (onlyActiveRoutes)
-			currentRoutes = APIController.getActiveRoutesList(Data.ctx);
+			currentRoutes = APIController.getActiveRoutesList(Data.sCtx);
 
 		/*
 		 * Iterate through route and direction if the rds matches the given
 		 * route/direction or is not in the activeRoutes then continue
 		 */
-		Iterator<RouteDirectionStop> iter = sharedStops.get(stopTitle)
+		Iterator<RouteDirectionStop> iter = sSharedStops.get(stopTitle)
 				.iterator();
 		while (iter.hasNext()) {
 			RouteDirectionStop rds = iter.next();
@@ -138,7 +138,7 @@ public class Data {
 	}
 
 	public static Route getRouteWithTag(String routeTag) {
-		return hm.get(routeTag);
+		return sRouteData.get(routeTag);
 	}
 
 	public static int getColorFromRouteTag(String routeTag) {
@@ -173,7 +173,7 @@ public class Data {
 			bg = R.drawable.pinkcell;
 		else if (routeTag.equals("night"))
 			bg = R.drawable.nightcell;
-		return ctx.getResources().getDrawable(bg);
+		return sCtx.getResources().getDrawable(bg);
 
 	}
 
@@ -204,16 +204,16 @@ public class Data {
 		InputStream is = null;
 
 		if (route.equals("red")) {
-			is = (InputStream) ctx.getResources().openRawResource(
+			is = (InputStream) sCtx.getResources().openRawResource(
 					R.raw.redroute);
 		} else if (route.equals("blue")) {
-			is = (InputStream) ctx.getResources().openRawResource(
+			is = (InputStream) sCtx.getResources().openRawResource(
 					R.raw.blueroute);
 		} else if (route.equals("green")) {
-			is = (InputStream) ctx.getResources().openRawResource(
+			is = (InputStream) sCtx.getResources().openRawResource(
 					R.raw.greenroute);
 		} else if (route.equals("trolley")) {
-			is = (InputStream) ctx.getResources().openRawResource(
+			is = (InputStream) sCtx.getResources().openRawResource(
 					R.raw.trolleyroute);
 		}
 		BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -256,7 +256,7 @@ public class Data {
 	}
 
 	public static boolean isRouteActive(String routeTag) {
-		String[] activeRoutes = APIController.getActiveRoutesList(Data.ctx);
+		String[] activeRoutes = APIController.getActiveRoutesList(Data.sCtx);
 		return isInArray(activeRoutes, routeTag);
 	}
 
@@ -269,9 +269,9 @@ public class Data {
 	}
 
 	public static boolean toggleFavorite(Favorite favorite) {
-		if (Data.favorites == null)
+		if (Data.sFavorites == null)
 			loadFavoritesData();
-		boolean ret = favorites.toggleFavorite(favorite);
+		boolean ret = sFavorites.toggleFavorite(favorite);
 		saveFavoriteData();
 		return ret;
 
@@ -279,19 +279,19 @@ public class Data {
 
 	private static void loadFavoritesData() {
 		try {
-			FileInputStream fis = ctx.openFileInput("favorites.txt");
+			FileInputStream fis = sCtx.openFileInput("favorites.txt");
 			Reader reader = new InputStreamReader(fis);
-			Data.favorites = new Gson().fromJson(reader, Favorites.class);
+			Data.sFavorites = new Gson().fromJson(reader, Favorites.class);
 		} catch (Exception e) {
 			System.out.println(e);
-			Data.favorites = new Favorites();
+			Data.sFavorites = new Favorites();
 		}
 	}
 
 	private static void saveFavoriteData() {
 		try {
-			String toSave = new Gson().toJson(Data.favorites);
-			FileOutputStream fos = Data.ctx.openFileOutput("favorites.txt",
+			String toSave = new Gson().toJson(Data.sFavorites);
+			FileOutputStream fos = Data.sCtx.openFileOutput("favorites.txt",
 					Context.MODE_PRIVATE);
 			fos.write(toSave.getBytes());
 			fos.close();
@@ -304,20 +304,20 @@ public class Data {
 	}
 
 	public static boolean isFavorite(Favorite favorite) {
-		if (Data.favorites == null)
+		if (Data.sFavorites == null)
 			loadFavoritesData();
-		return Data.favorites.contains(favorite);
+		return Data.sFavorites.contains(favorite);
 	}
 
 	public static int getFavoritesSize() {
-		if (Data.favorites == null)
+		if (Data.sFavorites == null)
 			loadFavoritesData();
-		return Data.favorites.getSize();
+		return Data.sFavorites.getSize();
 	}
 
 	public static Favorite getFavorite(int index) {
-		if (Data.favorites == null)
+		if (Data.sFavorites == null)
 			loadFavoritesData();
-		return Data.favorites.getFavorite(index);
+		return Data.sFavorites.getFavorite(index);
 	}
 }
