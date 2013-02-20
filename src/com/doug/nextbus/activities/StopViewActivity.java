@@ -275,7 +275,7 @@ public class StopViewActivity extends RoboActivity implements
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
 
-		if (key.equals("showActiveRoutes")) {
+		if (key.equals(Data.SHOW_ACTIVE_ROUTES_PREF)) {
 			this.setupArrivals();
 		}
 

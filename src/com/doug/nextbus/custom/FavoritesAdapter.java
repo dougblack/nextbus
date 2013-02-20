@@ -38,7 +38,7 @@ public class FavoritesAdapter extends BaseAdapter {
 
 		boolean showActiveRoutes = PreferenceManager
 				.getDefaultSharedPreferences(mCtx).getBoolean(
-						"showActiveRoutes", false);
+						Data.SHOW_ACTIVE_ROUTES_PREF, false);
 
 		// Gray out routes that are not active if showActiveRoutes is set
 		int color = mCtx.getResources().getColor(R.color.white);

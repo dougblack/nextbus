@@ -126,7 +126,8 @@ public class RoutePickerActivity extends RoboActivity implements
 
 	/** Updates available routes depending on show active routes preference. */
 	private void updateCurrentRoutes() {
-		boolean onlyActiveRoutes = mPrefs.getBoolean("showActiveRoutes", true);
+		boolean onlyActiveRoutes = mPrefs.getBoolean(
+				Data.SHOW_ACTIVE_ROUTES_PREF, true);
 		if (onlyActiveRoutes) {
 			mCurrentRoutes = APIController.getActiveRoutesList(this);
 		} else {
@@ -169,7 +170,7 @@ public class RoutePickerActivity extends RoboActivity implements
 
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-		if (key.equals("showActiveRoutes")) {
+		if (key.equals(Data.SHOW_ACTIVE_ROUTES_PREF)) {
 			updateCurrentRoutes();
 			mPagerAdapter.updateRoutes(this.mCurrentRoutes);
 			// Making sure the right color is chosen for the view

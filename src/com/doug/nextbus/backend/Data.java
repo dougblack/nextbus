@@ -44,7 +44,7 @@ public class Data {
 
 	private static Context sCtx;
 	/** Used for JSON parsing */
-	private static JSONDataResult jsonDataResult;
+	private static JSONDataResult sJsonDataResult;
 	/** Key: routeTag, Value: Route object */
 	final private static HashMap<String, Route> sRouteData;
 	/** Key: stopTitle, Value: RouteDirectionStop objects that share the stop */
@@ -52,6 +52,7 @@ public class Data {
 	/** For holding the favorites */
 	private static Favorites sFavorites;
 
+	public static final String SHOW_ACTIVE_ROUTES_PREF = "showActiveRoutes";
 	final static String[] stringReturnType = {};
 
 	static {
@@ -62,7 +63,7 @@ public class Data {
 	/** Reads the data into memory if it already doesn't exist */
 	public static void setConfig(Context ctx) {
 		Data.sCtx = ctx;
-		if (jsonDataResult == null)
+		if (sJsonDataResult == null)
 			readData();
 	}
 
@@ -72,12 +73,12 @@ public class Data {
 				R.raw.routeconfig);
 		Reader reader = new InputStreamReader(is);
 		try {
-			jsonDataResult = new Gson().fromJson(reader, JSONDataResult.class);
+			sJsonDataResult = new Gson().fromJson(reader, JSONDataResult.class);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
 
-		for (Route route : jsonDataResult.route) {
+		for (Route route : sJsonDataResult.route) {
 			for (Stop stop : route.stop) {
 				if (route.stopTagTable == null)
 					route.stopTagTable = new Hashtable<String, JSONDataResult.Route.Stop>();
@@ -109,7 +110,8 @@ public class Data {
 
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(Data.sCtx);
-		boolean onlyActiveRoutes = prefs.getBoolean("showActiveRoutes", false);
+		boolean onlyActiveRoutes = prefs.getBoolean(
+				Data.SHOW_ACTIVE_ROUTES_PREF, false);
 
 		// Get the default list of routes and overwrite if active routes is true
 		String[] currentRoutes = RoutePickerActivity.DEFAULT_ALL_ROUTES;
