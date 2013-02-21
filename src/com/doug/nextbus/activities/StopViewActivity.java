@@ -62,6 +62,11 @@ public class StopViewActivity extends RoboActivity implements
 	@InjectView(R.id.arrivalsDrawer) private SlidingDrawer arrivalsDrawer;
 	@InjectView(R.id.arrivalList) private ListView arrivalList;
 
+	@InjectView(R.id.footer_redcell) private View mFooterRedCell;
+	@InjectView(R.id.footer_bluecell) private View mFooterBlueCell;
+	@InjectView(R.id.footer_yellowcell) private View mFooterYellowCell;
+	@InjectView(R.id.footer_greencell) private View mFooterGreenCell;
+
 	final private static String ROUTE_TAG_KEY = "routeTag";
 	final private static String DIRECTION_TITLE_KEY = "directionTitle";
 	final private static String DIRECTION_TAG_KEY = "directionTag";
@@ -146,6 +151,16 @@ public class StopViewActivity extends RoboActivity implements
 		refresh(mRouteTag, mDirectionTag, mStopTag);
 
 		setEventListeners(favorite);
+
+		// Setting colors
+
+		mFooterBlueCell.setBackgroundColor(getResources()
+				.getColor(R.color.blue));
+		mFooterRedCell.setBackgroundColor(getResources().getColor(R.color.red));
+		mFooterYellowCell.setBackgroundColor(getResources().getColor(
+				R.color.yellow));
+		mFooterGreenCell.setBackgroundColor(getResources().getColor(
+				R.color.green));
 	}
 
 	private void setEventListeners(Favorite favorite) {
@@ -190,9 +205,11 @@ public class StopViewActivity extends RoboActivity implements
 				if (mRdsArray.length == 0) {
 					return;
 				}
-				Intent intent = StopListActivity.createIntent(
-						getApplicationContext(), mRdsArray[position].route.tag,
-						mRdsArray[position].direction.title);
+				Intent intent = StopViewActivity
+						.createIntent(getApplicationContext(),
+								mRdsArray[position].route.tag,
+								mRdsArray[position].direction,
+								mRdsArray[position].stop);
 				startActivity(intent);
 
 			}

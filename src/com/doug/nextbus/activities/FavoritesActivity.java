@@ -27,6 +27,8 @@ public class FavoritesActivity extends RoboActivity {
 	@InjectView(R.id.directionBackButton) private ImageView backButton;
 	@InjectView(R.id.titleText) private TextView titleText;
 
+	FavoritesAdapter mFavoritesAdapter;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -35,6 +37,8 @@ public class FavoritesActivity extends RoboActivity {
 		titleText.setText("FAVORITES");
 		directionTextView.setText("Favorites");
 
+		mFavoritesAdapter = new FavoritesAdapter(getApplicationContext());
+
 		/*
 		 * Making the colorbar smaller height, cleaner look. Maybe make new
 		 * layout file?
@@ -42,8 +46,14 @@ public class FavoritesActivity extends RoboActivity {
 		colorBar.setLayoutParams(new LinearLayout.LayoutParams(
 				LinearLayout.LayoutParams.WRAP_CONTENT, 3));
 
-		stopListView.setAdapter(new FavoritesAdapter(getApplicationContext()));
+		stopListView.setAdapter(mFavoritesAdapter);
 		setEventListeners();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		mFavoritesAdapter.notifyDataSetChanged();
 	}
 
 	private void setEventListeners() {
