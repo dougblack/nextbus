@@ -4,9 +4,7 @@ import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
@@ -17,6 +15,7 @@ import android.widget.TextView;
 import com.doug.nextbus.R;
 import com.doug.nextbus.backend.Data;
 import com.doug.nextbus.backend.Favorite;
+import com.doug.nextbus.custom.BackButtonOnTouchListener;
 import com.doug.nextbus.custom.FavoritesAdapter;
 
 public class FavoritesActivity extends RoboActivity {
@@ -35,7 +34,10 @@ public class FavoritesActivity extends RoboActivity {
 		setContentView(R.layout.stop_list);
 
 		titleText.setText("FAVORITES");
-		directionTextView.setText("Favorites");
+		// directionTextView.setText("Favorites");
+
+		((LinearLayout) directionTextView.getParent())
+				.removeView(directionTextView);
 
 		mFavoritesAdapter = new FavoritesAdapter(getApplicationContext());
 
@@ -53,6 +55,7 @@ public class FavoritesActivity extends RoboActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		// In case any preferences were changed.
 		mFavoritesAdapter.notifyDataSetChanged();
 	}
 
@@ -66,18 +69,8 @@ public class FavoritesActivity extends RoboActivity {
 			}
 		});
 
-		backButton.setOnTouchListener(new OnTouchListener() {
-			public boolean onTouch(View arg0, MotionEvent event) {
-				if (event.getAction() == MotionEvent.ACTION_DOWN) {
-					backButton.setBackgroundColor(getResources().getColor(
-							R.color.black));
-				} else if (event.getAction() == MotionEvent.ACTION_UP) {
-					backButton.setBackgroundColor(0);
-					finish();
-				}
-				return true;
-			}
-		});
+		backButton.setOnTouchListener(new BackButtonOnTouchListener(this,
+				backButton));
 	}
 
 	@Override

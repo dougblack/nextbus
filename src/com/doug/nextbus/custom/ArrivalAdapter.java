@@ -13,8 +13,8 @@ import com.doug.nextbus.backend.RouteDirectionStop;
 
 public class ArrivalAdapter extends BaseAdapter {
 
-	final private Context mCtx;
-	final private RouteDirectionStop[] mRdsArray;
+	private final Context mCtx;
+	private final RouteDirectionStop[] mRdsArray;
 
 	public ArrivalAdapter(Context ctx, RouteDirectionStop[] rdsArray) {
 		this.mCtx = ctx;

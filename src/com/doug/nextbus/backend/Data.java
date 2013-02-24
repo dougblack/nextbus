@@ -105,7 +105,10 @@ public class Data {
 
 	}
 
-	/** Finds all route/direction/stops with that share the same stop title */
+	/**
+	 * Finds all route/direction/stops with that share the same stop title.
+	 * Excludes Rds with given routeTag and directionTag
+	 */
 	public static RouteDirectionStop[] getAllRdsWithStopTitle(String stopTitle,
 			String routeTag, String directionTag) {
 		ArrayList<RouteDirectionStop> rdsList = new ArrayList<RouteDirectionStop>();
@@ -245,17 +248,6 @@ public class Data {
 		}
 
 		return routePathData;
-
-	}
-
-	private static String[] convertToStringArray(ArrayList<String> list) {
-
-		String[] ret = new String[list.size()];
-		Iterator<String> iterator = list.iterator();
-		for (int i = 0; i < ret.length; i++) {
-			ret[i] = iterator.next();
-		}
-		return ret;
 
 	}
 

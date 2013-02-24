@@ -7,9 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -23,6 +21,7 @@ import com.doug.nextbus.backend.Data;
 import com.doug.nextbus.backend.JSONDataResult.Route;
 import com.doug.nextbus.backend.JSONDataResult.Route.Direction;
 import com.doug.nextbus.backend.JSONDataResult.Route.Stop;
+import com.doug.nextbus.custom.BackButtonOnTouchListener;
 
 /* This activity shows a list of stops. */
 public class StopListActivity extends RoboActivity {
@@ -32,8 +31,8 @@ public class StopListActivity extends RoboActivity {
 	@InjectView(R.id.colorbar) private View colorBar;
 	@InjectView(R.id.directionBackButton) private ImageView backButton;
 
-	final private static String ROUTE_TAG_KEY = "routeTag";
-	final private static String DIRECTION_TITLE_KEY = "directionTitle";
+	private static final String ROUTE_TAG_KEY = "routeTag";
+	private static final String DIRECTION_TITLE_KEY = "directionTitle";
 
 	public static Intent createIntent(Context ctx, String routeTag,
 			String directionTitle) {
@@ -78,18 +77,8 @@ public class StopListActivity extends RoboActivity {
 			});
 		}
 
-		backButton.setOnTouchListener(new OnTouchListener() {
-			public boolean onTouch(View arg0, MotionEvent event) {
-				if (event.getAction() == MotionEvent.ACTION_DOWN) {
-					backButton.setBackgroundColor(getResources().getColor(
-							R.color.black));
-				} else if (event.getAction() == MotionEvent.ACTION_UP) {
-					backButton.setBackgroundColor(0);
-					finish();
-				}
-				return true;
-			}
-		});
+		backButton.setOnTouchListener(new BackButtonOnTouchListener(this,
+				backButton));
 	}
 
 	/** Sets color of label at top of view */

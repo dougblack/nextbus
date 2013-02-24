@@ -14,10 +14,8 @@ import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -39,6 +37,7 @@ import com.doug.nextbus.backend.JSONDataResult.Route.Direction;
 import com.doug.nextbus.backend.JSONDataResult.Route.Stop;
 import com.doug.nextbus.backend.RouteDirectionStop;
 import com.doug.nextbus.custom.ArrivalAdapter;
+import com.doug.nextbus.custom.BackButtonOnTouchListener;
 
 /* This activity displays the predictions for a the current stop */
 public class StopViewActivity extends RoboActivity implements
@@ -67,11 +66,11 @@ public class StopViewActivity extends RoboActivity implements
 	@InjectView(R.id.footer_yellowcell) private View mFooterYellowCell;
 	@InjectView(R.id.footer_greencell) private View mFooterGreenCell;
 
-	final private static String ROUTE_TAG_KEY = "routeTag";
-	final private static String DIRECTION_TITLE_KEY = "directionTitle";
-	final private static String DIRECTION_TAG_KEY = "directionTag";
-	final private static String STOP_TITLE_KEY = "stopTitle";
-	final private static String STOP_TAG_KEY = "stopTag";
+	private static final String ROUTE_TAG_KEY = "routeTag";
+	private static final String DIRECTION_TITLE_KEY = "directionTitle";
+	private static final String DIRECTION_TAG_KEY = "directionTag";
+	private static final String STOP_TITLE_KEY = "stopTitle";
+	private static final String STOP_TAG_KEY = "stopTag";
 
 	private String mRouteTag;
 	private String mDirectionTitle;
@@ -79,7 +78,6 @@ public class StopViewActivity extends RoboActivity implements
 	private String mStopTitle;
 	private String mStopTag;
 
-	private String[] mArrivalsArray;
 	private RouteDirectionStop[] mRdsArray;
 
 	public static Intent createIntent(Context ctx, String routeTag,
@@ -128,10 +126,9 @@ public class StopViewActivity extends RoboActivity implements
 		mStopTag = extras.getString(STOP_TAG_KEY);
 
 		stopTextView.setText(mStopTitle);
+		setViewColor();
 
 		setupArrivals();
-
-		setViewColor(mRouteTag);
 
 		// Setting text views to default values
 		firstArrival.setText("");
@@ -142,18 +139,17 @@ public class StopViewActivity extends RoboActivity implements
 		Favorite favorite = new Favorite(mRouteTag, mDirectionTag,
 				mDirectionTitle, mStopTag, mStopTitle);
 
-		int star = R.drawable.rate_star_big_off_holo_light;
-		if (Data.isFavorite(favorite)) {
-			star = R.drawable.rate_star_big_on_holo_light;
-		}
-		favoriteButton.setImageResource(star);
+		refresh();
 
-		refresh(mRouteTag, mDirectionTag, mStopTag);
+		int starImageResource = R.drawable.rate_star_big_off_holo_light;
+		if (Data.isFavorite(favorite)) {
+			starImageResource = R.drawable.rate_star_big_on_holo_light;
+		}
+		favoriteButton.setImageResource(starImageResource);
 
 		setEventListeners(favorite);
 
-		// Setting colors
-
+		// Setting colors, are needed because of view recycling.
 		mFooterBlueCell.setBackgroundColor(getResources()
 				.getColor(R.color.blue));
 		mFooterRedCell.setBackgroundColor(getResources().getColor(R.color.red));
@@ -164,26 +160,15 @@ public class StopViewActivity extends RoboActivity implements
 	}
 
 	private void setEventListeners(Favorite favorite) {
-		backButton.setOnTouchListener(new OnTouchListener() {
-
-			public boolean onTouch(View arg0, MotionEvent event) {
-				if (event.getAction() == MotionEvent.ACTION_DOWN) {
-					backButton.setBackgroundColor(getResources().getColor(
-							R.color.black));
-				} else if (event.getAction() == MotionEvent.ACTION_UP) {
-					backButton.setBackgroundColor(0);
-					finish();
-				}
-				return true;
-			}
-		});
+		backButton.setOnTouchListener(new BackButtonOnTouchListener(this,
+				backButton));
 
 		favoriteButton.setOnClickListener(new CustomOnClickListener(favorite));
 
 		refreshButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				routeViewProgressBar.setVisibility(View.VISIBLE);
-				refresh(mRouteTag, mDirectionTag, mStopTag);
+				refresh();
 			}
 		});
 
@@ -203,7 +188,7 @@ public class StopViewActivity extends RoboActivity implements
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				if (mRdsArray.length == 0) {
-					return;
+					return; //
 				}
 				Intent intent = StopViewActivity
 						.createIntent(getApplicationContext(),
@@ -211,15 +196,13 @@ public class StopViewActivity extends RoboActivity implements
 								mRdsArray[position].direction,
 								mRdsArray[position].stop);
 				startActivity(intent);
-
 			}
-
 		});
 
 	}
 
-	/** Gets Rds with stopTitle, exclude Rds with routeTag and directionTag */
 	public void setupArrivals() {
+		// TODO: check if the preferences is being used
 		mRdsArray = Data.getAllRdsWithStopTitle(mStopTitle, mRouteTag,
 				mDirectionTag);
 
@@ -227,14 +210,12 @@ public class StopViewActivity extends RoboActivity implements
 				mRdsArray));
 
 		arrivalList.setOnItemClickListener(null);
-		/*
-		 * Listener for arrival drawer thing. If a cell is clicked, open the
-		 * stop for that route
-		 */
+
+		/* If a cell is clicked, open the stop for that route */
 		arrivalList.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				if (!mArrivalsArray[0].equals("No other arrivals")) {
+				if (!mRdsArray[0].equals("No other arrivals")) {
 					RouteDirectionStop rds = mRdsArray[position];
 					Intent intent = StopViewActivity.createIntent(
 							getApplicationContext(), rds.route.tag,
@@ -243,7 +224,20 @@ public class StopViewActivity extends RoboActivity implements
 				}
 			}
 		});
+	}
 
+	/** Gets the latest prediction data */
+	private void refresh() {
+		new LoadPredictionAsyncTask(this).execute(mRouteTag, mDirectionTag,
+				mStopTag);
+	}
+
+	/** Set color of text with respect to current routeTag */
+	private void setViewColor() {
+		int color = Data.getColorFromRouteTag(mRouteTag);
+		stopTextView.setTextColor(getResources().getColor(color));
+		colorBar.setBackgroundColor(getResources().getColor(color));
+		colorSeperator.setBackgroundColor(getResources().getColor(color));
 	}
 
 	@Override
@@ -251,19 +245,6 @@ public class StopViewActivity extends RoboActivity implements
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.stock_menu, menu);
 		return true;
-	}
-
-	/** Gets the latest prediction data */
-	private void refresh(String route, String direction, String stopTag) {
-		new LoadPredictionAsyncTask(this).execute(route, direction, stopTag);
-	}
-
-	/** Set color of text with respect to route */
-	private void setViewColor(String route) {
-		int color = Data.getColorFromRouteTag(route);
-		stopTextView.setTextColor(getResources().getColor(color));
-		colorBar.setBackgroundColor(getResources().getColor(color));
-		colorSeperator.setBackgroundColor(getResources().getColor(color));
 	}
 
 	@Override
@@ -320,7 +301,7 @@ public class StopViewActivity extends RoboActivity implements
 
 	}
 
-	/* *Load prediction data asynchronously. */
+	/** Load prediction data asynchronously. */
 	private class LoadPredictionAsyncTask extends
 			AsyncTask<String, Void, ArrayList<String>> {
 		Context ctx;

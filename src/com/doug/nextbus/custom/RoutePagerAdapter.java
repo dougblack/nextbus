@@ -69,7 +69,7 @@ public class RoutePagerAdapter extends PagerAdapter {
 			// Populate list with direction titles
 			itemListTemp = currentRoute.getDirectionTitles();
 		} else {
-			// Populate with stop titles
+			// Populate list with stop titles
 			itemListTemp = currentRoute.getStopTitles(currentRoute
 					.getDefaultDirection().title);
 		}
@@ -84,7 +84,7 @@ public class RoutePagerAdapter extends PagerAdapter {
 					int position, long id) {
 				if (hasMultipleDirections) {
 					/*
-					 * Route has multiple direction, items start
+					 * Route has multiple directions, items start
 					 * StopListActivity
 					 */
 					Intent intent = StopListActivity.createIntent(mCtx,
@@ -92,7 +92,7 @@ public class RoutePagerAdapter extends PagerAdapter {
 					mCtx.startActivity(intent);
 				} else {
 					/*
-					 * Route doesn't have multiple direction, items start
+					 * Route only has one direction, items start
 					 * StopViewActivity
 					 */
 					Direction defaultDirection = currentRoute
@@ -127,7 +127,7 @@ public class RoutePagerAdapter extends PagerAdapter {
 		if (mRoutes.length > 0) {
 			return mRoutes.length;
 		} else {
-			return 1; // return 1 for deadcell if no routes
+			return 1; // If no routes, return 1 for deadcell
 		}
 	}
 
@@ -149,7 +149,7 @@ public class RoutePagerAdapter extends PagerAdapter {
 		if (mRoutes.length > 0) {
 			return Data.capitalize(mRoutes[position]);
 		} else {
-			return "No routes";
+			return "No routes"; // When no routes
 		}
 	}
 

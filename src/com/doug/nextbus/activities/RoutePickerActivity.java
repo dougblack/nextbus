@@ -79,7 +79,6 @@ public class RoutePickerActivity extends RoboActivity implements
 	}
 
 	private void setEventListeners() {
-
 		// Listener for page changing. Basically the left and right swiping
 		titleIndicator
 				.setOnPageChangeListener(new SimpleOnPageChangeListener() {
@@ -99,9 +98,9 @@ public class RoutePickerActivity extends RoboActivity implements
 					return true;
 				} else if (event.getAction() == MotionEvent.ACTION_UP) {
 					mapButton.setBackgroundColor(0);
-					Intent mapActivity = new Intent(getApplicationContext(),
+					Intent intent = new Intent(getApplicationContext(),
 							MapViewActivity.class);
-					startActivity(mapActivity);
+					startActivity(intent);
 					return true;
 				}
 				return true;
@@ -131,7 +130,7 @@ public class RoutePickerActivity extends RoboActivity implements
 
 	/** Updates text color depending on the position of view page */
 	private void setViewColor(int position) {
-		int color = R.color.orange; // default color
+		int color = 0; // default color
 		if (mCurrentRoutes.length > 0) { // if there are active routes
 			color = Data.getColorFromRouteTag(mCurrentRoutes[position]);
 		}

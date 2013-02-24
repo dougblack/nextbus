@@ -43,6 +43,7 @@ public class FavoritesAdapter extends BaseAdapter {
 		// Gray out routes that are not active if showActiveRoutes is set
 		int color = mCtx.getResources().getColor(R.color.white);
 		// default is white
+
 		if (showActiveRoutes && !Data.isRouteActive(favorite.routeTag)) {
 			color = mCtx.getResources().getColor(R.color.fade2);
 		}
