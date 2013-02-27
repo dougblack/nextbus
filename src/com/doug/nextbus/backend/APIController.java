@@ -20,18 +20,22 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 
-/* This class handles all request to the NextBus API.
- * It curates the returned data for easy consumption by other objects in the app. */
+/**
+ * This class handles all request to the NextBus API. It curates the returned
+ * data for easy consumption by other objects in the app.
+ */
 public class APIController {
+	/** How many times to retry before giving up */
+	private static final int NUM_RETRIES = 2;
 
 	private static String createURL(String route, String direction, String stop) {
 		// final String localHost = "http://10.0.2.2:3000/bus/";
 
 		final String remoteHost = "http://desolate-escarpment-6039.herokuapp.com/bus/";
-		// final String pythonHost = "http://quiet-fjord-4717.herokuapp.com/";
 		String url = String.format("%sget?route=%s&direction=%s&stop=%s",
 				remoteHost, route, direction, stop);
 
+		// final String pythonHost = "http://quiet-fjord-4717.herokuapp.com/";
 		// String url = "http://quiet-fjord-4717.herokuapp.com/" + route + "/"
 		// + direction + "/" + stop;
 
@@ -42,15 +46,17 @@ public class APIController {
 	public static ArrayList<String> getPrediction(String route,
 			String direction, String stop) {
 		String target = createURL(route, direction, stop);
-		try {
-			Reader reader = getReaderFromURL(target);
+		for (int i = 0; i < NUM_RETRIES; i++) {
+			try {
+				Reader reader = getReaderFromURL(target);
 
-			PredictionResult result = new Gson().fromJson(reader,
-					PredictionResult.class);
-			return result.predictions;
-		} catch (Exception e) {
-			e.printStackTrace();
-			Log.d("error", e.getClass().toString());
+				PredictionResult result = new Gson().fromJson(reader,
+						PredictionResult.class);
+				return result.predictions;
+			} catch (Exception e) {
+				e.printStackTrace();
+				Log.d("error", e.getClass().toString());
+			}
 		}
 		ArrayList<String> al = new ArrayList<String>();
 		al.add("-1"); // Returning -1 if there was an error

@@ -89,7 +89,7 @@ public class StopViewActivity extends RoboActivity implements
 		intent.putExtra(STOP_TITLE_KEY, stop.title);
 		intent.putExtra(STOP_TAG_KEY, stop.tag);
 		// Closes all instances of the same activity
-		// intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		return intent;
 	}
 
@@ -102,7 +102,7 @@ public class StopViewActivity extends RoboActivity implements
 		intent.putExtra(STOP_TITLE_KEY, favorite.stopTitle);
 		intent.putExtra(STOP_TAG_KEY, favorite.stopTag);
 		// Closes all instances of the same activity
-		// intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		return intent;
 	}
 

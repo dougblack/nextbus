@@ -36,9 +36,6 @@ public class FavoritesActivity extends RoboActivity {
 		titleText.setText("FAVORITES");
 		// directionTextView.setText("Favorites");
 
-		((LinearLayout) directionTextView.getParent())
-				.removeView(directionTextView);
-
 		mFavoritesAdapter = new FavoritesAdapter(getApplicationContext());
 
 		/*
@@ -47,6 +44,11 @@ public class FavoritesActivity extends RoboActivity {
 		 */
 		colorBar.setLayoutParams(new LinearLayout.LayoutParams(
 				LinearLayout.LayoutParams.WRAP_CONTENT, 3));
+
+		// Just getting rid of these
+		((LinearLayout) directionTextView.getParent())
+				.removeView(directionTextView);
+		((LinearLayout) colorBar.getParent()).removeView(colorBar);
 
 		stopListView.setAdapter(mFavoritesAdapter);
 		setEventListeners();
