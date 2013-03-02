@@ -49,7 +49,7 @@
         android:layout_height="fill_parent"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/titleBar"
-        android:apiKey="04Qw7Dy0-DFoNhqQqSnO8Glg7x9bwkd9Q_yFtPw"
+        android:apiKey="0Tm9yeEAGl3GeiO-pCUTbAgWMZ7bNQZn-cNNQIg"
         android:clickable="true" />
 
     <LinearLayout

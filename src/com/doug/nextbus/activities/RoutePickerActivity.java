@@ -130,7 +130,7 @@ public class RoutePickerActivity extends RoboActivity implements
 
 	/** Updates text color depending on the position of view page */
 	private void setViewColor(int position) {
-		int color = 0; // default color
+		int color = R.color.blue; // default color
 		if (mCurrentRoutes.length > 0) { // if there are active routes
 			color = Data.getColorFromRouteTag(mCurrentRoutes[position]);
 		}

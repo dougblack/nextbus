@@ -23,8 +23,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.doug.nextbus.R;
-import com.doug.nextbus.backend.APIController;
-import com.doug.nextbus.backend.Data;
+import com.doug.nextbus.old.APIController_Old;
+import com.doug.nextbus.old.Data_Old;
 import com.doug.nextbus.custom.BusOverlayItem;
 import com.doug.nextbus.custom.MapItemizedOverlay;
 import com.doug.nextbus.custom.RouteOverlay;
@@ -84,6 +84,8 @@ public class MapViewActivity extends MapActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.map_view);
+
+		Data_Old.setConfigData(this);
 
 		/* Initialize tons of shit */
 		redColor = this.getResources().getColor(R.color.red);
@@ -223,16 +225,16 @@ public class MapViewActivity extends MapActivity {
 				/* Get path data for each route */
 				switch (x) {
 				case 0:
-					routePathData = Data.getRoutePathData("red");
+					routePathData = Data_Old.getRoutePathData("red");
 					break;
 				case 1:
-					routePathData = Data.getRoutePathData("blue");
+					routePathData = Data_Old.getRoutePathData("blue");
 					break;
 				case 2:
-					routePathData = Data.getRoutePathData("trolley");
+					routePathData = Data_Old.getRoutePathData("trolley");
 					break;
 				case 3:
-					routePathData = Data.getRoutePathData("green");
+					routePathData = Data_Old.getRoutePathData("green");
 					break;
 				}
 
@@ -364,7 +366,7 @@ public class MapViewActivity extends MapActivity {
 			}
 
 			/* Here's where the actual location request happens. */
-			ArrayList<String[]> busLocations = APIController.getBusLocations();
+			ArrayList<String[]> busLocations = APIController_Old.getBusLocations();
 
 			ArrayList<MapItemizedOverlay> overlays = new ArrayList<MapItemizedOverlay>();
 

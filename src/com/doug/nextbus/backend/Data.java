@@ -149,7 +149,7 @@ public class Data {
 	}
 
 	public static int getColorFromRouteTag(String routeTag) {
-		int color = 0; // default color
+		int color = R.color.blue; // default color
 		if (routeTag.equals("red")) {
 			color = R.color.red;
 		} else if (routeTag.equals("blue")) {
