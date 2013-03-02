@@ -1,19 +1,20 @@
 package com.doug.nextbus.custom;
 
-import roboguice.activity.RoboActivity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 
+import com.actionbarsherlock.app.SherlockActivity;
 import com.doug.nextbus.R;
+import com.doug.nextbus.RoboSherlock.RoboSherlockActivity;
 
 public class BackButtonOnTouchListener implements OnTouchListener {
 
-	private final RoboActivity mCtx;
+	private final SherlockActivity mCtx;
 	private final ImageView backButton;
 
-	public BackButtonOnTouchListener(RoboActivity mCtx, ImageView backButton) {
+	public BackButtonOnTouchListener(SherlockActivity mCtx, ImageView backButton) {
 		super();
 		this.mCtx = mCtx;
 		this.backButton = backButton;

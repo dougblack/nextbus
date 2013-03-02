@@ -1,24 +1,19 @@
 package com.doug.nextbus.activities;
 
-import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.SimpleOnPageChangeListener;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
-import android.view.Window;
-import android.widget.ImageView;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.doug.nextbus.R;
+import com.doug.nextbus.RoboSherlock.RoboSherlockActivity;
 import com.doug.nextbus.backend.APIController;
 import com.doug.nextbus.backend.Data;
 import com.doug.nextbus.custom.RoutePagerAdapter;
@@ -27,13 +22,11 @@ import com.viewpagerindicator.TitlePageIndicator;
 import com.viewpagerindicator.TitlePageIndicator.IndicatorStyle;
 
 /* The top level, main activity. It lets the users switch between routes. */
-public class RoutePickerActivity extends RoboActivity implements
+public class RoutePickerActivity extends RoboSherlockActivity implements
 		OnSharedPreferenceChangeListener {
 
 	@InjectView(R.id.routepagerviewpager) private ViewPager pager;
-	@InjectView(R.id.mapButton) private ImageView mapButton;
 	@InjectView(R.id.routes) private TitlePageIndicator titleIndicator;
-	@InjectView(R.id.favoriteButtonLaunch) private ImageView favoritesLaunchButton;
 
 	private String[] mCurrentRoutes;
 	private SharedPreferences mPrefs;
@@ -41,13 +34,16 @@ public class RoutePickerActivity extends RoboActivity implements
 
 	public void onCreate(Bundle savedInstance) {
 		super.onCreate(savedInstance);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		// requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.route_picker);
 
 		// Used for waking up the server, done first
 		new WakeupAsyncTask().execute();
 
 		Data.setConfig(this);
+
+		int titleId = Resources.getSystem().getIdentifier("action_bar_title",
+				"id", "android");
 
 		mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 		mPrefs.registerOnSharedPreferenceChangeListener(this);
@@ -87,34 +83,6 @@ public class RoutePickerActivity extends RoboActivity implements
 						setViewColor(position);
 					}
 				});
-
-		// Button and event for switching to MapView
-		mapButton.setOnTouchListener(new OnTouchListener() {
-			@Override
-			public boolean onTouch(View arg0, MotionEvent event) {
-				if (event.getAction() == MotionEvent.ACTION_DOWN) {
-					mapButton.setBackgroundColor(getResources().getColor(
-							R.color.black));
-					return true;
-				} else if (event.getAction() == MotionEvent.ACTION_UP) {
-					mapButton.setBackgroundColor(0);
-					Intent intent = new Intent(getApplicationContext(),
-							MapViewActivity.class);
-					startActivity(intent);
-					return true;
-				}
-				return true;
-			}
-		});
-
-		favoritesLaunchButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(getApplicationContext(),
-						FavoritesActivity.class);
-				startActivity(intent);
-			}
-		});
 	}
 
 	/** Updates available routes depending on show active routes preference. */
@@ -140,7 +108,9 @@ public class RoutePickerActivity extends RoboActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.stock_menu, menu);
+		getSupportMenuInflater().inflate(R.menu.stock_menu, menu);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+
 		return true;
 	}
 
@@ -152,9 +122,19 @@ public class RoutePickerActivity extends RoboActivity implements
 			startActivity(aboutActivity);
 			return true;
 		case R.id.preferencesmenuitem:
-			Intent preferenceActivity = new Intent(this,
+			Intent preferenceIntent = new Intent(this,
 					PreferencesActivity.class);
-			startActivity(preferenceActivity);
+			startActivity(preferenceIntent);
+			return true;
+		case R.id.favoritesitem:
+			Intent favoriteIntent = new Intent(getApplicationContext(),
+					FavoritesActivity.class);
+			startActivity(favoriteIntent);
+			return true;
+		case R.id.mapsitem:
+			Intent mapIntent = new Intent(getApplicationContext(),
+					MapViewActivity.class);
+			startActivity(mapIntent);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -171,4 +151,5 @@ public class RoutePickerActivity extends RoboActivity implements
 		}
 
 	}
+
 }

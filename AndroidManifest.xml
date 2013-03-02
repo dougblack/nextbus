@@ -12,7 +12,7 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/Theme.DarkTheme" >
+        android:theme="@style/Theme.MySherlock" >
         <uses-library
             android:name="com.google.android.maps"
             android:required="true" />
@@ -20,7 +20,7 @@
         <activity
             android:name="com.doug.nextbus.activities.RoutePickerActivity"
             android:configChanges="orientation"
-            android:label="@string/app_name"
+            android:label="GT NEXTBUS"
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,34 +31,35 @@
         <activity
             android:name="com.doug.nextbus.activities.StopListActivity"
             android:configChanges="orientation"
-            android:label="Stop List"
+            android:label="STOP LIST"
             android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.doug.nextbus.activities.StopViewActivity"
             android:configChanges="orientation"
-            android:label="Stop View"
+            android:label="STOP"
             android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.doug.nextbus.activities.CreditsActivity"
             android:configChanges="orientation"
-            android:label="About"
+            android:label="ABOUT"
             android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.doug.nextbus.activities.PreferencesActivity"
-            android:label="Preferences"
+            android:label="PREFERENCES"
             android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.doug.nextbus.activities.MapViewActivity"
-            android:label="Map Activity"
+            android:label="MAP"
             android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.doug.nextbus.activities.FavoritesActivity"
-            android:label="@string/title_activity_favorites" >
+            android:label="FAVORITES"
+            android:screenOrientation="portrait" >
         </activity>
     </application>
 

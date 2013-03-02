@@ -1,35 +1,31 @@
 package com.doug.nextbus.activities;
 
-import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.doug.nextbus.R;
+import com.doug.nextbus.RoboSherlock.RoboSherlockActivity;
 import com.doug.nextbus.backend.Data;
 import com.doug.nextbus.backend.JSONDataResult.Route;
 import com.doug.nextbus.backend.JSONDataResult.Route.Direction;
 import com.doug.nextbus.backend.JSONDataResult.Route.Stop;
-import com.doug.nextbus.custom.BackButtonOnTouchListener;
 
 /* This activity shows a list of stops. */
-public class StopListActivity extends RoboActivity {
+public class StopListActivity extends RoboSherlockActivity {
 
 	@InjectView(R.id.stopListView) private ListView stopListView;
 	@InjectView(R.id.directionTextView) private TextView directionTextView;
 	@InjectView(R.id.colorbar) private View colorBar;
-	@InjectView(R.id.directionBackButton) private ImageView backButton;
 
 	private static final String ROUTE_TAG_KEY = "routeTag";
 	private static final String DIRECTION_TITLE_KEY = "directionTitle";
@@ -45,7 +41,6 @@ public class StopListActivity extends RoboActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.stop_list);
 
 		Bundle extras = getIntent().getExtras();
@@ -76,9 +71,6 @@ public class StopListActivity extends RoboActivity {
 
 			});
 		}
-
-		backButton.setOnTouchListener(new BackButtonOnTouchListener(this,
-				backButton));
 	}
 
 	/** Sets color of label at top of view */
@@ -89,7 +81,8 @@ public class StopListActivity extends RoboActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.stock_menu, menu);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportMenuInflater().inflate(R.menu.stock_menu, menu);
 		return true;
 	}
 
@@ -97,14 +90,26 @@ public class StopListActivity extends RoboActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.aboutmenusitem:
-			Intent aboutActivity = new Intent(getApplicationContext(),
-					CreditsActivity.class);
+			Intent aboutActivity = new Intent(this, CreditsActivity.class);
 			startActivity(aboutActivity);
 			return true;
 		case R.id.preferencesmenuitem:
-			Intent preferenceActivity = new Intent(getApplicationContext(),
+			Intent preferenceIntent = new Intent(this,
 					PreferencesActivity.class);
-			startActivity(preferenceActivity);
+			startActivity(preferenceIntent);
+			return true;
+		case R.id.favoritesitem:
+			Intent favoriteIntent = new Intent(getApplicationContext(),
+					FavoritesActivity.class);
+			startActivity(favoriteIntent);
+			return true;
+		case R.id.mapsitem:
+			Intent mapIntent = new Intent(getApplicationContext(),
+					MapViewActivity.class);
+			startActivity(mapIntent);
+			return true;
+		case android.R.id.home:
+			finish();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

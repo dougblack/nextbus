@@ -14,22 +14,21 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.doug.nextbus.R;
-import com.doug.nextbus.old.APIController_Old;
-import com.doug.nextbus.old.Data_Old;
+import com.doug.nextbus.RoboSherlock.RoboSherlockMapActivity;
 import com.doug.nextbus.custom.BusOverlayItem;
 import com.doug.nextbus.custom.MapItemizedOverlay;
 import com.doug.nextbus.custom.RouteOverlay;
+import com.doug.nextbus.old.APIController_Old;
+import com.doug.nextbus.old.Data_Old;
 import com.google.android.maps.GeoPoint;
-import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
@@ -37,7 +36,7 @@ import com.google.android.maps.Overlay;
 /*
  * The map activity. Shows routes and bus locations overlaid on a google map. 
  */
-public class MapViewActivity extends MapActivity {
+public class MapViewActivity extends RoboSherlockMapActivity {
 
 	/* Bus icon arrow things */
 	Drawable redArrow;
@@ -74,7 +73,6 @@ public class MapViewActivity extends MapActivity {
 	MapView mapView;
 
 	static ProgressBar pg;
-	static ImageView backButton;
 	Handler refreshHandler;
 	Runnable updateMapTask;
 	String displayRoute;
@@ -86,6 +84,8 @@ public class MapViewActivity extends MapActivity {
 		setContentView(R.layout.map_view);
 
 		Data_Old.setConfigData(this);
+
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		/* Initialize tons of shit */
 		redColor = this.getResources().getColor(R.color.red);
@@ -106,7 +106,6 @@ public class MapViewActivity extends MapActivity {
 		blueButton = (TextView) findViewById(R.id.blueButton);
 		greenButton = (TextView) findViewById(R.id.greenButton);
 		yellowButton = (TextView) findViewById(R.id.yellowButton);
-		backButton = (ImageView) findViewById(R.id.mapBackButton);
 
 		redPath = new LinkedList<Overlay>();
 		bluePath = new LinkedList<Overlay>();
@@ -168,21 +167,6 @@ public class MapViewActivity extends MapActivity {
 				mapController.animateTo(centerPoint);
 				displayRoute = "green";
 				refreshMap();
-			}
-		});
-
-		backButton.setOnTouchListener(new OnTouchListener() {
-			public boolean onTouch(View arg0, MotionEvent event) {
-				if (event.getAction() == MotionEvent.ACTION_DOWN) {
-					backButton.setBackgroundColor(getResources().getColor(
-							R.color.black));
-					return true;
-				} else if (event.getAction() == MotionEvent.ACTION_UP) {
-					backButton.setBackgroundColor(0);
-					finish();
-					return true;
-				}
-				return true;
 			}
 		});
 
@@ -355,6 +339,27 @@ public class MapViewActivity extends MapActivity {
 		refreshHandler.post(updateMapTask);
 	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportMenuInflater().inflate(R.menu.stock_menu, menu);
+		menu.findItem(R.id.mapsitem).setVisible(false);
+		menu.findItem(R.id.favoritesitem).setVisible(false);
+
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
 	/* Refresh bus locations. Implemented as AsyncTask so UI thread is free. */
 	private class refreshBusLocations extends
 			AsyncTask<Void, Void, ArrayList<MapItemizedOverlay>> {
@@ -366,7 +371,8 @@ public class MapViewActivity extends MapActivity {
 			}
 
 			/* Here's where the actual location request happens. */
-			ArrayList<String[]> busLocations = APIController_Old.getBusLocations();
+			ArrayList<String[]> busLocations = APIController_Old
+					.getBusLocations();
 
 			ArrayList<MapItemizedOverlay> overlays = new ArrayList<MapItemizedOverlay>();
 

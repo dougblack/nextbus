@@ -2,7 +2,6 @@ package com.doug.nextbus.activities;
 
 import java.util.ArrayList;
 
-import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
 import android.content.Context;
 import android.content.Intent;
@@ -11,12 +10,8 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageButton;
@@ -29,7 +24,10 @@ import android.widget.SlidingDrawer.OnDrawerOpenListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.doug.nextbus.R;
+import com.doug.nextbus.RoboSherlock.RoboSherlockActivity;
 import com.doug.nextbus.backend.APIController;
 import com.doug.nextbus.backend.Data;
 import com.doug.nextbus.backend.Favorite;
@@ -37,10 +35,9 @@ import com.doug.nextbus.backend.JSONDataResult.Route.Direction;
 import com.doug.nextbus.backend.JSONDataResult.Route.Stop;
 import com.doug.nextbus.backend.RouteDirectionStop;
 import com.doug.nextbus.custom.ArrivalAdapter;
-import com.doug.nextbus.custom.BackButtonOnTouchListener;
 
 /* This activity displays the predictions for a the current stop */
-public class StopViewActivity extends RoboActivity implements
+public class StopViewActivity extends RoboSherlockActivity implements
 		OnSharedPreferenceChangeListener {
 
 	@InjectView(R.id.firstArrival) private TextView firstArrival;
@@ -49,17 +46,16 @@ public class StopViewActivity extends RoboActivity implements
 	@InjectView(R.id.fourthArrival) private TextView fourthArrival;
 	@InjectView(R.id.stopTextView) private TextView stopTextView;
 	@InjectView(R.id.drawerTextView) private TextView drawerHandleTextView;
-	@InjectView(R.id.titleText) private TextView titleTextView;
 
-	@InjectView(R.id.backButton) private ImageView backButton;
 	@InjectView(R.id.refreshButton) private ImageView refreshButton;
-	@InjectView(R.id.favoriteButton) private ImageView favoriteButton;
+
 	@InjectView(R.id.routeviewprogressbar) private ProgressBar routeViewProgressBar;
 
 	@InjectView(R.id.colorbar) private View colorBar;
 	@InjectView(R.id.colorSeperator) private View colorSeperator;
 	@InjectView(R.id.arrivalsDrawer) private SlidingDrawer arrivalsDrawer;
 	@InjectView(R.id.arrivalList) private ListView arrivalList;
+	@InjectView(R.id.favoriteButton) private ImageButton favoriteButton;
 
 	@InjectView(R.id.footer_redcell) private View mFooterRedCell;
 	@InjectView(R.id.footer_bluecell) private View mFooterBlueCell;
@@ -110,7 +106,6 @@ public class StopViewActivity extends RoboActivity implements
 	public void onCreate(Bundle savedInstance) {
 
 		super.onCreate(savedInstance);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.stop_view);
 
 		SharedPreferences prefs = PreferenceManager
@@ -160,10 +155,6 @@ public class StopViewActivity extends RoboActivity implements
 	}
 
 	private void setEventListeners(Favorite favorite) {
-		backButton.setOnTouchListener(new BackButtonOnTouchListener(this,
-				backButton));
-
-		favoriteButton.setOnClickListener(new CustomOnClickListener(favorite));
 
 		refreshButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -171,6 +162,8 @@ public class StopViewActivity extends RoboActivity implements
 				refresh();
 			}
 		});
+
+		favoriteButton.setOnClickListener(new CustomOnClickListener(favorite));
 
 		arrivalsDrawer.setOnDrawerOpenListener(new OnDrawerOpenListener() {
 			public void onDrawerOpened() {
@@ -242,8 +235,8 @@ public class StopViewActivity extends RoboActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.stock_menu, menu);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportMenuInflater().inflate(R.menu.stock_menu, menu);
 		return true;
 	}
 
@@ -251,14 +244,26 @@ public class StopViewActivity extends RoboActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.aboutmenusitem:
-			Intent aboutActivity = new Intent(getApplicationContext(),
-					CreditsActivity.class);
+			Intent aboutActivity = new Intent(this, CreditsActivity.class);
 			startActivity(aboutActivity);
 			return true;
 		case R.id.preferencesmenuitem:
-			Intent preferenceActivity = new Intent(getApplicationContext(),
+			Intent preferenceIntent = new Intent(this,
 					PreferencesActivity.class);
-			startActivity(preferenceActivity);
+			startActivity(preferenceIntent);
+			return true;
+		case R.id.favoritesitem:
+			Intent favoriteIntent = new Intent(getApplicationContext(),
+					FavoritesActivity.class);
+			startActivity(favoriteIntent);
+			return true;
+		case R.id.mapsitem:
+			Intent mapIntent = new Intent(getApplicationContext(),
+					MapViewActivity.class);
+			startActivity(mapIntent);
+			return true;
+		case android.R.id.home:
+			finish();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

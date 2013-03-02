@@ -1,30 +1,27 @@
 package com.doug.nextbus.activities;
 
-import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.doug.nextbus.R;
+import com.doug.nextbus.RoboSherlock.RoboSherlockActivity;
 import com.doug.nextbus.backend.Data;
 import com.doug.nextbus.backend.Favorite;
-import com.doug.nextbus.custom.BackButtonOnTouchListener;
 import com.doug.nextbus.custom.FavoritesAdapter;
 
-public class FavoritesActivity extends RoboActivity {
+public class FavoritesActivity extends RoboSherlockActivity {
 
 	@InjectView(R.id.stopListView) private ListView stopListView;
 	@InjectView(R.id.directionTextView) private TextView directionTextView;
 	@InjectView(R.id.colorbar) private View colorBar;
-	@InjectView(R.id.directionBackButton) private ImageView backButton;
-	@InjectView(R.id.titleText) private TextView titleText;
 
 	FavoritesAdapter mFavoritesAdapter;
 
@@ -32,9 +29,6 @@ public class FavoritesActivity extends RoboActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.stop_list);
-
-		titleText.setText("FAVORITES");
-		// directionTextView.setText("Favorites");
 
 		mFavoritesAdapter = new FavoritesAdapter(getApplicationContext());
 
@@ -71,14 +65,27 @@ public class FavoritesActivity extends RoboActivity {
 			}
 		});
 
-		backButton.setOnTouchListener(new BackButtonOnTouchListener(this,
-				backButton));
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.stock_menu, menu);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportMenuInflater().inflate(R.menu.stock_menu, menu);
+		menu.findItem(R.id.favoritesitem).setVisible(false);
+		menu.findItem(R.id.mapsitem).setVisible(false);
+
 		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 }

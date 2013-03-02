@@ -4,68 +4,10 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
-    <LinearLayout
-        android:id="@+id/titleBar"
-        android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/titlebardrawable"
-        android:gravity="center"
-        android:text=""
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/white"
-        android:textSize="25sp"
-        android:textStyle="bold" >
-
-        <ImageView
-            android:id="@+id/backButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:padding="10dp"
-            android:src="@drawable/back_arrow" />
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="fill_parent"
-            android:background="@color/dividercolor" />
-
-        <TextView
-            android:id="@+id/titleText"
-            android:layout_width="0dip"
-            android:layout_height="match_parent"
-            android:layout_weight="1.10"
-            android:gravity="center_vertical"
-            android:paddingLeft="10dp"
-            android:text="STOP"
-            android:textColor="@color/white"
-            android:textSize="22sp"
-            android:textStyle="bold" />
-
-        <ProgressBar
-            android:id="@+id/routeviewprogressbar"
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:gravity="center"
-            android:padding="10dp" />
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="fill_parent"
-            android:background="@color/dividercolor" />
-
-        <ImageButton
-            android:id="@+id/favoriteButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@null"
-            android:src="@drawable/rate_star_big_on_holo_light" />
-    </LinearLayout>
-
     <RelativeLayout
         android:id="@+id/arrivalView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/titleBar"
         android:orientation="vertical"
         android:textColor="@color/black" >
 
@@ -119,6 +61,25 @@
         android:layout_centerHorizontal="true"
         android:background="@color/red" />
 
+    <ProgressBar
+        android:id="@+id/routeviewprogressbar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentRight="true"
+        android:gravity="center"
+        android:padding="10dp" />
+
+    <ImageButton
+        android:id="@+id/favoriteButton"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_alignParentLeft="true"
+        android:background="@null"
+        android:gravity="center"
+        android:padding="10dp"
+        android:src="@drawable/rate_star_big_on_holo_light" />
+
     <TextView
         android:id="@+id/thirdArrival"
         android:layout_width="80dp"
@@ -170,7 +131,6 @@
         android:id="@+id/arrivalsDrawer"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/titleBar"
         android:content="@+id/arrivalList"
         android:handle="@+id/drawerHandle" >
 
