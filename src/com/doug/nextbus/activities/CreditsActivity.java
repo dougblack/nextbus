@@ -1,56 +1,38 @@
 package com.doug.nextbus.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.doug.nextbus.R;
+import com.doug.nextbus.RoboSherlock.RoboSherlockActivity;
 
 /*
  * The credits activity. Shows simple contact links. 
  */
-public class CreditsActivity extends Activity {
+public class CreditsActivity extends RoboSherlockActivity {
 
 	static ListView contactList;
 	static String[] contactItemStrings = { "@dougblackgt", "doug@dougblack.io",
 			"dougblack.io", "Google+",
 			"All data copyright Georgia Tech Campus 2011" };
-	static ImageView backButton;
 
+	@Override
 	public void onCreate(Bundle savedInstance) {
 		super.onCreate(savedInstance);
 		setContentView(R.layout.credits);
 
 		contactList = (ListView) findViewById(R.id.contactList);
-		backButton = (ImageView) findViewById(R.id.creditsBackButton);
 
 		contactList.setAdapter(new ArrayAdapter<String>(this,
 				android.R.layout.simple_list_item_1, contactItemStrings));
-
-		backButton.setOnTouchListener(new OnTouchListener() {
-			public boolean onTouch(View arg0, MotionEvent event) {
-				if (event.getAction() == MotionEvent.ACTION_DOWN) {
-					backButton.setBackgroundColor(getResources().getColor(
-							R.color.black));
-				} else if (event.getAction() == MotionEvent.ACTION_UP) {
-					backButton.setBackgroundColor(0);
-					finish();
-				}
-				return true;
-			}
-		});
 
 		contactList.setOnItemClickListener(new OnItemClickListener() {
 
@@ -98,21 +80,41 @@ public class CreditsActivity extends Activity {
 		});
 	}
 
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.about_menu, menu);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportMenuInflater().inflate(R.menu.about_menu, menu);
 		return true;
 	}
 
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.tohome:
-			Intent intent = new Intent(getApplicationContext(),
-					RoutePickerActivity.class);
-			intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-			startActivity(intent);
+		case R.id.aboutmenusitem:
+			Intent aboutActivity = new Intent(this, CreditsActivity.class);
+			startActivity(aboutActivity);
+			return true;
+		case R.id.preferencesmenuitem:
+			Intent preferenceIntent = new Intent(this,
+					PreferencesActivity.class);
+			startActivity(preferenceIntent);
+			return true;
+		case R.id.favoritesitem:
+			Intent favoriteIntent = new Intent(getApplicationContext(),
+					FavoritesActivity.class);
+			startActivity(favoriteIntent);
+			return true;
+		case R.id.mapsitem:
+			Intent mapIntent = new Intent(getApplicationContext(),
+					MapViewActivity.class);
+			startActivity(mapIntent);
+			return true;
+		case android.R.id.home:
+			finish();
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
+
 }

@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    
     <item
         android:id="@+id/favoritesitem"
         android:icon="@drawable/rate_star_big_on_holo_light"
-        android:showAsAction="always"
+        android:showAsAction="ifRoom"
         android:title="Favorites"/>
     <item
         android:id="@+id/mapsitem"
         android:icon="@drawable/ic_dialog_map"
-        android:showAsAction="always"
-        android:title="Map"/><item android:id="@+id/preferencesmenuitem" android:icon="@drawable/ic_menu_preferences" android:showAsAction="never" android:title="Settings" />
+        android:showAsAction="ifRoom"
+        android:title="Map"/>
+    <item
+        android:id="@+id/preferencesmenuitem"
+        android:icon="@drawable/ic_menu_preferences"
+        android:showAsAction="never"
+        android:title="Settings"/>
     <item
         android:id="@+id/aboutmenusitem"
         android:icon="@drawable/ic_menu_info_details"

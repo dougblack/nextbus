@@ -11,12 +11,12 @@ import com.doug.nextbus.R;
 import com.doug.nextbus.backend.Data;
 import com.doug.nextbus.backend.RouteDirectionStop;
 
-public class ArrivalAdapter extends BaseAdapter {
+public class ArrivalsAdapter extends BaseAdapter {
 
 	private final Context mCtx;
 	private final RouteDirectionStop[] mRdsArray;
 
-	public ArrivalAdapter(Context ctx, RouteDirectionStop[] rdsArray) {
+	public ArrivalsAdapter(Context ctx, RouteDirectionStop[] rdsArray) {
 		this.mCtx = ctx;
 		this.mRdsArray = rdsArray;
 	}

@@ -1052,7 +1052,7 @@
                 },
                 {
                     "tag": "clough",
-                    "title": "Clough",
+                    "title": "Clough Commons",
                     "lat": "33.7755678",
                     "lon": "-84.4024904",
                     "stopid": "0088"

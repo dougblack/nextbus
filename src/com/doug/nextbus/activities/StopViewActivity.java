@@ -34,7 +34,7 @@ import com.doug.nextbus.backend.Favorite;
 import com.doug.nextbus.backend.JSONDataResult.Route.Direction;
 import com.doug.nextbus.backend.JSONDataResult.Route.Stop;
 import com.doug.nextbus.backend.RouteDirectionStop;
-import com.doug.nextbus.custom.ArrivalAdapter;
+import com.doug.nextbus.custom.ArrivalsAdapter;
 
 /* This activity displays the predictions for a the current stop */
 public class StopViewActivity extends RoboSherlockActivity implements
@@ -90,7 +90,6 @@ public class StopViewActivity extends RoboSherlockActivity implements
 	}
 
 	public static Intent createIntent(Context ctx, Favorite favorite) {
-
 		Intent intent = new Intent(ctx, StopViewActivity.class);
 		intent.putExtra(ROUTE_TAG_KEY, favorite.routeTag);
 		intent.putExtra(DIRECTION_TITLE_KEY, favorite.directionTitle);
@@ -199,7 +198,7 @@ public class StopViewActivity extends RoboSherlockActivity implements
 		mRdsArray = Data.getAllRdsWithStopTitle(mStopTitle, mRouteTag,
 				mDirectionTag);
 
-		arrivalList.setAdapter(new ArrivalAdapter(getApplicationContext(),
+		arrivalList.setAdapter(new ArrivalsAdapter(getApplicationContext(),
 				mRdsArray));
 
 		arrivalList.setOnItemClickListener(null);
@@ -316,6 +315,7 @@ public class StopViewActivity extends RoboSherlockActivity implements
 		}
 
 		/* Get the data. */
+		@Override
 		protected ArrayList<String> doInBackground(String... values) {
 			ArrayList<String> predictions = APIController.getPrediction(
 					values[0], values[1], values[2]);
@@ -323,35 +323,40 @@ public class StopViewActivity extends RoboSherlockActivity implements
 		}
 
 		/* Update the UI */
+		@Override
 		public void onPostExecute(ArrayList<String> predictions) {
 			routeViewProgressBar.setVisibility(View.INVISIBLE);
+			try {
+				if (predictions.size() == 1 && predictions.get(0).equals("-1")) {
+					Toast.makeText(ctx, "Error, Server Down?",
+							Toast.LENGTH_LONG).show();
+					predictions.clear();
+				}
 
-			if (predictions.size() == 1 && predictions.get(0).equals("-1")) {
-				Toast.makeText(ctx, "Error, Server Down?", Toast.LENGTH_LONG)
-						.show();
-				predictions.clear();
-			}
-
-			if (predictions.size() == 0 || predictions.get(0).equals("error")) {
-				firstArrival.setText("--");
-				secondArrival.setText("");
-				thirdArrival.setText("");
-				fourthArrival.setText("");
-
-			} else {
-				firstArrival.setText(predictions.get(0).toString());
-				if (predictions.size() > 1)
-					secondArrival.setText(predictions.get(1).toString());
-				else
+				if (predictions.size() == 0
+						|| predictions.get(0).equals("error")) {
+					firstArrival.setText("--");
 					secondArrival.setText("");
-				if (predictions.size() > 2)
-					thirdArrival.setText(predictions.get(2).toString());
-				else
 					thirdArrival.setText("");
-				if (predictions.size() > 3)
-					fourthArrival.setText(predictions.get(3).toString());
-				else
 					fourthArrival.setText("");
+
+				} else {
+					firstArrival.setText(predictions.get(0).toString());
+					if (predictions.size() > 1)
+						secondArrival.setText(predictions.get(1).toString());
+					else
+						secondArrival.setText("");
+					if (predictions.size() > 2)
+						thirdArrival.setText(predictions.get(2).toString());
+					else
+						thirdArrival.setText("");
+					if (predictions.size() > 3)
+						fourthArrival.setText(predictions.get(3).toString());
+					else
+						fourthArrival.setText("");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 	}
