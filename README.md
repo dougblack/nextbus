@@ -38,9 +38,12 @@ Necessary libraries are:
     * Already included in /libs/ and necessary dependent libraries 
     * [Github Page](https://github.com/roboguice/roboguice)
     * [Tutorials](https://github.com/roboguice/roboguice/wiki/InjectView)
+* ActionBarSherlock. [Home Page](http://actionbarsherlock.com/)
+    * Version needed is [here](https://github.com/darkzeroman/NextBus-ActionBarSherlock)
 * ViewPagerIndicator: used for displaying the information.
-    * Requires to make the project as a library available for this project. Should be in the same workspace.
-    * [GitHub Page](https://github.com/JakeWharton/Android-ViewPagerIndicator)
+    * Requires to make the project as a library available for this project. Should be in the same workspace. [GitHub Page](https://github.com/JakeWharton/Android-ViewPagerIndicator)
+    * Version needed is [here](https://github.com/darkzeroman/NextBus-ViewPagerIndicator)
+   
 
 **Random Notes for Documentation**
 
