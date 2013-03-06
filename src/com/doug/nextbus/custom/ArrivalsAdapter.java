@@ -35,18 +35,22 @@ public class ArrivalsAdapter extends BaseAdapter {
 
 		// If no rds, then return the dead cell
 		if (mRdsArray.length == 0) {
-			vi.setBackgroundDrawable(mCtx.getResources().getDrawable(
-					R.drawable.deadcell));
-			routeFavView.setText("None");
-			directionFavView.setText("");
+			// vi.setBackgroundDrawable(mCtx.getResources().getDrawable(
+			// R.drawable.deadcell));
+			routeFavView.setText("");
+			directionFavView.setText("None");
 			return vi;
 		}
 
 		RouteDirectionStop rds = mRdsArray[position];
-		routeFavView.setText(Data.capitalize(rds.route.tag));
+
+		int routeColor = Data.getColorFromRouteTag(rds.route.tag);
+		routeFavView.setTextColor(mCtx.getResources().getColor(routeColor));
+
+		routeFavView.setText(rds.route.tag.substring(0, 1).toUpperCase());
 		directionFavView.setText(Data.capitalize(rds.direction.title));
-		Drawable drawable = Data.getDrawableForRouteTag(rds.route.tag);
-		vi.setBackgroundDrawable(drawable);
+		// Drawable drawable = Data.getDrawableForRouteTag(rds.route.tag);
+		// vi.setBackgroundDrawable(drawable);
 
 		return vi;
 	}

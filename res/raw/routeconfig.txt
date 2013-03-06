@@ -104,7 +104,7 @@
                 },
                 {
                     "tag": "ferstcher",
-                    "title": "Tech Tower",
+                    "title": "Cherry St & Ferst Dr",
                     "lat": "33.7722835",
                     "lon": "-84.3954802",
                     "stopid": "0012"

@@ -198,6 +198,13 @@ public class StopViewActivity extends RoboSherlockActivity implements
 		mRdsArray = Data.getAllRdsWithStopTitle(mStopTitle, mRouteTag,
 				mDirectionTag);
 
+		if (mRdsArray.length == 0) {
+			arrivalsDrawer.setVisibility(View.INVISIBLE);
+			return;
+		} else {
+			arrivalsDrawer.setVisibility(View.VISIBLE);
+		}
+
 		arrivalList.setAdapter(new ArrivalsAdapter(getApplicationContext(),
 				mRdsArray));
 

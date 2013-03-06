@@ -30,11 +30,15 @@ public class FavoritesAdapter extends BaseAdapter {
 		TextView stopFavView = (TextView) vi.findViewById(R.id.stopFavView);
 
 		Favorite favorite = Data.getFavorite(position);
-		vi.setBackgroundDrawable(Data.getDrawableForRouteTag(favorite.routeTag));
+		//		vi.setBackgroundDrawable(Data.getDrawableForRouteTag(favorite.routeTag));
 
-		routeFavView.setText(Data.capitalize(favorite.routeTag));
+		routeFavView.setText(favorite.routeTag.substring(0, 1).toUpperCase());
 		directionFavView.setText(favorite.directionTitle);
 		stopFavView.setText(favorite.stopTitle);
+
+		int routeColor = Data
+				.getColorFromRouteTag(Data.getFavorite(position).routeTag);
+		routeFavView.setTextColor(mCtx.getResources().getColor(routeColor));
 
 		boolean showActiveRoutes = PreferenceManager
 				.getDefaultSharedPreferences(mCtx).getBoolean(
@@ -48,7 +52,7 @@ public class FavoritesAdapter extends BaseAdapter {
 			color = mCtx.getResources().getColor(R.color.fade2);
 		}
 
-		routeFavView.setTextColor(color);
+		// routeFavView.setTextColor(color);
 		directionFavView.setTextColor(color);
 		stopFavView.setTextColor(color);
 
