@@ -1,143 +1,119 @@
 package com.doug.nextbus.activities;
 
-import com.doug.nextbus.R;
-import com.doug.nextbus.R.color;
-import com.doug.nextbus.R.id;
-import com.doug.nextbus.R.layout;
-import com.doug.nextbus.R.menu;
-import com.doug.nextbus.backend.Data;
-
-import android.app.Activity;
+import roboguice.inject.InjectView;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.doug.nextbus.R;
+import com.doug.nextbus.RoboSherlock.RoboSherlockActivity;
+import com.doug.nextbus.backend.Data;
+import com.doug.nextbus.backend.JSONDataResult.Route;
+import com.doug.nextbus.backend.JSONDataResult.Route.Direction;
+import com.doug.nextbus.backend.JSONDataResult.Route.Stop;
+
 /* This activity shows a list of stops. */
-public class StopListActivity extends Activity {
+public class StopListActivity extends RoboSherlockActivity {
 
-	Data data;
-	String[] stops;
-	String[] stoptags;
+	@InjectView(R.id.stopListView) private ListView stopListView;
+	@InjectView(R.id.directionTextView) private TextView directionTextView;
+	@InjectView(R.id.colorbar) private View colorBar;
 
-	static ListView stopList;
-	static TextView routeTitle;
-	static TextView directionTextView;
-	static String route;
-	static String direction;
-	static View colorBar;
-	static ImageView backButton;
+	private static final String ROUTE_TAG_KEY = "routeTag";
+	private static final String DIRECTION_TITLE_KEY = "directionTitle";
 
+	public static Intent createIntent(Context ctx, String routeTag,
+			String directionTitle) {
+		Intent intent = new Intent(ctx, StopListActivity.class);
+		intent.putExtra(ROUTE_TAG_KEY, routeTag);
+		intent.putExtra(DIRECTION_TITLE_KEY, directionTitle);
+		return intent;
+	}
+
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
-
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.stop_list);
 
-		data = new Data();
-		stopList = (ListView) findViewById(R.id.stopListView);
-		directionTextView = (TextView) findViewById(R.id.directionTextView);
-		backButton = (ImageView) findViewById(R.id.directionBackButton);
 		Bundle extras = getIntent().getExtras();
 
-		colorBar = (View) findViewById(R.id.colorbar);
-
 		if (extras != null) {
-      /* Pull route and direction for extras */
-			route = extras.getString("route");
-			direction = extras.getString("direction");
+			/* Pull route and direction for extras */
+			final String routeTag = extras.getString(ROUTE_TAG_KEY);
+			final String directionTitle = extras.getString(DIRECTION_TITLE_KEY);
 
-			directionTextView.setText(Data.capitalize(direction));
-			Object[] stopInfo = data.getListForRoute(route, direction);
-			stops = (String[]) stopInfo[0];
-			stoptags = (String[]) stopInfo[1];
-			setDirectionTextViewColor(route);
-			Log.i("Info", "Showing list for route=" + route + " and direction=" + direction);
+			final Route route = Data.getRouteWithTag(routeTag);
+			final String[] stopTitles = route.getStopTitles(directionTitle);
+			setDirectionTextViewColor(Data.getColorFromRouteTag(routeTag));
+			directionTextView.setText(Data.capitalize(directionTitle));
 
-			stopList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, stops));
+			stopListView.setAdapter(new ArrayAdapter<String>(this,
+					android.R.layout.simple_list_item_1, stopTitles));
 
-      /* Handler for a stop cell. */
-			stopList.setOnItemClickListener(new OnItemClickListener() {
-				
-				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-					Intent intent = new Intent(getApplicationContext(), StopViewActivity.class);
-					intent.putExtra("stoptag", ((String[]) stoptags)[position]);
-					intent.putExtra("route", route);
-					intent.putExtra("stop", ((String[]) stops)[position]);
+			stopListView.setOnItemClickListener(new OnItemClickListener() {
+				public void onItemClick(AdapterView<?> parent, View view,
+						int position, long id) {
+					Direction direction = route.getDirection(directionTitle);
+					Stop stop = route.getStop(directionTitle, position);
+
+					Intent intent = StopViewActivity.createIntent(
+							getApplicationContext(), routeTag, direction, stop);
 					startActivity(intent);
 				}
 
 			});
 		}
-		
-		backButton.setOnTouchListener(new OnTouchListener () {
-			public boolean onTouch(View arg0, MotionEvent event) {
-				if (event.getAction() == MotionEvent.ACTION_DOWN) {
-					backButton.setBackgroundColor(R.color.black);
-					return true;
-				} else if (event.getAction() == MotionEvent.ACTION_UP) {
-					backButton.setBackgroundColor(0);
-					finish();
-					return true;
-				}
-				return true;
-			}
-		});
 	}
-	
+
+	/** Sets color of label at top of view */
+	public void setDirectionTextViewColor(int color) {
+		colorBar.setBackgroundColor(getResources().getColor(color));
+		directionTextView.setTextColor(getResources().getColor(color));
+	}
+
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.stock_menu, menu);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportMenuInflater().inflate(R.menu.stock_menu, menu);
 		return true;
 	}
-	
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-    /* Handle item selection */
 		switch (item.getItemId()) {
 		case R.id.aboutmenusitem:
-			Intent aboutActivity = new Intent(getApplicationContext(), CreditsActivity.class);
+			Intent aboutActivity = new Intent(this, CreditsActivity.class);
 			startActivity(aboutActivity);
 			return true;
 		case R.id.preferencesmenuitem:
-			Intent preferenceActivity = new Intent(getApplicationContext(), PreferencesActivity.class);
-			startActivity(preferenceActivity);
+			Intent preferenceIntent = new Intent(this,
+					PreferencesActivity.class);
+			startActivity(preferenceIntent);
+			return true;
+		case R.id.favoritesitem:
+			Intent favoriteIntent = new Intent(getApplicationContext(),
+					FavoritesActivity.class);
+			startActivity(favoriteIntent);
+			return true;
+		case R.id.mapsitem:
+			Intent mapIntent = new Intent(getApplicationContext(),
+					MapViewActivity.class);
+			startActivity(mapIntent);
+			return true;
+		case android.R.id.home:
+			finish();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
-	}
-
-  /* Sets color of label at top of view */
-	public void setDirectionTextViewColor(String route) {
-
-		int color = 0;
-		if (route.equals("red")) {
-			color = R.color.red;
-		} else if (route.equals("blue")) {
-			color = R.color.blue;
-		} else if (route.equals("green")) {
-			color = R.color.green;
-		} else if (route.equals("trolley")) {
-			color = R.color.yellow;
-		} else if (route.equals("night")) {
-			color = R.color.night;
-		}
-
-		colorBar.setBackgroundColor(getResources().getColor(color));
-		directionTextView.setTextColor(getResources().getColor(color));
 	}
 
 }

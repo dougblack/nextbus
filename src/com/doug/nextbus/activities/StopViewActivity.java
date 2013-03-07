@@ -1,40 +1,20 @@
 package com.doug.nextbus.activities;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-import java.util.TreeMap;
 
-import com.doug.nextbus.R;
-import com.doug.nextbus.R.color;
-import com.doug.nextbus.R.drawable;
-import com.doug.nextbus.R.id;
-import com.doug.nextbus.R.layout;
-import com.doug.nextbus.R.menu;
-import com.doug.nextbus.backend.APIController;
-import com.doug.nextbus.backend.Data;
-import com.doug.nextbus.custom.RainbowArrayAdapter;
-
-import android.app.Activity;
+import roboguice.inject.InjectView;
+import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.MotionEvent;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -44,249 +24,348 @@ import android.widget.SlidingDrawer.OnDrawerOpenListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.doug.nextbus.R;
+import com.doug.nextbus.RoboSherlock.RoboSherlockActivity;
+import com.doug.nextbus.backend.APIController;
+import com.doug.nextbus.backend.Data;
+import com.doug.nextbus.backend.Favorite;
+import com.doug.nextbus.backend.JSONDataResult.Route.Direction;
+import com.doug.nextbus.backend.JSONDataResult.Route.Stop;
+import com.doug.nextbus.backend.RouteDirectionStop;
+import com.doug.nextbus.custom.ArrivalsAdapter;
+
 /* This activity displays the predictions for a the current stop */
-public class StopViewActivity extends Activity {
+public class StopViewActivity extends RoboSherlockActivity implements
+		OnSharedPreferenceChangeListener {
 
-  static TextView firstArrival;
-  static TextView secondArrival;
-  static TextView thirdArrival;
-  static TextView fourthArrival;
-  static TextView stopTextView;
-  static TextView titleBar;
-  static SlidingDrawer arrivalDrawer;
-  static ImageView backButton;
+	@InjectView(R.id.firstArrival) private TextView firstArrival;
+	@InjectView(R.id.secondArrival) private TextView secondArrival;
+	@InjectView(R.id.thirdArrival) private TextView thirdArrival;
+	@InjectView(R.id.fourthArrival) private TextView fourthArrival;
+	@InjectView(R.id.stopTextView) private TextView stopTextView;
+	@InjectView(R.id.drawerTextView) private TextView drawerHandleTextView;
 
-  static View colorBar;
-  static View colorSeperator;
+	@InjectView(R.id.refreshButton) private ImageView refreshButton;
 
-  static ProgressBar routeViewProgressBar;
-  static ImageView refreshButton;
-  static ImageView starButton;
-  static String route;
-  static String stoptag;
-  static String stop;
-  static TextView drawerHandleTextView;
-  static ListView arrivalList;
-  static ArrayList<Drawable> drawableList;
-  static ArrayList<String> arrivalsList;
-  static String[] arrivals;
-  static Drawable[] colorInts;
-  static StopViewActivity thisActivity;
-  static Resources resources;
-  static long start;
-  boolean deadCellOnly;
+	@InjectView(R.id.routeviewprogressbar) private ProgressBar routeViewProgressBar;
 
-  public void onCreate(Bundle savedInstance) {
+	@InjectView(R.id.colorbar) private View colorBar;
+	@InjectView(R.id.colorSeperator) private View colorSeperator;
+	@InjectView(R.id.arrivalsDrawer) private SlidingDrawer arrivalsDrawer;
+	@InjectView(R.id.arrivalList) private ListView arrivalList;
+	@InjectView(R.id.favoriteButton) private ImageButton favoriteButton;
 
-    super.onCreate(savedInstance);
-    requestWindowFeature(Window.FEATURE_NO_TITLE);
-    setContentView(R.layout.stop_view);
-    Bundle extras = getIntent().getExtras();
-    route = extras.getString("route");
-    stoptag = extras.getString("stoptag");
-    stop = extras.getString("stop");
-    deadCellOnly = false;
-    routeViewProgressBar = (ProgressBar) this.findViewById(R.id.routeviewprogressbar);
+	@InjectView(R.id.footer_redcell) private View mFooterRedCell;
+	@InjectView(R.id.footer_bluecell) private View mFooterBlueCell;
+	@InjectView(R.id.footer_yellowcell) private View mFooterYellowCell;
+	@InjectView(R.id.footer_greencell) private View mFooterGreenCell;
 
-    thisActivity = this;
-    resources = getResources();
-    refreshButton = (ImageView) this.findViewById(R.id.refreshButton);
-    firstArrival = (TextView) this.findViewById(R.id.firstArrival);
-    secondArrival = (TextView) this.findViewById(R.id.secondArrival);
-    thirdArrival = (TextView) this.findViewById(R.id.thirdArrival);
-    fourthArrival = (TextView) this.findViewById(R.id.fourthArrival);
-    stopTextView = (TextView) this.findViewById(R.id.stopTextView);
-    backButton = (ImageView) this.findViewById(R.id.backButton);
+	private static final String ROUTE_TAG_KEY = "routeTag";
+	private static final String DIRECTION_TITLE_KEY = "directionTitle";
+	private static final String DIRECTION_TAG_KEY = "directionTag";
+	private static final String STOP_TITLE_KEY = "stopTitle";
+	private static final String STOP_TAG_KEY = "stopTag";
 
-    colorBar = (View) this.findViewById(R.id.colorbar);
-    colorSeperator = (View) this.findViewById(R.id.colorSeperator);
+	private String mRouteTag;
+	private String mDirectionTitle;
+	private String mDirectionTag;
+	private String mStopTitle;
+	private String mStopTag;
 
-    drawerHandleTextView = (TextView) this.findViewById(R.id.drawerTextView);
-    arrivalList = (ListView) this.findViewById(R.id.arrivalList);
-    arrivalList.setBackgroundColor(getResources().getColor(R.color.black));
+	private RouteDirectionStop[] mRdsArray;
 
-    arrivalsList = Data.getAllRoutesForStop(stoptag);
-    ArrayList<String> arrivalsTextList = new ArrayList<String>();
+	public static Intent createIntent(Context ctx, String routeTag,
+			Direction direction, Stop stop) {
+		Intent intent = new Intent(ctx, StopViewActivity.class);
+		intent.putExtra(ROUTE_TAG_KEY, routeTag);
+		intent.putExtra(DIRECTION_TITLE_KEY, direction.title);
+		intent.putExtra(DIRECTION_TAG_KEY, direction.tag);
+		intent.putExtra(STOP_TITLE_KEY, stop.title);
+		intent.putExtra(STOP_TAG_KEY, stop.tag);
+		// Closes all instances of the same activity
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		return intent;
+	}
 
-    for (String route : arrivalsList) {
-      arrivalsTextList.add(Data.capitalize(route));
-    }
+	public static Intent createIntent(Context ctx, Favorite favorite) {
+		Intent intent = new Intent(ctx, StopViewActivity.class);
+		intent.putExtra(ROUTE_TAG_KEY, favorite.routeTag);
+		intent.putExtra(DIRECTION_TITLE_KEY, favorite.directionTitle);
+		intent.putExtra(DIRECTION_TAG_KEY, favorite.directionTag);
+		intent.putExtra(STOP_TITLE_KEY, favorite.stopTitle);
+		intent.putExtra(STOP_TAG_KEY, favorite.stopTag);
+		// Closes all instances of the same activity
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		return intent;
+	}
 
-    drawableList = new ArrayList<Drawable>();
-    if (arrivalsList.size() <= 0) {
-      drawableList.add(getResources().getDrawable(R.drawable.deadcell));
-      arrivalsTextList.add("No other arrivals");
-      deadCellOnly = true;
-    } else {
+	@Override
+	public void onCreate(Bundle savedInstance) {
 
-      for (String route : arrivalsList) {
-        Drawable cellDrawable = null;
-        if (route.equals("red")) {
-          cellDrawable = getResources().getDrawable(R.drawable.redcell);
-        } else if (route.equals("blue")) {
-          cellDrawable = getResources().getDrawable(R.drawable.bluecell);
-        } else if (route.equals("trolley")) {
-          cellDrawable = getResources().getDrawable(R.drawable.yellowcell);
-        } else if (route.equals("green")) {
-          cellDrawable = getResources().getDrawable(R.drawable.greencell);
-        } else if (route.equals("night")) {
-          cellDrawable = getResources().getDrawable(R.drawable.nightcell);
-        }
-        drawableList.add(cellDrawable);
-      }
-    }
+		super.onCreate(savedInstance);
+		setContentView(R.layout.stop_view);
 
-    arrivals = Data.convertToStringArray(arrivalsTextList);
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		prefs.registerOnSharedPreferenceChangeListener(this);
 
-    arrivalList.setAdapter(new RainbowArrayAdapter(thisActivity, R.layout.customarrivallist, arrivals,
-          drawableList, deadCellOnly));
+		// Extras
+		Bundle extras = getIntent().getExtras();
+		mRouteTag = extras.getString(ROUTE_TAG_KEY);
+		mDirectionTitle = extras.getString(DIRECTION_TITLE_KEY);
+		mDirectionTag = extras.getString(DIRECTION_TAG_KEY);
+		mStopTitle = extras.getString(STOP_TITLE_KEY);
+		mStopTag = extras.getString(STOP_TAG_KEY);
 
-    /* Listener for arrival drawer thing. If a cell is clicked, open the stop for that route */
-    arrivalList.setOnItemClickListener(new OnItemClickListener() {
-      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (!arrivals[0].equals("No other arrivals")) {
-          Intent intent = new Intent(thisActivity.getApplicationContext(), StopViewActivity.class);
-          intent.putExtra("stoptag", stoptag);
-          intent.putExtra("route", arrivalsList.get(position));
-          intent.putExtra("stop", stop);
-          startActivity(intent);
-        }
-      }
-    });
+		stopTextView.setText(mStopTitle);
+		setViewColor();
 
-    backButton.setOnTouchListener(new OnTouchListener () {
-      public boolean onTouch(View arg0, MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-          backButton.setBackgroundColor(R.color.black);
-          return true;
-        } else if (event.getAction() == MotionEvent.ACTION_UP) {
-          backButton.setBackgroundColor(0);
-          finish();
-          return true;
-        }
-        return true;
-      }
-    });
+		setupArrivals();
 
-    stopTextView.setText(stop);
+		// Setting text views to default values
+		firstArrival.setText("");
+		secondArrival.setText("");
+		thirdArrival.setText("");
+		fourthArrival.setText("");
 
-    refreshButton.setOnClickListener(new OnClickListener() {
-      public void onClick(View v) {
-        routeViewProgressBar.setVisibility(View.VISIBLE);
-        refresh(route, stoptag);
-      }
-    });
+		Favorite favorite = new Favorite(mRouteTag, mDirectionTag,
+				mDirectionTitle, mStopTag, mStopTitle);
 
-    arrivalDrawer = (SlidingDrawer) this.findViewById(R.id.arrivalsDrawer);
-    arrivalDrawer.setOnDrawerOpenListener(new OnDrawerOpenListener() {
-      public void onDrawerOpened() {
-        drawerHandleTextView.setText(stop);
-      }
-    });
+		refresh();
 
-    arrivalDrawer.setOnDrawerCloseListener(new OnDrawerCloseListener() {
-      public void onDrawerClosed() {
-        drawerHandleTextView.setText("OTHER ROUTES");
-      }
-    });
+		int starImageResource = R.drawable.rate_star_big_off_holo_light;
+		if (Data.isFavorite(favorite)) {
+			starImageResource = R.drawable.rate_star_big_on_holo_light;
+		}
+		favoriteButton.setImageResource(starImageResource);
 
-    setViewColor(route);
+		setEventListeners(favorite);
 
-    firstArrival.setText("");
-    secondArrival.setText("");
-    thirdArrival.setText("");
-    fourthArrival.setText("");
+		// Setting colors, are needed because of view recycling.
+		mFooterBlueCell.setBackgroundColor(getResources()
+				.getColor(R.color.blue));
+		mFooterRedCell.setBackgroundColor(getResources().getColor(R.color.red));
+		mFooterYellowCell.setBackgroundColor(getResources().getColor(
+				R.color.yellow));
+		mFooterGreenCell.setBackgroundColor(getResources().getColor(
+				R.color.green));
+	}
 
-    refresh(route, stoptag);
+	private void setEventListeners(Favorite favorite) {
 
-  }
+		refreshButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				routeViewProgressBar.setVisibility(View.VISIBLE);
+				refresh();
+			}
+		});
 
+		favoriteButton.setOnClickListener(new CustomOnClickListener(favorite));
 
-  public boolean onCreateOptionsMenu(Menu menu) {
-    MenuInflater inflater = getMenuInflater();
-    inflater.inflate(R.menu.stock_menu, menu);
-    return true;
-  }
+		arrivalsDrawer.setOnDrawerOpenListener(new OnDrawerOpenListener() {
+			public void onDrawerOpened() {
+				drawerHandleTextView.setText(mStopTitle);
+			}
+		});
 
+		arrivalsDrawer.setOnDrawerCloseListener(new OnDrawerCloseListener() {
+			public void onDrawerClosed() {
+				drawerHandleTextView.setText("OTHER ROUTES");
+			}
+		});
 
-  public boolean onOptionsItemSelected(MenuItem item) {
-    // Handle item selection
-    switch (item.getItemId()) {
-      case R.id.aboutmenusitem:
-        Intent aboutActivity = new Intent(getApplicationContext(), CreditsActivity.class);
-        startActivity(aboutActivity);
-        return true;
-      case R.id.preferencesmenuitem:
-        Intent preferenceActivity = new Intent(getApplicationContext(), PreferencesActivity.class);
-        startActivity(preferenceActivity);
-        return true;
-      default:
-        return super.onOptionsItemSelected(item);
-    }
-  }
+		arrivalList.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				if (mRdsArray.length == 0) {
+					return; //
+				}
+				Intent intent = StopViewActivity
+						.createIntent(getApplicationContext(),
+								mRdsArray[position].route.tag,
+								mRdsArray[position].direction,
+								mRdsArray[position].stop);
+				startActivity(intent);
+			}
+		});
 
-  public void setViewColor(String route) {
-    int color = 0;
-    if (route.equals("red")) {
-      color = R.color.red;
-    } else if (route.equals("blue")) {
-      color = R.color.blue;
-    } else if (route.equals("green")) {
-      color = R.color.green;
-    } else if (route.equals("trolley")) {
-      color = R.color.yellow;
-    } else if (route.equals("night")) {
-      color = R.color.night;
-    }
+	}
 
-    stopTextView.setTextColor(getResources().getColor(color));
-    colorBar.setBackgroundColor(getResources().getColor(color));
-    colorSeperator.setBackgroundColor(getResources().getColor(color));
-  }
+	public void setupArrivals() {
+		// TODO: check if the preferences is being used
+		mRdsArray = Data.getAllRdsWithStopTitle(mStopTitle, mRouteTag,
+				mDirectionTag);
 
-  public void refresh(String route, String stoptag) {
-    new loadPredictionData().execute(route, stoptag);
-  }
+		if (mRdsArray.length == 0) {
+			arrivalsDrawer.setVisibility(View.INVISIBLE);
+			return;
+		} else {
+			arrivalsDrawer.setVisibility(View.VISIBLE);
+		}
 
-  /* Load prediction data asynchronously. */
-  private class loadPredictionData extends AsyncTask<String, Void, ArrayList<Integer>> {
+		arrivalList.setAdapter(new ArrivalsAdapter(getApplicationContext(),
+				mRdsArray));
 
-    /* Get the data. */  
-    protected ArrayList<Integer> doInBackground(String... values) {
-      start = System.currentTimeMillis();
-      ArrayList<Integer> predictions = APIController.getPrediction(values[0], values[1]);
-      return predictions;
-    }
+		arrivalList.setOnItemClickListener(null);
 
-    /* Update the UI */
-    public void onPostExecute(ArrayList<Integer> predictions) {
+		/* If a cell is clicked, open the stop for that route */
+		arrivalList.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				if (!mRdsArray[0].equals("No other arrivals")) {
+					RouteDirectionStop rds = mRdsArray[position];
+					Intent intent = StopViewActivity.createIntent(
+							getApplicationContext(), rds.route.tag,
+							rds.direction, rds.stop);
+					startActivity(intent);
+				}
+			}
+		});
+	}
 
-      long end = System.currentTimeMillis() - start;
-      Log.i("TIME", "Received and processed prediction in: " + end + "ms");
+	/** Gets the latest prediction data */
+	private void refresh() {
+		new LoadPredictionAsyncTask(this).execute(mRouteTag, mDirectionTag,
+				mStopTag);
+	}
 
-      routeViewProgressBar.setVisibility(View.INVISIBLE);
-      drawableList = new ArrayList<Drawable>();
-      if (predictions.get(0) == Integer.valueOf(-1)) {
-        firstArrival.setText("--");
-        secondArrival.setText("");
-        thirdArrival.setText("");
-        fourthArrival.setText("");
+	/** Set color of text with respect to current routeTag */
+	private void setViewColor() {
+		int color = Data.getColorFromRouteTag(mRouteTag);
+		stopTextView.setTextColor(getResources().getColor(color));
+		colorBar.setBackgroundColor(getResources().getColor(color));
+		colorSeperator.setBackgroundColor(getResources().getColor(color));
+	}
 
-      } else {
-        firstArrival.setText(predictions.get(0).toString());
-        if (predictions.size() > 1)
-          secondArrival.setText(predictions.get(1).toString());
-        else
-          secondArrival.setText("");
-        if (predictions.size() > 2)
-          thirdArrival.setText(predictions.get(2).toString());
-        else
-          thirdArrival.setText("");
-        if (predictions.size() > 3)
-          fourthArrival.setText(predictions.get(3).toString());
-        else
-          fourthArrival.setText("");
-      }
-    }
-  }
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportMenuInflater().inflate(R.menu.stock_menu, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.aboutmenusitem:
+			Intent aboutActivity = new Intent(this, CreditsActivity.class);
+			startActivity(aboutActivity);
+			return true;
+		case R.id.preferencesmenuitem:
+			Intent preferenceIntent = new Intent(this,
+					PreferencesActivity.class);
+			startActivity(preferenceIntent);
+			return true;
+		case R.id.favoritesitem:
+			Intent favoriteIntent = new Intent(getApplicationContext(),
+					FavoritesActivity.class);
+			startActivity(favoriteIntent);
+			return true;
+		case R.id.mapsitem:
+			Intent mapIntent = new Intent(getApplicationContext(),
+					MapViewActivity.class);
+			startActivity(mapIntent);
+			return true;
+		case android.R.id.home:
+			finish();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	@Override
+	public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+
+		if (key.equals(Data.SHOW_ACTIVE_ROUTES_PREF)) {
+			this.setupArrivals();
+		}
+
+	}
+
+	/** Custom OnClickListener so the favorite class could be passed to it. */
+	private class CustomOnClickListener implements OnClickListener {
+
+		private Favorite favorite;
+
+		public CustomOnClickListener(Favorite favorite) {
+			this.favorite = favorite;
+		}
+
+		@Override
+		public void onClick(View v) {
+			boolean ret = Data.toggleFavorite(favorite);
+			if (ret) {
+				((ImageButton) v)
+						.setImageResource(R.drawable.rate_star_big_on_holo_light);
+				Toast.makeText(getApplicationContext(), "Added to Favorites",
+						Toast.LENGTH_SHORT).show();
+			} else {
+				((ImageButton) v)
+						.setImageResource(R.drawable.rate_star_big_off_holo_light);
+				Toast.makeText(getApplicationContext(),
+						"Removed from Favorites", Toast.LENGTH_SHORT).show();
+			}
+		}
+
+	}
+
+	/** Load prediction data asynchronously. */
+	private class LoadPredictionAsyncTask extends
+			AsyncTask<String, Void, ArrayList<String>> {
+		Context ctx;
+
+		public LoadPredictionAsyncTask(Context ctx) {
+			this.ctx = ctx;
+		}
+
+		/* Get the data. */
+		@Override
+		protected ArrayList<String> doInBackground(String... values) {
+			ArrayList<String> predictions = APIController.getPrediction(
+					values[0], values[1], values[2]);
+			return predictions;
+		}
+
+		/* Update the UI */
+		@Override
+		public void onPostExecute(ArrayList<String> predictions) {
+			routeViewProgressBar.setVisibility(View.INVISIBLE);
+			try {
+				if (predictions.size() == 1 && predictions.get(0).equals("-1")) {
+					Toast.makeText(ctx, "Error, Server Down?",
+							Toast.LENGTH_LONG).show();
+					predictions.clear();
+				}
+
+				if (predictions.size() == 0
+						|| predictions.get(0).equals("error")) {
+					firstArrival.setText("--");
+					secondArrival.setText("");
+					thirdArrival.setText("");
+					fourthArrival.setText("");
+
+				} else {
+					firstArrival.setText(predictions.get(0).toString());
+					if (predictions.size() > 1)
+						secondArrival.setText(predictions.get(1).toString());
+					else
+						secondArrival.setText("");
+					if (predictions.size() > 2)
+						thirdArrival.setText(predictions.get(2).toString());
+					else
+						thirdArrival.setText("");
+					if (predictions.size() > 3)
+						fourthArrival.setText(predictions.get(3).toString());
+					else
+						fourthArrival.setText("");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 }
