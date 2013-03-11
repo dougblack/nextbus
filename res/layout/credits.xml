@@ -3,52 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <LinearLayout
-        android:id="@+id/titleBar"
-        android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/titlebardrawable"
-        android:gravity="center"
-        android:text=""
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/white"
-        android:textSize="25sp"
-        android:textStyle="bold" >
-
-        <ImageView
-            android:id="@+id/creditsBackButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:padding="10dp"
-            android:src="@drawable/back_arrow" />
-
-        <View
-            android:id="@+id/divider"
-            android:layout_width="1dp"
-            android:layout_height="fill_parent"
-            android:background="@color/dividercolor" />
-
-        <TextView
-            android:id="@+id/titleText"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1.10"
-            android:gravity="center_vertical"
-            android:paddingLeft="10dp"
-            android:text="ABOUT"
-            android:textColor="@color/white"
-            android:textSize="22sp"
-            android:textStyle="bold" />
-    </LinearLayout>
-
     <ListView
         android:id="@+id/contactList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/titleBar"
         android:layout_above="@+id/credits"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" >
     </ListView>
 

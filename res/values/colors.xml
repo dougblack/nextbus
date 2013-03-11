@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <color name="red">#e63f3f</color>
     <color name="blue">#0078ff</color>
     <color name="green">#02d038</color>
     <color name="yellow">#ffd200</color>
+    <color name="pink">#FADADD</color>
     <color name="black">#000</color>
     <color name="white">#FFF</color>
     <color name="gray">#CCC</color>
@@ -20,5 +22,4 @@
     <color name="orange">#f8db16</color>
     <color name="dividercolor">#00000F</color>
 
-    
 </resources>

@@ -2,43 +2,117 @@ package com.doug.nextbus.custom;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
 
 import com.doug.nextbus.R;
 import com.doug.nextbus.activities.StopListActivity;
 import com.doug.nextbus.activities.StopViewActivity;
 import com.doug.nextbus.backend.Data;
-import com.viewpagerindicator.TitleProvider;
+import com.doug.nextbus.backend.JSONDataResult.Route;
+import com.doug.nextbus.backend.JSONDataResult.Route.Direction;
+import com.doug.nextbus.backend.JSONDataResult.Route.Stop;
 
-/* The adapter for the swiping between route pages for the RoutePickerActivity */
-public class RoutePagerAdapter extends PagerAdapter implements TitleProvider {
+/** The adapter for the swiping between route pages for the RoutePickerActivity */
+public class RoutePagerAdapter extends PagerAdapter {
 
-	boolean activeRoutesExist;
-	String[] currentRoutes;
-	boolean[] hasDirections;
-	Data data;
-	Context cxt;
-	
-	public RoutePagerAdapter(boolean activeRoutesExist, String[] currentRoutes, boolean[] hasDirections, Data data,
-			Context cxt) {
-		super();
-		this.activeRoutesExist = activeRoutesExist;
-		this.currentRoutes = currentRoutes;
-		this.hasDirections = hasDirections;
-		this.data = data;
-		this.cxt = cxt;
-		
+	private final Context mCtx;
+	private String[] mRoutes;
+
+	public RoutePagerAdapter(Context ctx, String[] routes) {
+		this.mCtx = ctx;
+		this.mRoutes = routes;
 	}
 
+	/** How to update the routes at runtime, calls notifyDataSetChanged() */
+	public void updateRoutes(String[] routes) {
+		this.mRoutes = routes;
+		notifyDataSetChanged();
+	}
+
+	/*
+	 * For each page, make a list view of available stops. Or, if there are
+	 * directions, make a list view of available directions. Then launch the
+	 * correct activity based on which item in the list view is selected.
+	 */
+	public Object instantiateItem(View container, int position) {
+
+		// If there are not routes, return a cell saying there are no routes
+		if (mRoutes.length == 0) {
+			TextView noRoutes = new TextView(mCtx);
+			noRoutes.setText("No active routes");
+			noRoutes.setGravity(Gravity.CENTER);
+			noRoutes.setTextSize(40);
+			noRoutes.setTypeface(null, 1);
+			noRoutes.setTextColor(mCtx.getResources().getColor(R.color.white));
+			((ViewPager) container).addView(noRoutes, 0);
+			return noRoutes;
+		}
+
+		// At this point there are routes, so list view as necessary
+		final int listPosition = position;
+		final String routeTag = mRoutes[listPosition];
+		final Route currentRoute = Data.getRouteWithTag(routeTag);
+		final boolean hasMultipleDirections = currentRoute
+				.hasMultipleDirections();
+
+		// For populating the list view
+		String[] itemListTemp = new String[] {};
+		if (hasMultipleDirections) {
+			// Populate list with direction titles
+			itemListTemp = currentRoute.getDirectionTitles();
+		} else {
+			// Populate list with stop titles
+			itemListTemp = currentRoute.getStopTitles(currentRoute
+					.getDefaultDirection().title);
+		}
+
+		final String[] itemList = itemListTemp;
+
+		ListView itemListView = new ListView(mCtx);
+		itemListView.setAdapter(new ArrayAdapter<String>(mCtx,
+				android.R.layout.simple_list_item_1, itemList));
+		itemListView.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				if (hasMultipleDirections) {
+					/*
+					 * Route has multiple directions, items start
+					 * StopListActivity
+					 */
+					Intent intent = StopListActivity.createIntent(mCtx,
+							routeTag, itemList[position]);
+					mCtx.startActivity(intent);
+				} else {
+					/*
+					 * Route only has one direction, items start
+					 * StopViewActivity
+					 */
+					Direction defaultDirection = currentRoute
+							.getDefaultDirection();
+					Stop stop = currentRoute
+							.getStopFromDefaultDirection(position);
+					Intent intent = StopViewActivity.createIntent(mCtx,
+							routeTag, defaultDirection, stop);
+					mCtx.startActivity(intent);
+				}
+			}
+
+		});
+
+		((ViewPager) container).addView(itemListView, 0);
+		return itemListView;
+
+	}
+
+	@Override
 	public void destroyItem(View container, int position, Object view) {
 		if (view instanceof ListView) {
 			((ViewPager) container).removeView((ListView) view);
@@ -48,90 +122,21 @@ public class RoutePagerAdapter extends PagerAdapter implements TitleProvider {
 
 	}
 
-	public void finishUpdate(View arg0) {
-		// TODO Auto-generated method stub
-	}
-
+	@Override
 	public int getCount() {
-		if (activeRoutesExist) {
-			return currentRoutes.length;
+		if (mRoutes.length > 0) {
+			return mRoutes.length;
 		} else {
-			return 1;
+			return 1; // If no routes, return 1 for deadcell
 		}
 	}
 
+	/** Necessary code to force the view to update */
 	public int getItemPosition(Object object) {
 		return POSITION_NONE;
 	}
 
-	/*
-	 * For each page, make a list view of available stops. Or, if there are
-	 * directions, make a list view of available directions. Then launch the
-	 * correct activity based on which item in the list view is selected.
-	 */
-	public Object instantiateItem(View container, int position) {
-		if (activeRoutesExist) {
-			final boolean thisRouteHasDirection = hasDirections[position];
-			String[] itemListTemp = null;
-			String[] stopTagsTemp = null;
-
-			if (thisRouteHasDirection) {
-				// If route has direction set list view to contain
-				// directions
-				itemListTemp = data.getDirectionList(currentRoutes[position]);
-			} else {
-				// Route doesn't have direction so list view contains stops
-				Object[] stopsAndTags = data.getStopList(currentRoutes[position]);
-				itemListTemp = (String[]) stopsAndTags[0];
-				stopTagsTemp = (String[]) stopsAndTags[1];
-			}
-
-			final String[] itemList = itemListTemp;
-			final String[] stopTags = stopTagsTemp;
-
-			final int listPosition = position;
-			ListView stopList = new ListView(cxt);
-			stopList.setAdapter(new ArrayAdapter<String>(cxt, android.R.layout.simple_list_item_1, itemList));
-			stopList.setOnItemClickListener(new OnItemClickListener() {
-
-				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-					if (thisRouteHasDirection) {
-						// Route has direction so items have to point to
-						// StopListActivity with correct
-						// extras.
-						Intent intent = new Intent(cxt.getApplicationContext(), StopListActivity.class);
-						intent.putExtra("route", currentRoutes[listPosition]);
-						intent.putExtra("direction", itemList[position]);
-						cxt.startActivity(intent);
-					} else {
-						// Route doesn't have direction so items have to
-						// point to StopViewActivity with
-						// correct extras.
-						Intent intent = new Intent(cxt.getApplicationContext(), StopViewActivity.class);
-						intent.putExtra("stoptag", stopTags[position]);
-						intent.putExtra("route", currentRoutes[listPosition]);
-						intent.putExtra("stop", itemList[position]);
-						cxt.startActivity(intent);
-					}
-				}
-
-			});
-
-			((ViewPager) container).addView(stopList, 0);
-
-			return stopList;
-		} else {
-			TextView noRoutes = new TextView(cxt);
-			noRoutes.setText("No active routes");
-			noRoutes.setGravity(Gravity.CENTER);
-			noRoutes.setTextSize(40);
-			noRoutes.setTypeface(null, 1);
-			noRoutes.setTextColor(cxt.getResources().getColor(R.color.white));
-			((ViewPager) container).addView(noRoutes, 0);
-			return noRoutes;
-		}
-	}
-
+	@Override
 	public boolean isViewFromObject(View view, Object object) {
 		if (object instanceof ListView) {
 			return view == ((ListView) object);
@@ -139,27 +144,12 @@ public class RoutePagerAdapter extends PagerAdapter implements TitleProvider {
 		return view == ((TextView) object);
 	}
 
-	public void restoreState(Parcelable arg0, ClassLoader arg1) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public Parcelable saveState() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public void startUpdate(View arg0) {
-
-		// TODO Auto-generated method stub
-
-	}
-
-	public String getTitle(int position) {
-		if (activeRoutesExist) {
-			return Data.capitalize(currentRoutes[position]);
+	@Override
+	public String getPageTitle(int position) {
+		if (mRoutes.length > 0) {
+			return Data.capitalize(mRoutes[position]);
 		} else {
-			return "No routes";
+			return "No routes"; // When no routes
 		}
 	}
 

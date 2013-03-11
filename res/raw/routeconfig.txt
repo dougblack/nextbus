@@ -1,907 +1,1126 @@
 {
-
     "-copyright": "All data copyright Georgia Tech Campus 2011.",
     "route": [
-      {
-        "tag": "red",
-        "title": "Red",
-        "-color": "ff1100",
-        "-oppositeColor": "ffffff",
-        "latMin": "33.7699403",
-        "latMax": "33.7796305",
-        "lonMin": "-84.4041907",
-        "lonMax": "-84.3916294",
-        "stop": [
-          {
-            "tag": "fitten",
-            "title": "Fitten Hall",
-            "lat": "33.7782737",
-            "lon": "-84.4041907",
-            "stopid": "0022"
-          },
-          {
-            "tag": "mcm8th",
-            "title": "McMillian St & 8th St",
-            "lat": "33.7795985",
-            "lon": "-84.4041643",
-            "stopid": "0030"
-          },
-          {
-            "tag": "8thhemp",
-            "title": "8th St & Hemphill Ave",
-            "lat": "33.7796305",
-            "lon": "-84.4027401",
-            "stopid": "0006"
-          },
-          {
-            "tag": "fershemrt",
-            "title": "Ferst Dr & Hemphill Ave",
-            "lat": "33.7784495",
-            "lon": "-84.4008238",
-            "stopid": "0017"
-          },
-          {
-            "tag": "fersstmrt",
-            "title": "Ferst Dr & State St",
-            "lat": "33.7782696",
-            "lon": "-84.399535",
-            "stopid": "0021"
-          },
-          {
-            "tag": "fersatmrt",
-            "title": "Ferst Dr & Atlantic Dr",
-            "lat": "33.77819",
-            "lon": "-84.3974906",
-            "stopid": "0015"
-          },
-          {
-            "tag": "ferschmrt",
-            "title": "Ferst Dr & Cherry St",
-            "lat": "33.7771003",
-            "lon": "-84.3954803",
-            "stopid": "0019"
-          },
-          {
-            "tag": "5thfowl",
-            "title": "Ferst Dr & Fowler St",
-            "lat": "33.7769",
-            "lon": "-84.3937809",
-            "stopid": "0003"
-          },
-          {
-            "tag": "tech5th",
-            "title": "Techwood Dr & 5th St",
-            "lat": "33.7766841",
-            "lon": "-84.39215",
-            "stopid": "0054"
-          },
-          {
-            "tag": "tech4th",
-            "title": "Techwood Dr & 4th St",
-            "lat": "33.7749538",
-            "lon": "-84.3920495",
-            "stopid": "0052"
-          },
-          {
-            "tag": "techbob",
-            "title": "Techwood Dr & Bobby Dodd Way",
-            "lat": "33.7736674",
-            "lon": "-84.39205",
-            "stopid": "0055"
-          },
-          {
-            "tag": "technorth",
-            "title": "Techwood Dr & North Ave",
-            "lat": "33.7714504",
-            "lon": "-84.3920998",
-            "stopid": "0057"
-          },
-          {
-            "tag": "nortavea",
-            "title": "North Avenue Apartments",
-            "lat": "33.77019",
-            "lon": "-84.39174",
-            "stopid": "0067"
-          },
-          {
-            "tag": "ferstcher",
-            "title": "Cherry St & Ferst Dr",
-            "lat": "33.7722835",
-            "lon": "-84.3954802",
-            "stopid": "0012"
-          },
-          {
-            "tag": "hubfers",
-            "title": "HUB/Ferst Dr",
-            "lat": "33.77274",
-            "lon": "-84.39706",
-            "stopid": "0085"
-          },
-          {
-            "tag": "centrstud",
-            "title": "Student Center",
-            "lat": "33.7734596",
-            "lon": "-84.3991588",
-            "stopid": "0044"
-          },
-          {
-            "tag": "765femrt",
-            "title": "Recreation Center",
-            "lat": "33.77557",
-            "lon": "-84.40249",
-            "stopid": "0039"
-          }
-        ],
-        "direction": {
-          "tag": "Clockwise",
-          "title": "Clockwise",
-          "useForUI": "true",
-          "stop": [
-            { "tag": "fitten" },
-            { "tag": "mcm8th" },
-            { "tag": "8thhemp" },
-            { "tag": "fershemrt" },
-            { "tag": "fersstmrt" },
-            { "tag": "fersatmrt" },
-            { "tag": "ferschmrt" },
-            { "tag": "5thfowl" },
-            { "tag": "tech5th" },
-            { "tag": "tech4th" },
-            { "tag": "techbob" },
-            { "tag": "technorth" },
-            { "tag": "nortavea" },
-            { "tag": "ferstcher" },
-            { "tag": "hubfers" },
-            { "tag": "centrstud" },
-            { "tag": "765femrt" }
-          ]
-        }
-      },
-      {
-        "tag": "blue",
-        "title": "Blue",
-        "-color": "0000ff",
-        "-oppositeColor": "ffffff",
-        "latMin": "33.77019",
-        "latMax": "33.7796305",
-        "lonMin": "-84.40421",
-        "lonMax": "-84.39174",
-        "stop": [
-          {
-            "tag": "fitten_a",
-            "title": "Fitten Hall",
-            "lat": "33.7782737",
-            "lon": "-84.4041907",
-            "stopid": "0022"
-          },
-          {
-            "tag": "mcm8th",
-            "title": "McMillian St & 8th St",
-            "lat": "33.779598",
-            "lon": "-84.4041646",
-            "stopid": "0030"
-          },
-          {
-            "tag": "8thhemp",
-            "title": "8th St & Hemphill Ave",
-            "lat": "33.7796305",
-            "lon": "-84.4027401",
-            "stopid": "0006"
-          },
-          {
-            "tag": "fersherec",
-            "title": "Ferst Dr & Hemphill Ave",
-            "lat": "33.7781409",
-            "lon": "-84.4018286",
-            "stopid": "0016"
-          },
-          {
-            "tag": "recctr",
-            "title": "Recreation Center",
-            "lat": "33.7751",
-            "lon": "-84.40265",
-            "stopid": "0037"
-          },
-          {
-            "tag": "studcentr",
-            "title": "Student Center",
-            "lat": "33.77335",
-            "lon": "-84.39917",
-            "stopid": "0043"
-          },
-          {
-            "tag": "fershub",
-            "title": "HUB/Ferst Dr",
-            "lat": "33.77279",
-            "lon": "-84.39721",
-            "stopid": "0084"
-          },
-          {
-            "tag": "cherfers",
-            "title": "Cherry St & Ferst Dr",
-            "lat": "33.77234",
-            "lon": "-84.3957028",
-            "stopid": "0011"
-          },
-          {
-            "tag": "nortavea",
-            "title": "North Avenue Apartments",
-            "lat": "33.77019",
-            "lon": "-84.39174",
-            "stopid": "0067"
-          },
-          {
-            "tag": "technorth",
-            "title": "Techwood Dr & North Ave",
-            "lat": "33.7718568",
-            "lon": "-84.3919202",
-            "stopid": "0056"
-          },
-          {
-            "tag": "3rdtech",
-            "title": "Techwood Dr & 3rd Street",
-            "lat": "33.7740614",
-            "lon": "-84.39192",
-            "stopid": "0050"
-          },
-          {
-            "tag": "4thtech",
-            "title": "Techwood Dr & 4th Street",
-            "lat": "33.7750658",
-            "lon": "-84.3919399",
-            "stopid": "0051"
-          },
-          {
-            "tag": "5thtech",
-            "title": "Techwood Dr & 5th Street",
-            "lat": "33.77676",
-            "lon": "-84.39206",
-            "stopid": "0053"
-          },
-          {
-            "tag": "fersforec",
-            "title": "Ferst Dr & Fowler St",
-            "lat": "33.77699",
-            "lon": "-84.3940499",
-            "stopid": "0002"
-          },
-          {
-            "tag": "ferschrec",
-            "title": "Ferst Dr & Cherry St",
-            "lat": "33.7774847",
-            "lon": "-84.3955756",
-            "stopid": "0018"
-          },
-          {
-            "tag": "fersatrec",
-            "title": "Ferst Dr & Atlantic Dr",
-            "lat": "33.7783198",
-            "lon": "-84.3980827",
-            "stopid": "0014"
-          },
-          {
-            "tag": "fersstrec",
-            "title": "Ferst Dr & State St",
-            "lat": "33.7783603",
-            "lon": "-84.3995716",
-            "stopid": "0020"
-          }
-        ],
-        "direction": {
-          "tag": "Counterclo",
-          "title": "Counterclockwise",
-          "useForUI": "true",
-          "stop": [
-            { "tag": "fitten" },
-            { "tag": "mcm8th" },
-            { "tag": "8thhemp" },
-            { "tag": "fersherec" },
-            { "tag": "recctr" },
-            { "tag": "studcentr" },
-            { "tag": "fershub" },
-            { "tag": "cherfers" },
-            { "tag": "nortavea" },
-            { "tag": "technorth" },
-            { "tag": "3rdtech" },
-            { "tag": "4thtech" },
-            { "tag": "5thtech" },
-            { "tag": "fersforec" },
-            { "tag": "ferschrec" },
-            { "tag": "fersatrec" },
-            { "tag": "fersstrec" }
-          ]
-        }
-      },
-      {
-        "tag": "green",
-        "title": "Green",
-        "-color": "00cc66",
-        "-oppositeColor": "000000",
-        "latMin": "33.7695",
-        "latMax": "33.78628",
-        "lonMin": "-84.405937",
-        "lonMax": "-84.39559",
-        "stop": [
-          {
-            "tag": "tep_d",
-            "title": "TEP",
-            "lat": "33.7695",
-            "lon": "-84.402752",
-            "stopid": "0063"
-          },
-          {
-            "tag": "stuctr",
-            "title": "Student Center at Tech Pkwy",
-            "lat": "33.7731096",
-            "lon": "-84.3993087",
-            "stopid": "0047"
-          },
-          {
-            "tag": "tranhub",
-            "title": "Transit HUB",
-            "lat": "33.77314",
-            "lon": "-84.397",
-            "stopid": "0086"
-          },
-          {
-            "tag": "ctrstu",
-            "title": "Student Center",
-            "lat": "33.7734589",
-            "lon": "-84.399156",
-            "stopid": "0044"
-          },
-          {
-            "tag": "765femrt",
-            "title": "Recreation Center",
-            "lat": "33.77557",
-            "lon": "-84.40249",
-            "stopid": "0039"
-          },
-          {
-            "tag": "fershemrt",
-            "title": "Ferst Dr & Hemphill Ave",
-            "lat": "33.7784497",
-            "lon": "-84.4008249",
-            "stopid": "0017"
-          },
-          {
-            "tag": "fersstmrt",
-            "title": "Ferst Dr & State St",
-            "lat": "33.77827",
-            "lon": "-84.39954",
-            "stopid": "0021"
-          },
-          {
-            "tag": "ndec",
-            "title": "North Deck",
-            "lat": "33.7802334",
-            "lon": "-84.3990501",
-            "stopid": "0074"
-          },
-          {
-            "tag": "10thhemp",
-            "title": "Hemphill Ave & 10th St",
-            "lat": "33.7816186",
-            "lon": "-84.4040821",
-            "stopid": "0075"
-          },
-          {
-            "tag": "hempcurr",
-            "title": "Hemphill Ave & Curran St",
-            "lat": "33.784665",
-            "lon": "-84.405937",
-            "stopid": "0076"
-          },
-          {
-            "tag": "14thmcmi",
-            "title": "14th St Bus Yard",
-            "lat": "33.78617",
-            "lon": "-84.4052407",
-            "stopid": "0077"
-          },
-          {
-            "tag": "14thstat",
-            "title": "14th St & State St",
-            "lat": "33.7861299",
-            "lon": "-84.3987994",
-            "stopid": "0078"
-          },
-          {
-            "tag": "gcat",
-            "title": "GCATT",
-            "lat": "33.78628",
-            "lon": "-84.39559",
-            "stopid": "0023"
-          },
-          {
-            "tag": "glc",
-            "title": "GLC",
-            "lat": "33.78158",
-            "lon": "-84.39645",
-            "stopid": "0024"
-          },
-          {
-            "tag": "bake",
-            "title": "Baker Bldg",
-            "lat": "33.7803546",
-            "lon": "-84.3992799",
-            "stopid": "0080"
-          },
-          {
-            "tag": "fersstat",
-            "title": "Ferst Dr & State St",
-            "lat": "33.77836",
-            "lon": "-84.3995688",
-            "stopid": "0020"
-          },
-          {
-            "tag": "fersherec",
-            "title": "Ferst Dr & Hemphill Ave",
-            "lat": "33.7781421",
-            "lon": "-84.4018266",
-            "stopid": "0016"
-          },
-          {
-            "tag": "recctr",
-            "title": "Recreation Center",
-            "lat": "33.7750991",
-            "lon": "-84.4026499",
-            "stopid": "0037"
-          },
-          {
-            "tag": "studcentr",
-            "title": "Student Center",
-            "lat": "33.7733503",
-            "lon": "-84.3991716",
-            "stopid": "0043"
-          },
-          {
-            "tag": "fershub",
-            "title": "HUB/Ferst Dr",
-            "lat": "33.77279",
-            "lon": "-84.39721",
-            "stopid": "0084"
-          },
-          {
-            "tag": "cherferst",
-            "title": "Cherry St & Ferst Dr",
-            "lat": "33.77234",
-            "lon": "-84.3957029",
-            "stopid": "0011"
-          },
-          {
-            "tag": "nara",
-            "title": "NARA",
-            "lat": "33.7706997",
-            "lon": "-84.4033768",
-            "stopid": "0060"
-          }
-        ],
-        "direction": [
-          {
-            "tag": "tep",
-            "title": "to TEP",
-            "useForUI": "true",
+        {
+            "tag": "red",
+            "title": "Red",
+            "-color": "ff1100",
+            "-oppositeColor": "ffffff",
+            "latMin": "33.7699403",
+            "latMax": "33.7796305",
+            "lonMin": "-84.4041907",
+            "lonMax": "-84.3916294",
             "stop": [
-              { "tag": "fershub" },
-              { "tag": "cherferst" },
-              { "tag": "nara" }
+                {
+                    "tag": "fitten",
+                    "title": "Fitten Hall",
+                    "lat": "33.7782737",
+                    "lon": "-84.4041907",
+                    "stopid": "0022"
+                },
+                {
+                    "tag": "mcm8th",
+                    "title": "McMillian St & 8th St",
+                    "lat": "33.7795985",
+                    "lon": "-84.4041643",
+                    "stopid": "0030"
+                },
+                {
+                    "tag": "8thhemp",
+                    "title": "8th St & Hemphill Ave",
+                    "lat": "33.7796305",
+                    "lon": "-84.4027401",
+                    "stopid": "0006"
+                },
+                {
+                    "tag": "fershemrt",
+                    "title": "Ferst Dr & Hemphill Ave",
+                    "lat": "33.7784495",
+                    "lon": "-84.4008238",
+                    "stopid": "0017"
+                },
+                {
+                    "tag": "fersstmrt",
+                    "title": "Ferst Dr & State St",
+                    "lat": "33.7782696",
+                    "lon": "-84.399535",
+                    "stopid": "0021"
+                },
+                {
+                    "tag": "fersatmrt",
+                    "title": "Ferst Dr & Atlantic Dr",
+                    "lat": "33.77819",
+                    "lon": "-84.3974906",
+                    "stopid": "0015"
+                },
+                {
+                    "tag": "ferschmrt",
+                    "title": "Klaus Building",
+                    "lat": "33.7771003",
+                    "lon": "-84.3954803",
+                    "stopid": "0019"
+                },
+                {
+                    "tag": "5thfowl",
+                    "title": "Ferst Dr & Fowler St",
+                    "lat": "33.7769",
+                    "lon": "-84.3937809",
+                    "stopid": "0003"
+                },
+                {
+                    "tag": "tech5th",
+                    "title": "Techwood Dr & 5th St",
+                    "lat": "33.7766841",
+                    "lon": "-84.39215",
+                    "stopid": "0054"
+                },
+                {
+                    "tag": "tech4th",
+                    "title": "Techwood Dr & 4th St",
+                    "lat": "33.7749538",
+                    "lon": "-84.3920495",
+                    "stopid": "0052"
+                },
+                {
+                    "tag": "techbob",
+                    "title": "Techwood Dr & Bobby Dodd Way",
+                    "lat": "33.7736674",
+                    "lon": "-84.39205",
+                    "stopid": "0055"
+                },
+                {
+                    "tag": "technorth",
+                    "title": "Techwood Dr & North Ave",
+                    "lat": "33.7714504",
+                    "lon": "-84.3920998",
+                    "stopid": "0057"
+                },
+                {
+                    "tag": "nortavea_a",
+                    "title": "North Avenue Apartments",
+                    "lat": "33.77019",
+                    "lon": "-84.39174",
+                    "stopid": "0067"
+                },
+                {
+                    "tag": "ferstcher",
+                    "title": "Cherry St & Ferst Dr",
+                    "lat": "33.7722835",
+                    "lon": "-84.3954802",
+                    "stopid": "0012"
+                },
+                {
+                    "tag": "hubfers",
+                    "title": "Transit Hub",
+                    "lat": "33.77274",
+                    "lon": "-84.39706",
+                    "stopid": "0085"
+                },
+                {
+                    "tag": "centrstud",
+                    "title": "Student Center",
+                    "lat": "33.7734596",
+                    "lon": "-84.3991588",
+                    "stopid": "0044"
+                },
+                {
+                    "tag": "765femrt",
+                    "title": "Recreation Center",
+                    "lat": "33.77557",
+                    "lon": "-84.40249",
+                    "stopid": "0038"
+                }
+            ],
+            "direction": [
+                {
+                    "tag": "Clockwise",
+                    "title": "Clockwise",
+                    "useForUI": "true",
+                    "stop": [
+                        {
+                            "tag": "fitten"
+                        },
+                        {
+                            "tag": "mcm8th"
+                        },
+                        {
+                            "tag": "8thhemp"
+                        },
+                        {
+                            "tag": "fershemrt"
+                        },
+                        {
+                            "tag": "fersstmrt"
+                        },
+                        {
+                            "tag": "fersatmrt"
+                        },
+                        {
+                            "tag": "ferschmrt"
+                        },
+                        {
+                            "tag": "5thfowl"
+                        },
+                        {
+                            "tag": "tech5th"
+                        },
+                        {
+                            "tag": "tech4th"
+                        },
+                        {
+                            "tag": "techbob"
+                        },
+                        {
+                            "tag": "technorth"
+                        },
+                        {
+                            "tag": "nortavea_a"
+                        },
+                        {
+                            "tag": "ferstcher"
+                        },
+                        {
+                            "tag": "hubfers"
+                        },
+                        {
+                            "tag": "centrstud"
+                        },
+                        {
+                            "tag": "765femrt"
+                        }
+                    ]
+                }
             ]
-          },
-          {
-            "tag": "hub",
-            "title": "Transit Hub",
-            "useForUI": "true",
+        },
+        {
+            "tag": "blue",
+            "title": "Blue",
+            "-color": "0000ff",
+            "-oppositeColor": "ffffff",
+            "latMin": "33.77019",
+            "latMax": "33.7796305",
+            "lonMin": "-84.40421",
+            "lonMax": "-84.39174",
             "stop": [
-              { "tag": "14thmcmi" },
-              { "tag": "14thstat" },
-              { "tag": "gcat" },
-              { "tag": "glc" },
-              { "tag": "bake" },
-              { "tag": "fersstat" },
-              { "tag": "fersherec" },
-              { "tag": "recctr" },
-              { "tag": "studcentr" }
+                {
+                    "tag": "fitten_a",
+                    "title": "Fitten Hall",
+                    "lat": "33.7782737",
+                    "lon": "-84.4041907",
+                    "stopid": "0022"
+                },
+                {
+                    "tag": "mcm8th",
+                    "title": "McMillian St & 8th St",
+                    "lat": "33.779598",
+                    "lon": "-84.4041646",
+                    "stopid": "0030"
+                },
+                {
+                    "tag": "8thhemp",
+                    "title": "8th St & Hemphill Ave",
+                    "lat": "33.7796305",
+                    "lon": "-84.4027401",
+                    "stopid": "0006"
+                },
+                {
+                    "tag": "fersherec",
+                    "title": "Ferst Dr & Hemphill Ave",
+                    "lat": "33.7781409",
+                    "lon": "-84.4018286",
+                    "stopid": "0016"
+                },
+                {
+                    "tag": "recctr",
+                    "title": "Recreation Center",
+                    "lat": "33.7751",
+                    "lon": "-84.40265",
+                    "stopid": "0037"
+                },
+                {
+                    "tag": "studcentr",
+                    "title": "Student Center",
+                    "lat": "33.77335",
+                    "lon": "-84.39917",
+                    "stopid": "0043"
+                },
+                {
+                    "tag": "fershub",
+                    "title": "Transit Hub",
+                    "lat": "33.77279",
+                    "lon": "-84.39721",
+                    "stopid": "0084"
+                },
+                {
+                    "tag": "cherfers",
+                    "title": "Cherry St & Ferst Dr",
+                    "lat": "33.77234",
+                    "lon": "-84.3957028",
+                    "stopid": "0011"
+                },
+                {
+                    "tag": "nortavea",
+                    "title": "North Avenue Apartments",
+                    "lat": "33.77019",
+                    "lon": "-84.39174",
+                    "stopid": "0067"
+                },
+                {
+                    "tag": "technorth",
+                    "title": "Techwood Dr & North Ave",
+                    "lat": "33.7718568",
+                    "lon": "-84.3919202",
+                    "stopid": "0056"
+                },
+                {
+                    "tag": "3rdtech",
+                    "title": "Techwood Dr & 3rd Street",
+                    "lat": "33.7740614",
+                    "lon": "-84.39192",
+                    "stopid": "0050"
+                },
+                {
+                    "tag": "4thtech",
+                    "title": "Techwood Dr & 4th Street",
+                    "lat": "33.7750658",
+                    "lon": "-84.3919399",
+                    "stopid": "0051"
+                },
+                {
+                    "tag": "5thtech",
+                    "title": "Techwood Dr & 5th Street",
+                    "lat": "33.77676",
+                    "lon": "-84.39206",
+                    "stopid": "0053"
+                },
+                {
+                    "tag": "fersforec",
+                    "title": "Ferst Dr & Fowler St",
+                    "lat": "33.77699",
+                    "lon": "-84.3940499",
+                    "stopid": "0002"
+                },
+                {
+                    "tag": "ferschrec",
+                    "title": "Klaus Building",
+                    "lat": "33.7774847",
+                    "lon": "-84.3955756",
+                    "stopid": "0018"
+                },
+                {
+                    "tag": "fersatrec",
+                    "title": "Ferst Dr & Atlantic Dr",
+                    "lat": "33.7783198",
+                    "lon": "-84.3980827",
+                    "stopid": "0014"
+                },
+                {
+                    "tag": "fersstrec",
+                    "title": "Ferst Dr & State St",
+                    "lat": "33.7783603",
+                    "lon": "-84.3995716",
+                    "stopid": "0020"
+                }
+            ],
+            "direction": [
+                {
+                    "tag": "Counterclo",
+                    "title": "Counterclockwise",
+                    "useForUI": "true",
+                    "stop": [
+                        {
+                            "tag": "fitten_a"
+                        },
+                        {
+                            "tag": "mcm8th"
+                        },
+                        {
+                            "tag": "8thhemp"
+                        },
+                        {
+                            "tag": "fersherec"
+                        },
+                        {
+                            "tag": "recctr"
+                        },
+                        {
+                            "tag": "studcentr"
+                        },
+                        {
+                            "tag": "fershub"
+                        },
+                        {
+                            "tag": "cherfers"
+                        },
+                        {
+                            "tag": "nortavea"
+                        },
+                        {
+                            "tag": "technorth"
+                        },
+                        {
+                            "tag": "3rdtech"
+                        },
+                        {
+                            "tag": "4thtech"
+                        },
+                        {
+                            "tag": "5thtech"
+                        },
+                        {
+                            "tag": "fersforec"
+                        },
+                        {
+                            "tag": "ferschrec"
+                        },
+                        {
+                            "tag": "fersatrec"
+                        },
+                        {
+                            "tag": "fersstrec"
+                        }
+                    ]
+                }
             ]
-          },
-          {
-            "tag": "gr_to14th",
-            "title": "to 14th Street",
-            "useForUI": "true",
+        },
+        {
+            "tag": "green",
+            "title": "Green",
+            "-color": "00cc66",
+            "-oppositeColor": "000000",
+            "latMin": "33.7695",
+            "latMax": "33.78628",
+            "lonMin": "-84.405937",
+            "lonMax": "-84.39559",
             "stop": [
-              { "tag": "tep_d" },
-              { "tag": "stuctr" },
-              { "tag": "tranhub" },
-              { "tag": "ctrstu" },
-              { "tag": "765femrt" },
-              { "tag": "fershemrt" },
-              { "tag": "fersstmrt" },
-              { "tag": "ndec" },
-              { "tag": "10thhemp" },
-              { "tag": "hempcurr" }
+                {
+                    "tag": "tep_d",
+                    "title": "TEP",
+                    "lat": "33.7695",
+                    "lon": "-84.402752",
+                    "stopid": "0063"
+                },
+                {
+                    "tag": "tep_a",
+                    "title": "TEP",
+                    "lat": "33.7695",
+                    "lon": "-84.402752",
+                    "stopid": "0063"
+                },
+                {
+                    "tag": "stuctr",
+                    "title": "Student Center at Tech Pkwy",
+                    "lat": "33.7731096",
+                    "lon": "-84.3993087",
+                    "stopid": "0047"
+                },
+                {
+                    "tag": "tranhub",
+                    "title": "Transit Hub",
+                    "lat": "33.77314",
+                    "lon": "-84.397",
+                    "stopid": "0086"
+                },
+                {
+                    "tag": "ctrstu",
+                    "title": "Student Center",
+                    "lat": "33.7734589",
+                    "lon": "-84.399156",
+                    "stopid": "0044"
+                },
+                {
+                    "tag": "765femrt",
+                    "title": "Recreation Center",
+                    "lat": "33.77557",
+                    "lon": "-84.40249",
+                    "stopid": "0039"
+                },
+                {
+                    "tag": "fershemrt",
+                    "title": "Ferst Dr & Hemphill Ave",
+                    "lat": "33.7784497",
+                    "lon": "-84.4008249",
+                    "stopid": "0017"
+                },
+                {
+                    "tag": "fersstmrt",
+                    "title": "Ferst Dr & State St",
+                    "lat": "33.77827",
+                    "lon": "-84.39954",
+                    "stopid": "0021"
+                },
+                {
+                    "tag": "ndec",
+                    "title": "North Deck",
+                    "lat": "33.7802334",
+                    "lon": "-84.3990501",
+                    "stopid": "0074"
+                },
+                {
+                    "tag": "10thhemp",
+                    "title": "Hemphill Ave & 10th St",
+                    "lat": "33.7816186",
+                    "lon": "-84.4040821",
+                    "stopid": "0075"
+                },
+                {
+                    "tag": "hempcurr",
+                    "title": "Hemphill Ave & Curran St",
+                    "lat": "33.784665",
+                    "lon": "-84.405937",
+                    "stopid": "0076"
+                },
+                {
+                    "tag": "14thmcmi_a",
+                    "title": "14th St Bus Yard",
+                    "lat": "33.78617",
+                    "lon": "-84.4052407",
+                    "stopid": "0077"
+                },
+                {
+                    "tag": "14thstat",
+                    "title": "14th St & State St",
+                    "lat": "33.7861299",
+                    "lon": "-84.3987994",
+                    "stopid": "0078"
+                },
+                {
+                    "tag": "gcat",
+                    "title": "GCATT",
+                    "lat": "33.78628",
+                    "lon": "-84.39559",
+                    "stopid": "0023"
+                },
+                {
+                    "tag": "glc",
+                    "title": "GLC",
+                    "lat": "33.78158",
+                    "lon": "-84.39645",
+                    "stopid": "0024"
+                },
+                {
+                    "tag": "bake",
+                    "title": "Baker Bldg",
+                    "lat": "33.7803546",
+                    "lon": "-84.3992799",
+                    "stopid": "0080"
+                },
+                {
+                    "tag": "fersstat",
+                    "title": "Ferst Dr & State St",
+                    "lat": "33.77836",
+                    "lon": "-84.3995688",
+                    "stopid": "0020"
+                },
+                {
+                    "tag": "fersherec",
+                    "title": "Ferst Dr & Hemphill Ave",
+                    "lat": "33.7781421",
+                    "lon": "-84.4018266",
+                    "stopid": "0016"
+                },
+                {
+                    "tag": "recctr",
+                    "title": "Recreation Center",
+                    "lat": "33.7750991",
+                    "lon": "-84.4026499",
+                    "stopid": "0037"
+                },
+                {
+                    "tag": "studcentr",
+                    "title": "Student Center",
+                    "lat": "33.7733503",
+                    "lon": "-84.3991716",
+                    "stopid": "0043"
+                },
+                {
+                    "tag": "fershub",
+                    "title": "Transit Hub",
+                    "lat": "33.77279",
+                    "lon": "-84.39721",
+                    "stopid": "0084"
+                },
+                {
+                    "tag": "cherferst",
+                    "title": "Cherry St & Ferst Dr",
+                    "lat": "33.77234",
+                    "lon": "-84.3957029",
+                    "stopid": "0011"
+                },
+                {
+                    "tag": "nara",
+                    "title": "NARA",
+                    "lat": "33.7706997",
+                    "lon": "-84.4033768",
+                    "stopid": "0060"
+                }
+            ],
+            "direction": [
+                {
+                    "tag": "tep",
+                    "title": "To TEP",
+                    "useForUI": "true",
+                    "stop": [
+                        {
+                            "tag": "fershub"
+                        },
+                        {
+                            "tag": "cherferst"
+                        },
+                        {
+                            "tag": "nara"
+                        },
+                        {
+                            "tag": "tep_a"
+                        }
+
+                    ]
+                },
+                {
+                    "tag": "hub",
+                    "title": "To Transit Hub",
+                    "useForUI": "true",
+                    "stop": [
+                        {
+                            "tag": "14thstat"
+                        },
+                        {
+                            "tag": "gcat"
+                        },
+                        {
+                            "tag": "glc"
+                        },
+                        {
+                            "tag": "bake"
+                        },
+                        {
+                            "tag": "fersstat"
+                        },
+                        {
+                            "tag": "fersherec"
+                        },
+                        {
+                            "tag": "recctr"
+                        },
+                        {
+                            "tag": "studcentr"
+                        }
+                    ]
+                },
+                {
+                    "tag": "gr_to14th",
+                    "title": "To 14th Street",
+                    "useForUI": "true",
+                    "stop": [
+                        {
+                            "tag": "stuctr"
+                        },
+                        {
+                            "tag": "tranhub"
+                        },
+                        {
+                            "tag": "ctrstu"
+                        },
+                        {
+                            "tag": "765femrt"
+                        },
+                        {
+                            "tag": "fershemrt"
+                        },
+                        {
+                            "tag": "fersstmrt"
+                        },
+                        {
+                            "tag": "ndec"
+                        },
+                        {
+                            "tag": "10thhemp"
+                        },
+                        {
+                            "tag": "hempcurr"
+                        },
+                        {
+                            "tag": "14thmcmi_a"
+                        }
+                    ]
+                }
             ]
-          }
-        ]
-      },
-      {
-        "tag": "trolley",
-        "title": "Tech Trolley",
-        "-color": "ffcc00",
-        "-oppositeColor": "000000",
-        "latMin": "33.7729648",
-        "latMax": "33.78082",
-        "lonMin": "-84.40265",
-        "lonMax": "-84.3860166",
-        "stop": [
-          {
-            "tag": "marta",
-            "title": "MARTA Midtown Station",
-            "lat": "33.78082",
-            "lon": "-84.38641",
-            "stopid": "0029"
-          },
-          {
-            "tag": "publix",
-            "title": "Publix Supermarket",
-            "lat": "33.7806002",
-            "lon": "-84.3888183",
-            "stopid": "0073"
-          },
-          {
-            "tag": "techrec",
-            "title": "Technology Square",
-            "lat": "33.7769199",
-            "lon": "-84.38978",
-            "stopid": "0048"
-          },
-          {
-            "tag": "tech5rec",
-            "title": "Techwood Dr & 5th St",
-            "lat": "33.7769499",
-            "lon": "-84.3917069",
-            "stopid": "0004"
-          },
-          {
-            "tag": "fersforec",
-            "title": "Ferst Dr & Fowler St",
-            "lat": "33.7769899",
-            "lon": "-84.3940482",
-            "stopid": "0002"
-          },
-          {
-            "tag": "ferschrec",
-            "title": "Ferst Dr & Cherry St",
-            "lat": "33.7774847",
-            "lon": "-84.3955756",
-            "stopid": "0018"
-          },
-          {
-            "tag": "fersatrec",
-            "title": "Ferst Dr & Atlantic Dr",
-            "lat": "33.7783198",
-            "lon": "-84.3980827",
-            "stopid": "0014"
-          },
-          {
-            "tag": "fersherec",
-            "title": "Ferst Dr & Hemphill Ave",
-            "lat": "33.7781409",
-            "lon": "-84.4018286",
-            "stopid": "0016"
-          },
-          {
-            "tag": "recctr",
-            "title": "Recreation Center",
-            "lat": "33.7751",
-            "lon": "-84.40265",
-            "stopid": "0038"
-          },
-          {
-            "tag": "studcentr",
-            "title": "Student Center",
-            "lat": "33.7733498",
-            "lon": "-84.3991691",
-            "stopid": "0043"
-          },
-          {
-            "tag": "tranhub",
-            "title": "Transit HUB",
-            "lat": "33.77314",
-            "lon": "-84.397",
-            "stopid": "0086"
-          },
-          {
-            "tag": "centrstud",
-            "title": "Student Center",
-            "lat": "33.7734589",
-            "lon": "-84.399156",
-            "stopid": "0044"
-          },
-          {
-            "tag": "ferstdr",
-            "title": "Recreation Center",
-            "lat": "33.7750974",
-            "lon": "-84.4023893",
-            "stopid": "0038"
-          },
-          {
-            "tag": "fershemrt",
-            "title": "Ferst Dr & Hemphill Ave",
-            "lat": "33.77845",
-            "lon": "-84.40083",
-            "stopid": "0017"
-          },
-          {
-            "tag": "fersatmrt",
-            "title": "Ferst Dr & Atlantic Dr",
-            "lat": "33.77819",
-            "lon": "-84.397491",
-            "stopid": "0015"
-          },
-          {
-            "tag": "ferschmrt",
-            "title": "Ferst Dr & Cherry St",
-            "lat": "33.7771003",
-            "lon": "-84.3954803",
-            "stopid": "0019"
-          },
-          {
-            "tag": "fersfomrt",
-            "title": "Ferst Dr & Fowler St",
-            "lat": "33.7769",
-            "lon": "-84.3937809",
-            "stopid": "0003"
-          },
-          {
-            "tag": "tech5mrt",
-            "title": "Techwood Dr & 5th St",
-            "lat": "33.77689",
-            "lon": "-84.39197",
-            "stopid": "0005"
-          },
-          {
-            "tag": "techmrt",
-            "title": "Technology Square",
-            "lat": "33.7768",
-            "lon": "-84.38975",
-            "stopid": "0049"
-          },
-          {
-            "tag": "duprmrt",
-            "title": "College of Management",
-            "lat": "33.77678",
-            "lon": "-84.38749",
-            "stopid": "0025"
-          },
-          {
-            "tag": "wpe7mrt",
-            "title": "Academy of Medicine",
-            "lat": "33.7785362",
-            "lon": "-84.38724",
-            "stopid": "0059"
-          }
-        ],
-        "direction": [
-          {
-            "tag": "marta",
-            "title": "To MARTA Station",
-            "useForUI": "true",
+        },
+        {
+            "tag": "trolley",
+            "title": "Tech Trolley",
+            "-color": "ffcc00",
+            "-oppositeColor": "000000",
+            "latMin": "33.7729648",
+            "latMax": "33.78082",
+            "lonMin": "-84.40265",
+            "lonMax": "-84.3860166",
             "stop": [
-              { "tag": "tranhub" },
-              { "tag": "centrstud" },
-              { "tag": "ferstdr" },
-              { "tag": "fershemrt" },
-              { "tag": "fersatmrt" },
-              { "tag": "ferschmrt" },
-              { "tag": "fersfomrt" },
-              { "tag": "tech5mrt" },
-              { "tag": "techmrt" },
-              { "tag": "duprmrt" },
-              { "tag": "wpe7mrt" }
+                {
+                    "tag": "marta_arr",
+                    "title": "MARTA Midtown Station",
+                    "lat": "33.78082",
+                    "lon": "-84.38641",
+                    "stopid": "0029"
+                },
+                {
+                    "tag": "publix",
+                    "title": "Publix Supermarket",
+                    "lat": "33.7806002",
+                    "lon": "-84.3888183",
+                    "stopid": "0073"
+                },
+                {
+                    "tag": "techrec",
+                    "title": "Technology Square",
+                    "lat": "33.7769199",
+                    "lon": "-84.38978",
+                    "stopid": "0048"
+                },
+                {
+                    "tag": "tech5rec",
+                    "title": "Techwood Dr & 5th St",
+                    "lat": "33.7769499",
+                    "lon": "-84.3917069",
+                    "stopid": "0004"
+                },
+                {
+                    "tag": "fersforec",
+                    "title": "Ferst Dr & Fowler St",
+                    "lat": "33.7769899",
+                    "lon": "-84.3940482",
+                    "stopid": "0002"
+                },
+                {
+                    "tag": "ferschrec",
+                    "title": "Klaus Building",
+                    "lat": "33.7774847",
+                    "lon": "-84.3955756",
+                    "stopid": "0018"
+                },
+                {
+                    "tag": "fersatrec",
+                    "title": "Ferst Dr & Atlantic Dr",
+                    "lat": "33.7783198",
+                    "lon": "-84.3980827",
+                    "stopid": "0014"
+                },
+                {
+                    "tag": "fersherec",
+                    "title": "Ferst Dr & Hemphill Ave",
+                    "lat": "33.7781409",
+                    "lon": "-84.4018286",
+                    "stopid": "0016"
+                },
+                {
+                    "tag": "recctr",
+                    "title": "Recreation Center",
+                    "lat": "33.7751",
+                    "lon": "-84.40265",
+                    "stopid": "0038"
+                },
+                {
+                    "tag": "studcentr",
+                    "title": "Student Center",
+                    "lat": "33.7733498",
+                    "lon": "-84.3991691",
+                    "stopid": "0043"
+                },
+                {
+                    "tag": "tranhub_a",
+                    "title": "Transit Hub",
+                    "lat": "33.77314",
+                    "lon": "-84.397",
+                    "stopid": "0086"
+                },
+                {
+                    "tag": "centrstud",
+                    "title": "Student Center",
+                    "lat": "33.7734589",
+                    "lon": "-84.399156",
+                    "stopid": "0044"
+                },
+                {
+                    "tag": "ferstdr",
+                    "title": "Recreation Center",
+                    "lat": "33.7750974",
+                    "lon": "-84.4023893",
+                    "stopid": "0038"
+                },
+                {
+                    "tag": "fershemrt",
+                    "title": "Ferst Dr & Hemphill Ave",
+                    "lat": "33.77845",
+                    "lon": "-84.40083",
+                    "stopid": "0017"
+                },
+                {
+                    "tag": "fersatmrt",
+                    "title": "Ferst Dr & Atlantic Dr",
+                    "lat": "33.77819",
+                    "lon": "-84.397491",
+                    "stopid": "0015"
+                },
+                {
+                    "tag": "ferschmrt",
+                    "title": "Klaus Building",
+                    "lat": "33.7771003",
+                    "lon": "-84.3954803",
+                    "stopid": "0019"
+                },
+                {
+                    "tag": "fersfomrt",
+                    "title": "Ferst Dr & Fowler St",
+                    "lat": "33.7769",
+                    "lon": "-84.3937809",
+                    "stopid": "0003"
+                },
+                {
+                    "tag": "tech5mrt",
+                    "title": "Techwood Dr & 5th St",
+                    "lat": "33.77689",
+                    "lon": "-84.39197",
+                    "stopid": "0005"
+                },
+                {
+                    "tag": "techmrt",
+                    "title": "Technology Square",
+                    "lat": "33.7768",
+                    "lon": "-84.38975",
+                    "stopid": "0049"
+                },
+                {
+                    "tag": "duprmrt",
+                    "title": "College of Management",
+                    "lat": "33.77678",
+                    "lon": "-84.38749",
+                    "stopid": "0025"
+                },
+                {
+                    "tag": "wpe7mrt",
+                    "title": "Academy of Medicine",
+                    "lat": "33.7785362",
+                    "lon": "-84.38724",
+                    "stopid": "0059"
+                }
+            ],
+            "direction": [
+                {
+                    "tag": "marta",
+                    "title": "To MARTA Station",
+                    "useForUI": "true",
+                    "stop": [
+                        {
+                            "tag": "centrstud"
+                        },
+                        {
+                            "tag": "ferstdr"
+                        },
+                        {
+                            "tag": "fershemrt"
+                        },
+                        {
+                            "tag": "fersatmrt"
+                        },
+                        {
+                            "tag": "ferschmrt"
+                        },
+                        {
+                            "tag": "fersfomrt"
+                        },
+                        {
+                            "tag": "tech5mrt"
+                        },
+                        {
+                            "tag": "techmrt"
+                        },
+                        {
+                            "tag": "duprmrt"
+                        },
+                        {
+                            "tag": "wpe7mrt"
+                        },
+                        {
+                            "tag": "marta_arr"
+                        }
+                    ]
+                },
+                {
+                    "tag": "hub",
+                    "title": "To Transit Hub",
+                    "useForUI": "true",
+                    "stop": [
+                        {
+                            "tag": "publix"
+                        },
+                        {
+                            "tag": "techrec"
+                        },
+                        {
+                            "tag": "tech5rec"
+                        },
+                        {
+                            "tag": "fersforec"
+                        },
+                        {
+                            "tag": "ferschrec"
+                        },
+                        {
+                            "tag": "fersatrec"
+                        },
+                        {
+                            "tag": "fersherec"
+                        },
+                        {
+                            "tag": "recctr"
+                        },
+                        {
+                            "tag": "studcentr"
+                        },
+                        {
+                            "tag": "tranhub_a"
+                        }
+                    ]
+                }
             ]
-          },
-          {
-            "tag": "hub",
-            "title": "Transit Hub",
-            "useForUI": "true",
+        },
+        {
+            "tag": "emory",
+            "title": "Emory Shuttle",
+            "-color": "cc33cc",
+            "-oppositeColor": "000000",
+            "latMin": "33.7781911",
+            "latMax": "33.7992629",
+            "lonMin": "-84.3977137",
+            "lonMax": "-84.3221608",
             "stop": [
-              { "tag": "marta" },
-              { "tag": "publix" },
-              { "tag": "techrec" },
-              { "tag": "tech5rec" },
-              { "tag": "fersforec" },
-              { "tag": "ferschrec" },
-              { "tag": "fersatrec" },
-              { "tag": "fersherec" },
-              { "tag": "recctr" },
-              { "tag": "studcentr" }
+                {
+                    "tag": "fersatrec",
+                    "title": "Ferst Dr & Atlantic Dr",
+                    "lat": "33.7781911",
+                    "lon": "-84.3975044"
+                },
+                {
+                    "tag": "fersatmrt",
+                    "title": "Ferst Dr & Atlantic Dr",
+                    "lat": "33.7781911",
+                    "lon": "-84.3975044"
+                },
+                {
+                    "tag": "piedmor",
+                    "title": "Piedmont Rd & E Morningside Dr",
+                    "lat": "33.7991862",
+                    "lon": "-84.3677137"
+                },
+                {
+                    "tag": "johnrock",
+                    "title": "Rock Springs Rd & Johnson Rd",
+                    "lat": "33.7968201",
+                    "lon": "-84.3502405"
+                },
+                {
+                    "tag": "clifgate_e",
+                    "title": "Clifton Rd & Gatewood Rd",
+                    "lat": "33.7972107",
+                    "lon": "-84.3224908"
+                },
+                {
+                    "tag": "emory_d",
+                    "title": "Emory Campus - Means Dr and Pierce",
+                    "lat": "33.7934505",
+                    "lon": "-84.32242"
+                },
+                {
+                    "tag": "emory_a",
+                    "title": "Woodruff Memorial",
+                    "lat": "33.7934505",
+                    "lon": "-84.32242"
+                },
+                {
+                    "tag": "clifgate_g",
+                    "title": "Clifton Rd & Gatewood Rd",
+                    "lat": "33.7970511",
+                    "lon": "-84.3221608"
+                },
+                {
+                    "tag": "rockjohn",
+                    "title": "Rock Springs Rd & Johnson Rd",
+                    "lat": "33.79688",
+                    "lon": "-84.3501964"
+                },
+                {
+                    "tag": "morpied",
+                    "title": "Piedmont Rd & E Morningside Dr",
+                    "lat": "33.7992629",
+                    "lon": "-84.3677555"
+                }
+            ],
+            "direction": [
+                {
+                    "tag": "ToEmory",
+                    "title": "To Emory",
+                    "useForUI": "true",
+                    "stop": [
+                        {
+                            "tag": "fersatrec"
+                        },
+                        {
+                            "tag": "clifgate_e"
+                        }
+                    ]
+                },
+                {
+                    "tag": "ToGatech",
+                    "title": "To Georgia Tech",
+                    "useForUI": "true",
+                    "stop": [
+                        {
+                            "tag": "emory_a"
+                        },
+                        {
+                            "tag": "clifgate_g"
+                        }
+                    ]
+                }
             ]
-          }
-        ]
-      },
-      {
-        "tag": "emory",
-        "title": "Emory Shuttle",
-        "-color": "cc33cc",
-        "-oppositeColor": "000000",
-        "latMin": "33.7781911",
-        "latMax": "33.7992629",
-        "lonMin": "-84.3977137",
-        "lonMax": "-84.3221608",
-        "stop": [
-          {
-            "tag": "fersatmrt",
-            "title": "Ferst Dr & Atlantic Dr",
-            "lat": "33.7781911",
-            "lon": "-84.3975044"
-          },
-          {
-            "tag": "piedmor",
-            "title": "Piedmont Rd & E Morningside Dr",
-            "lat": "33.7991862",
-            "lon": "-84.3677137"
-          },
-          {
-            "tag": "johnrock",
-            "title": "Rock Springs Rd & Johnson Rd",
-            "lat": "33.7968201",
-            "lon": "-84.3502405"
-          },
-          {
-            "tag": "clifgate_e",
-            "title": "Clifton Rd & Gatewood Rd",
-            "lat": "33.7972107",
-            "lon": "-84.3224908"
-          },
-          {
-            "tag": "emory_d",
-            "title": "Emory Campus - Means Dr and Pierce",
-            "lat": "33.7934505",
-            "lon": "-84.32242"
-          },
-          {
-            "tag": "clifgate_g",
-            "title": "Clifton Rd & Gatewood Rd",
-            "lat": "33.7970511",
-            "lon": "-84.3221608"
-          },
-          {
-            "tag": "rockjohn",
-            "title": "Rock Springs Rd & Johnson Rd",
-            "lat": "33.79688",
-            "lon": "-84.3501964"
-          },
-          {
-            "tag": "morpied",
-            "title": "Piedmont Rd & E Morningside Dr",
-            "lat": "33.7992629",
-            "lon": "-84.3677555"
-          }
-        ],
-        "direction": [
-          {
-            "tag": "ToEmory",
-            "title": "To Emory",
-            "useForUI": "true",
-            "stop": [
-              { "tag": "fersatmrt" },
-              { "tag": "piedmor" },
-              { "tag": "johnrock" },
-              { "tag": "clifgate_e" }
-            ]
-          },
-          {
-            "tag": "ToGatech",
-            "title": "To Georgia Tech",
-            "useForUI": "true",
-            "stop": [
-              { "tag": "emory_d" },
-              { "tag": "clifgate_g" },
-              { "tag": "rockjohn" },
-              { "tag": "morpied" }
-            ]
-          }
-        ]
-      },
-      {
-        "tag": "night",
-        "title": "Night",
-        "-color": "7849a8",
-        "-oppositeColor": "ffffff",
-        "latMin": "33.7714542",
-        "latMax": "33.7796305",
-        "lonMin": "-84.40421",
-        "lonMax": "-84.39192",
-        "stop": [
-          {
-            "tag": "fitten",
-            "title": "Fitten Hall",
-            "lat": "33.7782737",
-            "lon": "-84.4041907",
-            "stopid": "0022"
-          },
-          {
-            "tag": "8thhemp",
-            "title": "8th St & Hemphill Ave",
-            "lat": "33.7796305",
-            "lon": "-84.4027401",
-            "stopid": "0006"
-          },
-          {
-            "tag": "recctr",
-            "title": "Recreation Center",
-            "lat": "33.7750993",
-            "lon": "-84.4026499",
-            "stopid": "0037"
-          },
-          {
-            "tag": "tranhub_b",
-            "title": "Transit HUB",
-            "lat": "33.77314",
-            "lon": "-84.397",
-            "stopid": "0086"
-          },
-          {
-            "tag": "technorth_b",
-            "title": "Techwood Dr & North Ave",
-            "lat": "33.7718599",
-            "lon": "-84.39192",
-            "stopid": "0056"
-          },
-          {
-            "tag": "bobfow",
-            "title": "Bobby Dodd/Fowler",
-            "lat": "33.77387",
-            "lon": "-84.3932628",
-            "stopid": "0087"
-          },
-          {
-            "tag": "technorth_f",
-            "title": "Techwood Dr & North Ave",
-            "lat": "33.7714542",
-            "lon": "-84.3920993",
-            "stopid": "0057"
-          },
-          {
-            "tag": "tranhub_f",
-            "title": "Transit HUB",
-            "lat": "33.77314",
-            "lon": "-84.397",
-            "stopid": "0086"
-          },
-          {
-            "tag": "765femrt",
-            "title": "Recreation Center",
-            "lat": "33.7755678",
-            "lon": "-84.4024904",
-            "stopid": "0039"
-          }
-        ],
-        "direction": [
-          {
-            "tag": "bobfow",
+        },
+        {
+            "tag": "night",
             "title": "Night",
-            "useForUI": "true",
+            "-color": "7849a8",
+            "-oppositeColor": "ffffff",
+            "latMin": "33.7714542",
+            "latMax": "33.7796305",
+            "lonMin": "-84.40421",
+            "lonMax": "-84.39192",
             "stop": [
-              { "tag": "fitten" },
-              { "tag": "8thhemp" },
-              { "tag": "recctr" },
-              { "tag": "tranhub_b" },
-              { "tag": "technorth_b" }
+                {
+                    "tag": "fitten_a",
+                    "title": "Fitten Hall",
+                    "lat": "33.7782737",
+                    "lon": "-84.4041907",
+                    "stopid": "0022"
+                },
+                {
+                    "tag": "8thhemp",
+                    "title": "8th St & Hemphill Ave",
+                    "lat": "33.7796305",
+                    "lon": "-84.4027401",
+                    "stopid": "0006"
+                },
+                {
+                    "tag": "recctr",
+                    "title": "Recreation Center",
+                    "lat": "33.7750993",
+                    "lon": "-84.4026499",
+                    "stopid": "0037"
+                },
+                {
+                    "tag": "tranhub_b",
+                    "title": "Transit Hub",
+                    "lat": "33.77314",
+                    "lon": "-84.397",
+                    "stopid": "0086"
+                },
+                {
+                    "tag": "technorth_b",
+                    "title": "Techwood Dr & North Ave",
+                    "lat": "33.7718599",
+                    "lon": "-84.39192",
+                    "stopid": "0056"
+                },
+                {
+                    "tag": "technorth_f",
+                    "title": "Techwood Dr & North Ave",
+                    "lat": "33.7714542",
+                    "lon": "-84.3920993",
+                    "stopid": "0057"
+                },
+                {
+                    "tag": "tranhub_f",
+                    "title": "Transit Hub",
+                    "lat": "33.77314",
+                    "lon": "-84.397",
+                    "stopid": "0086"
+                },
+                {
+                    "tag": "765femrt",
+                    "title": "Recreation Center",
+                    "lat": "33.7755678",
+                    "lon": "-84.4024904",
+                    "stopid": "0038"
+                },
+                {
+                    "tag": "clough",
+                    "title": "Clough Commons",
+                    "lat": "33.7755678",
+                    "lon": "-84.4024904",
+                    "stopid": "0088"
+                },
+                {
+                    "tag": "tech4th",
+                    "title": "Techwood Dr & 4th St",
+                    "lat": "33.7755678",
+                    "lon": "-84.4024904",
+                    "stopid": "0038"
+                },
+                {
+                    "tag": "tech4th_f",
+                    "title": "Techwood Dr & 4th St",
+                    "lat": "33.7755678",
+                    "lon": "-84.4024904",
+                    "stopid": "0038"
+                }
+            ],
+            "direction": [
+                {
+                    "tag": "clough",
+                    "title": "To Clough Commons",
+                    "useForUI": "true",
+                    "stop": [
+                        {
+                            "tag": "8thhemp"
+                        },
+                        {
+                            "tag": "recctr"
+                        },
+                        {
+                            "tag": "tranhub_b"
+                        },
+                        {
+                            "tag": "technorth_b"
+                        },
+                        {
+                            "tag": "tech4th"
+                        }
+                    ]
+                },
+                {
+                    "tag": "fitten",
+                    "title": "To Fitten Hall",
+                    "useForUI": "true",
+                    "stop": [
+                        {
+                            "tag": "clough"
+                        },
+                        {
+                            "tag": "tech4th_f"
+                        },
+                        {
+                            "tag": "technorth_f"
+                        },
+                        {
+                            "tag": "tranhub_f"
+                        },
+                        {
+                            "tag": "765femrt"
+                        },
+                        {
+                            "tag": "fitten_a"
+                        }
+                    ]
+                }
             ]
-          },
-          {
-            "tag": "fitten",
-            "title": "Fitten Hall",
-            "useForUI": "true",
-            "stop": [
-              { "tag": "bobfow" },
-              { "tag": "technorth_f" },
-              { "tag": "tranhub_f" },
-              { "tag": "765femrt" }
-            ]
-          }
-        ]
-      }
+        }
     ]
 }

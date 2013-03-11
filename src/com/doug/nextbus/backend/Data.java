@@ -1,253 +1,193 @@
 package com.doug.nextbus.backend;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Writer;
+import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Locale;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.doug.nextbus.R;
+import com.doug.nextbus.backend.JSONDataResult.Route;
+import com.doug.nextbus.backend.JSONDataResult.Route.Direction;
+import com.doug.nextbus.backend.JSONDataResult.Route.PathStop;
+import com.doug.nextbus.backend.JSONDataResult.Route.Stop;
+import com.google.gson.Gson;
 
-/* This class controls reading and writing local files as well as persisting current state data. */
+/**
+ * This class controls reading and writing local files as well as persisting
+ * current state data. This class is a catch all for the methods I need, I
+ * usually come and clean this up a great deal
+ */
+
 public class Data {
 
-	static JSONObject data;
-	static Context context;
+	private static Context sCtx;
+	/** Used for JSON parsing */
+	private static JSONDataResult sJsonDataResult;
+	/** Key: routeTag, Value: Route object */
+	final private static HashMap<String, Route> sRouteData;
+	/** Key: stopTitle, Value: RouteDirectionStop objects that share the stop */
+	final private static HashMap<String, HashSet<RouteDirectionStop>> sSharedStops;
+	/** For holding the favorites */
+	private static Favorites sFavorites;
 
-	/**
-	 * This read the text file and instantiates it as a static JSONObject, data.
-	 * 
-	 * @param context
-	 *            application context
-	 */
-	public static void setConfigData(Context context) {
+	public static final String SHOW_ACTIVE_ROUTES_PREF;
+	public static final String[] DEFAULT_ALL_ROUTES;
 
-		setContext(context);
+	static {
+		sRouteData = new HashMap<String, Route>();
+		sSharedStops = new HashMap<String, HashSet<RouteDirectionStop>>();
+		DEFAULT_ALL_ROUTES = new String[] { "blue", "red", "trolley", "night",
+				"green", "emory" };
+		SHOW_ACTIVE_ROUTES_PREF = "showActiveRoutes";
+	}
 
-		InputStream is = (InputStream) context.getResources().openRawResource(R.raw.routeconfig);
-		BufferedReader br = new BufferedReader(new InputStreamReader(is));
-		StringBuffer lines = null;
+	/** Reads the data into memory if it already doesn't exist */
+	public static void setConfig(Context ctx) {
+		Data.sCtx = ctx;
+		if (sJsonDataResult == null)
+			readData();
+	}
+
+	/** Loads route information and populates the necessary data structures */
+	private static void readData() {
+		InputStream is = (InputStream) sCtx.getResources().openRawResource(
+				R.raw.routeconfig);
+		Reader reader = new InputStreamReader(is);
 		try {
-			lines = new StringBuffer();
-			String line = br.readLine();
-			while (line != null) {
-				lines.append(line);
-				line = br.readLine();
+			sJsonDataResult = new Gson().fromJson(reader, JSONDataResult.class);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
 
+		for (Route route : sJsonDataResult.route) {
+			for (Stop stop : route.stop) {
+				if (route.stopTagTable == null)
+					route.stopTagTable = new Hashtable<String, JSONDataResult.Route.Stop>();
+				route.stopTagTable.put(stop.tag, stop);
 			}
-		} catch (IOException ie) {
-			Log.e("ERROR", "Failed to parse file.");
-		}
+			sRouteData.put(route.tag, route);
 
-		try {
-			data = new JSONObject(lines.toString());
-		} catch (JSONException e) {
-			Log.e("ERROR", "Failed to make into JSON.");
-		}
+			for (Direction direction : route.direction)
+				for (PathStop pathStop : direction.stop) {
 
-	}
-  
-  /* Reads the path data for a given route */
-	public static JSONArray getRoutePathData(String route) {
-		
-		InputStream is = null;
-		
-		if (route.equals("red")) {
-			is = (InputStream) context.getResources().openRawResource(R.raw.redroute);
-		} else if (route.equals("blue")) {
-			is = (InputStream) context.getResources().openRawResource(R.raw.blueroute);
-		} else if (route.equals("green")) {
-			is = (InputStream) context.getResources().openRawResource(R.raw.greenroute);
-		} else if (route.equals("trolley")) {
-			is = (InputStream) context.getResources().openRawResource(R.raw.trolleyroute);
-		}
-		BufferedReader br = new BufferedReader(new InputStreamReader(is));
-		StringBuffer lines = null;
-		JSONObject redRouteData = null;
-		JSONArray redRoutePathData = null;
-		try {
-			lines = new StringBuffer();
-			String line = br.readLine();
-			while (line != null) {
-				lines.append(line);
-				line = br.readLine();
+					Stop stop = route.getStop(pathStop.tag);
 
-			}
-		} catch (IOException ie) {
-			Log.e("ERROR", "Failed to parse file.");
-		}
+					if (sSharedStops.get(stop.title) == null) {
+						sSharedStops.put(stop.title,
+								new HashSet<RouteDirectionStop>());
+					}
 
-		try {
-			redRouteData = new JSONObject(lines.toString());
-			redRoutePathData = redRouteData.getJSONObject("body").getJSONObject("route").getJSONArray("path");
-		} catch (JSONException e) {
-			Log.e("ERROR", "Failed to make into JSON.");
-		}
-		
-		return redRoutePathData;
-
-	}
-
-	public static JSONObject getData() {
-		return data;
-	}
-
-	private static void setContext(Context context2) {
-		context = context2;
-	}
-
-	/**
-	 * This returns the JSONObject for the specified route.
-	 * 
-	 * @param route
-	 *            the route to get the JSONObject from
-	 * @return the JSONObject for the given route.  */
-	public JSONObject getRoute(String route) {
-
-		JSONObject thisroute = new JSONObject();
-
-		try {
-			JSONArray routes = data.getJSONArray("route");
-			for (int i = 0; i < routes.length(); i++) {
-				thisroute = routes.getJSONObject(i);
-				if (route.equals(thisroute.getString("tag")))
-					return thisroute;
-			}
-
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-
-		return new JSONObject();
-	}
-
-	/**
-	 * This returns a 2D array of both the stop titles and stopids for the given
-	 * route.
-	 * 
-	 * @param routeStr
-	 *            the route to check
-	 * @return the 2D array
-	 */
-	public Object[] getStopList(String routeStr) {
-		Object[] finalList = { "", "" };
-		String[] strings = {};
-		String[] integers = {};
-		ArrayList<String> stopList = new ArrayList<String>();
-		ArrayList<String> stopListTags = new ArrayList<String>();
-
-		JSONArray stops;
-		try {
-			stops = getRoute(routeStr).getJSONArray("stop");
-			for (int i = 0; i < stops.length(); i++) {
-				String title = stops.getJSONObject(i).getString("title");
-				String stoptag = stops.getJSONObject(i).getString("tag");
-				if (title != null && stoptag != null) {
-					stopList.add(title);
-					stopListTags.add(stoptag);
+					sSharedStops.get(stop.title).add(
+							new RouteDirectionStop(route, direction, stop));
 				}
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
 		}
-		finalList[0] = stopList.toArray(strings);
-		finalList[1] = stopListTags.toArray(integers);
-		return finalList;
+
 	}
 
 	/**
-	 * This returns an array of all the given directions for a specified stop
-	 * 
-	 * @param routeStr
-	 *            the stop to get directions for
-	 * @return the String[] with directions
+	 * Finds all route/direction/stops with that share the same stop title.
+	 * Excludes Rds with given routeTag and directionTag
 	 */
-	public String[] getDirectionList(String routeStr) {
+	public static RouteDirectionStop[] getAllRdsWithStopTitle(String stopTitle,
+			String routeTag, String directionTag) {
+		ArrayList<RouteDirectionStop> rdsList = new ArrayList<RouteDirectionStop>();
 
-		String[] finalList = { "" };
-		ArrayList<String> directionList = new ArrayList<String>();
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(Data.sCtx);
+		boolean onlyActiveRoutes = prefs.getBoolean(
+				Data.SHOW_ACTIVE_ROUTES_PREF, false);
 
-		JSONArray directions;
+		// Get the default list of routes and overwrite if active routes is true
+		String[] currentRoutes = Data.DEFAULT_ALL_ROUTES;
+		if (onlyActiveRoutes)
+			currentRoutes = APIController.getActiveRoutesList(Data.sCtx);
 
-		try {
-			directions = getRoute(routeStr).getJSONArray("direction");
-			for (int i = 0; i < directions.length(); i++) {
-				directionList.add(directions.getJSONObject(i).getString("title"));
-			}
-		} catch (JSONException e) {
-			Log.e("ERROR", "Couldn't parse directions.");
+		/*
+		 * Iterate through route and direction if the rds matches the given
+		 * route/direction or is not in the activeRoutes then continue
+		 */
+		Iterator<RouteDirectionStop> iter = sSharedStops.get(stopTitle)
+				.iterator();
+		while (iter.hasNext()) {
+			RouteDirectionStop rds = iter.next();
+			if ((rds.route.tag.equals(routeTag) && rds.direction.tag
+					.equals(directionTag))
+					|| !isInArray(currentRoutes, rds.route.tag))
+				continue;
+			rdsList.add(rds);
 		}
 
-		return directionList.toArray(finalList);
+		// Sorting to put the blues, reds, etc together
+		Collections.sort(rdsList);
+		RouteDirectionStop[] rdsArray = {};
+		return rdsList.toArray(rdsArray);
 	}
 
-	/**
-	 * Returns the a dual list of stop titles and stop ids for a given route and
-	 * direction
-	 * 
-	 * @param route
-	 *            the given route
-	 * @param direction
-	 *            the given direction
-	 * @return the stop titles and stop ids in one array
-	 */
-	public Object[] getListForRoute(String route, String direction) {
+	public static Route getRouteWithTag(String routeTag) {
+		return sRouteData.get(routeTag);
+	}
 
-		Object[] finalList = { "", "" };
-		String[] strings = {};
-		String[] integers = {};
-		ArrayList<String> stopList = new ArrayList<String>();
-		ArrayList<String> stopListTags = new ArrayList<String>();
-		HashMap<String, String> stopHash = new HashMap<String, String>();
-
-		JSONArray directions;
-		JSONObject directionObj = null;
-		try {
-			directions = getRoute(route).getJSONArray("direction");
-			for (int i = 0; i < directions.length(); i++) {
-				if (directions.getJSONObject(i).getString("title").equals(direction)) {
-					directionObj = directions.getJSONObject(i);
-				}
-			}
-			JSONArray directionObjStops = directionObj.getJSONArray("stop");
-			for (int i = 0; i < directionObjStops.length(); i++) {
-				stopHash.put(directionObjStops.getJSONObject(i).getString("tag"), "Hi");
-			}
-
-			JSONArray allStops = getRoute(route).getJSONArray("stop");
-			for (int i = 0; i < allStops.length(); i++) {
-				if (stopHash.containsKey(allStops.getJSONObject(i).getString("tag")))
-					stopList.add(allStops.getJSONObject(i).getString("title"));
-				stopListTags.add(allStops.getJSONObject(i).getString("tag"));
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
+	public static int getColorFromRouteTag(String routeTag) {
+		int color = R.color.blue; // default color
+		if (routeTag.equals("red")) {
+			color = R.color.red;
+		} else if (routeTag.equals("blue")) {
+			color = R.color.blue;
+		} else if (routeTag.equals("green")) {
+			color = R.color.green;
+		} else if (routeTag.equals("trolley")) {
+			color = R.color.yellow;
+		} else if (routeTag.equals("night")) {
+			color = R.color.night;
+		} else if (routeTag.equals("emory")) {
+			color = R.color.pink;
 		}
-		finalList[0] = stopList.toArray(strings);
-		finalList[1] = stopListTags.toArray(integers);
-		return finalList;
+		return color;
+	}
+
+	public static Drawable getDrawableForRouteTag(String routeTag) {
+		int bg = R.drawable.redcell; // default cell type
+		if (routeTag.equals("red"))
+			bg = R.drawable.redcell;
+		else if (routeTag.equals("blue"))
+			bg = R.drawable.bluecell;
+		else if (routeTag.equals("green"))
+			bg = R.drawable.greencell;
+		else if (routeTag.equals("trolley"))
+			bg = R.drawable.yellowcell;
+		else if (routeTag.equals("emory"))
+			bg = R.drawable.pinkcell;
+		else if (routeTag.equals("night"))
+			bg = R.drawable.nightcell;
+		return sCtx.getResources().getDrawable(bg);
 
 	}
 
-  /* Capitalize a string */
+	/** Capitalize a string */
 	public static String capitalize(String route) {
 
-		char[] chars = route.toLowerCase().toCharArray();
+		char[] chars = route.toLowerCase(Locale.getDefault()).toCharArray();
 		boolean found = false;
 		for (int i = 0; i < chars.length; i++) {
 			if (!found && Character.isLetter(chars[i])) {
@@ -257,98 +197,123 @@ public class Data {
 					chars[i] = Character.toUpperCase(chars[i]);
 					found = true;
 				}
-			} else if (Character.isWhitespace(chars[i]) || chars[i] == '.' || chars[i] == '\'') {
+			} else if (Character.isWhitespace(chars[i]) || chars[i] == '.'
+					|| chars[i] == '\'') {
 				found = false;
 			}
 		}
 		return String.valueOf(chars);
 	}
 
-  /* Make ArrayList of integers into an int array */
-	public static int[] convertIntegers(List<Integer> integers) {
-		int[] ret = new int[integers.size()];
-		Iterator<Integer> iterator = integers.iterator();
-		for (int i = 0; i < ret.length; i++) {
-			ret[i] = iterator.next().intValue();
+	/* Reads the path data for a given route */
+	public static JSONArray getRoutePathData(String route) {
+
+		InputStream is = null;
+
+		if (route.equals("red")) {
+			is = (InputStream) sCtx.getResources().openRawResource(
+					R.raw.redroute);
+		} else if (route.equals("blue")) {
+			is = (InputStream) sCtx.getResources().openRawResource(
+					R.raw.blueroute);
+		} else if (route.equals("green")) {
+			is = (InputStream) sCtx.getResources().openRawResource(
+					R.raw.greenroute);
+		} else if (route.equals("trolley")) {
+			is = (InputStream) sCtx.getResources().openRawResource(
+					R.raw.trolleyroute);
 		}
-		return ret;
-	}
-
-	public static String[] convertToStringArray(ArrayList<String> list) {
-
-		String[] ret = new String[list.size()];
-		Iterator<String> iterator = list.iterator();
-		for (int i = 0; i < ret.length; i++) {
-			ret[i] = iterator.next();
-		}
-		return ret;
-
-	}
-
-	public static Object convertToBooleanArray(ArrayList<Boolean> list) {
-		boolean[] ret = new boolean[list.size()];
-		Iterator<Boolean> iterator = list.iterator();
-		for (int i = 0; i < ret.length; i++) {
-			ret[i] = iterator.next();
-		}
-		return ret;
-	}
-
-	public static JSONObject readStopData() {
-		JSONObject stopData = null;
+		BufferedReader br = new BufferedReader(new InputStreamReader(is));
+		StringBuffer lines = null;
+		JSONObject routeData = null;
+		JSONArray routePathData = null;
 		try {
-			BufferedReader input = new BufferedReader(new FileReader(context.getFilesDir().toString()
-					+ "/favoritestop.txt"));
-			stopData = new JSONObject(input.readLine());
+			lines = new StringBuffer();
+			String line = br.readLine();
+			while (line != null) {
+				lines.append(line);
+				line = br.readLine();
+
+			}
+		} catch (IOException ie) {
+			Log.e("ERROR", "Failed to parse file.");
+		}
+
+		try {
+			routeData = new JSONObject(lines.toString());
+			routePathData = routeData.getJSONObject("body")
+					.getJSONObject("route").getJSONArray("path");
+		} catch (JSONException e) {
+			Log.e("ERROR", "Failed to make into JSON.");
+		}
+
+		return routePathData;
+
+	}
+
+	public static boolean isRouteActive(String routeTag) {
+		String[] activeRoutes = APIController.getActiveRoutesList(Data.sCtx);
+		return isInArray(activeRoutes, routeTag);
+	}
+
+	public static boolean isInArray(String[] arr, String str) {
+		for (String route : arr) {
+			if (route.equals(str))
+				return true;
+		}
+		return false;
+	}
+
+	public static boolean toggleFavorite(Favorite favorite) {
+		if (Data.sFavorites == null)
+			loadFavoritesData();
+		boolean ret = sFavorites.toggleFavorite(favorite);
+		saveFavoriteData();
+		return ret;
+
+	}
+
+	private static void loadFavoritesData() {
+		try {
+			FileInputStream fis = sCtx.openFileInput("favorites.txt");
+			Reader reader = new InputStreamReader(fis);
+			Data.sFavorites = new Gson().fromJson(reader, Favorites.class);
+		} catch (Exception e) {
+			System.out.println(e);
+			Data.sFavorites = new Favorites();
+		}
+	}
+
+	private static void saveFavoriteData() {
+		try {
+			String toSave = new Gson().toJson(Data.sFavorites);
+			FileOutputStream fos = Data.sCtx.openFileOutput("favorites.txt",
+					Context.MODE_PRIVATE);
+			fos.write(toSave.getBytes());
+			fos.close();
 
 		} catch (FileNotFoundException e) {
-			Log.i("Data.load()", "Properties.txt not found.");
-			e.printStackTrace();
-		} catch (JSONException e) {
-			Log.i("Data.load()", "Error converting workingData to JSONObject.");
 			e.printStackTrace();
 		} catch (IOException e) {
-			Log.i("Data.load()", "Error parsing Properties.txt.");
 			e.printStackTrace();
 		}
-		return stopData;
 	}
 
-	private static void writeStopData(JSONObject settings) {
-
-		try {
-			Writer output = new BufferedWriter(new FileWriter(context.getFilesDir().toString() + "/favoritestop.txt"));
-			output.write(settings.toString());
-			output.close();
-		} catch (IOException e) {
-			Log.i("Data.save()", "Error loading file.");
-			e.printStackTrace();
-		}
-
+	public static boolean isFavorite(Favorite favorite) {
+		if (Data.sFavorites == null)
+			loadFavoritesData();
+		return Data.sFavorites.contains(favorite);
 	}
 
-	public static ArrayList<String> getAllRoutesForStop(String stoptag) {
-
-		ArrayList<String> routesForThisStop = new ArrayList<String>();
-
-		try {
-			JSONArray routes = data.getJSONArray("route");
-			for (int i = 0; i < routes.length() - 1; i++) {
-				JSONObject route = routes.getJSONObject(i);
-				String routeName = route.getString("tag");
-				JSONArray stops = route.getJSONArray("stop");
-				for (int j = 0; j < stops.length() - 1; j++) {
-					JSONObject stop = stops.getJSONObject(j);
-					if (stop.getString("tag").equals(stoptag)) {
-						routesForThisStop.add(routeName);
-					}
-				}
-			}
-		} catch (JSONException je) {
-			// Do nothing. Just don't add any routes...
-		}
-		return routesForThisStop;
-
+	public static int getFavoritesSize() {
+		if (Data.sFavorites == null)
+			loadFavoritesData();
+		return Data.sFavorites.getSize();
 	}
 
+	public static Favorite getFavorite(int index) {
+		if (Data.sFavorites == null)
+			loadFavoritesData();
+		return Data.sFavorites.getFavorite(index);
+	}
 }

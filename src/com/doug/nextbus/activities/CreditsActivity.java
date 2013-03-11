@@ -1,113 +1,120 @@
 package com.doug.nextbus.activities;
 
-import com.doug.nextbus.R;
-import com.doug.nextbus.R.id;
-import com.doug.nextbus.R.layout;
-import com.doug.nextbus.R.menu;
-
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
+
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.doug.nextbus.R;
+import com.doug.nextbus.RoboSherlock.RoboSherlockActivity;
 
 /*
  * The credits activity. Shows simple contact links. 
  */
-public class CreditsActivity extends Activity {
+public class CreditsActivity extends RoboSherlockActivity {
 
-  static ListView contactList;
-  static String[] contactItemStrings = { "@dougblackgt", "doug@dougblack.io", "dougblack.io", "Google+",
-    "All data copyright Georgia Tech Campus 2011" };
-  static ImageView backButton;
+	static ListView contactList;
+	static String[] contactItemStrings = { "@dougblackgt", "doug@dougblack.io",
+			"dougblack.io", "Google+",
+			"All data copyright Georgia Tech Campus 2011" };
 
-  public void onCreate(Bundle savedInstance) {
+	@Override
+	public void onCreate(Bundle savedInstance) {
+		super.onCreate(savedInstance);
+		setContentView(R.layout.credits);
 
-    super.onCreate(savedInstance);
-    setContentView(R.layout.credits);
+		contactList = (ListView) findViewById(R.id.contactList);
 
-    contactList = (ListView) findViewById(R.id.contactList);
-    backButton = (ImageView) findViewById(R.id.creditsBackButton);
+		contactList.setAdapter(new ArrayAdapter<String>(this,
+				android.R.layout.simple_list_item_1, contactItemStrings));
 
-    contactList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, contactItemStrings));
+		contactList.setOnItemClickListener(new OnItemClickListener() {
 
-    backButton.setOnTouchListener(new OnTouchListener() {
-      public boolean onTouch(View arg0, MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-          backButton.setBackgroundColor(R.color.black);
-          return true;
-        } else if (event.getAction() == MotionEvent.ACTION_UP) {
-          backButton.setBackgroundColor(0);
-          finish();
-          return true;
-        }
-        return true;
-      }
-    });
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
 
-    contactList.setOnItemClickListener(new OnItemClickListener() {
+				/* Handles contact-link clicks. */
+				switch (position) {
 
-      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				/* TWITTER */
+				case 0:
+					Intent openBrowserToTwitterProfile = new Intent(
+							Intent.ACTION_VIEW, Uri
+									.parse("http://twitter.com/DougBlackGT"));
+					startActivity(openBrowserToTwitterProfile);
+					break;
 
-        /* Handles contact-link clicks. */
-        switch (position) {
+				/* EMAIL */
+				case 1:
+					Intent emailIntent = new Intent(
+							android.content.Intent.ACTION_SEND);
+					emailIntent.setType("plain/text");
+					emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
+							new String[] { "doug@dougblack.io" });
+					emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
+							"Feedback on GT NextBus");
+					startActivity(emailIntent);
+					break;
+				/* WEBSITE */
+				case 2:
+					Intent openBrowserToSite = new Intent(Intent.ACTION_VIEW,
+							Uri.parse("http://www.dougblack.io"));
+					startActivity(openBrowserToSite);
+					break;
 
-          /* TWITTER */
-          case 0:
-            Intent openBrowserToTwitterProfile = new Intent(Intent.ACTION_VIEW, Uri
-              .parse("http://twitter.com/DougBlackGT"));
-            startActivity(openBrowserToTwitterProfile);
-            break;
+				/* GOOGLE+ */
+				case 3:
+					Intent openBrowserToGooglePlus = new Intent(
+							Intent.ACTION_VIEW,
+							Uri.parse("https://profiles.google.com/u/0/101188344020658014431"));
+					startActivity(openBrowserToGooglePlus);
+					break;
+				}
+			}
+		});
+	}
 
-            /* EMAIL */
-          case 1:
-            Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
-            emailIntent.setType("plain/text");
-            emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[] { "doug@dougblack.io" });
-            emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Feedback on GT NextBus");
-            startActivity(emailIntent);
-            break;
-            /* WEBSITE */
-          case 2:
-            Intent openBrowserToSite = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.dougblack.io"));
-            startActivity(openBrowserToSite);
-            break;
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportMenuInflater().inflate(R.menu.about_menu, menu);
+		return true;
+	}
 
-            /* GOOGLE+ */
-          case 3:
-            Intent openBrowserToGooglePlus = new Intent(Intent.ACTION_VIEW, Uri
-                .parse("https://profiles.google.com/u/0/101188344020658014431"));
-            startActivity(openBrowserToGooglePlus);
-            break;
-        }
-      }
-    });
-  } 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.aboutmenusitem:
+			Intent aboutActivity = new Intent(this, CreditsActivity.class);
+			startActivity(aboutActivity);
+			return true;
+		case R.id.preferencesmenuitem:
+			Intent preferenceIntent = new Intent(this,
+					PreferencesActivity.class);
+			startActivity(preferenceIntent);
+			return true;
+		case R.id.favoritesitem:
+			Intent favoriteIntent = new Intent(getApplicationContext(),
+					FavoritesActivity.class);
+			startActivity(favoriteIntent);
+			return true;
+		case R.id.mapsitem:
+			Intent mapIntent = new Intent(getApplicationContext(),
+					MapViewActivity.class);
+			startActivity(mapIntent);
+			return true;
+		case android.R.id.home:
+			finish();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
 
-  public boolean onCreateOptionsMenu(Menu menu) {
-    MenuInflater inflater = getMenuInflater();
-    inflater.inflate(R.menu.about_menu, menu);
-    return true;
-  }
-
-  public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-      case R.id.tohome:
-        Intent intent = new Intent(getApplicationContext(), RoutePickerActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        startActivity(intent);
-      default:
-        return super.onOptionsItemSelected(item);
-    }
-  }
 }
