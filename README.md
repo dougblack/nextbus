@@ -24,12 +24,12 @@ GT NextBus
 
 
 
-**My preferences for code are:**
+**Preferences for code are:**
 
 - Prefer smaller, more compact code.
 - Try to follow the [Android Code Style Documentation](http://source.android.com/source/code-style.html) as much as possible.
 - Move getter/setters/trivial/overrided methods to bottom of file.
-- Annotate @Overrides to keep help understand the purpose of a method.
+- Annotate @Overrides to help understand the purpose of a method.
 - If there are multiple Event Listeners being created in the onCreate method, move them to a separate "eventListeners(args)" to keep the onCreate method clean.
 
 Quick Documentation

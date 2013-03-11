@@ -1,7 +1,8 @@
 package com.doug.nextbus.custom;
 
+import java.util.Locale;
+
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -47,7 +48,8 @@ public class ArrivalsAdapter extends BaseAdapter {
 		int routeColor = Data.getColorFromRouteTag(rds.route.tag);
 		routeFavView.setTextColor(mCtx.getResources().getColor(routeColor));
 
-		routeFavView.setText(rds.route.tag.substring(0, 1).toUpperCase());
+		routeFavView.setText(rds.route.tag.substring(0, 1).toUpperCase(
+				Locale.ENGLISH));
 		directionFavView.setText(Data.capitalize(rds.direction.title));
 		// Drawable drawable = Data.getDrawableForRouteTag(rds.route.tag);
 		// vi.setBackgroundDrawable(drawable);

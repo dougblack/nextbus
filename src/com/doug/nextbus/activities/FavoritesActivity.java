@@ -39,7 +39,7 @@ public class FavoritesActivity extends RoboSherlockActivity {
 		colorBar.setLayoutParams(new LinearLayout.LayoutParams(
 				LinearLayout.LayoutParams.WRAP_CONTENT, 3));
 
-		// Just getting rid of these
+		// Just getting rid of these for now
 		((LinearLayout) directionTextView.getParent())
 				.removeView(directionTextView);
 		((LinearLayout) colorBar.getParent()).removeView(colorBar);
