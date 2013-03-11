@@ -15,12 +15,15 @@
  */
 package com.doug.nextbus.RoboSherlock;
 
+import android.R.style;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
+import com.doug.nextbus.R;
 import com.google.inject.Inject;
 import com.google.inject.Key;
 

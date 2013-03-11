@@ -15,6 +15,9 @@
  */
 package com.doug.nextbus.RoboSherlock;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import roboguice.RoboGuice;
 import roboguice.activity.event.OnActivityResultEvent;
 import roboguice.activity.event.OnConfigurationChangedEvent;
@@ -41,9 +44,6 @@ import android.preference.PreferenceScreen;
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.google.inject.Inject;
 import com.google.inject.Key;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * An example of how to make your own Robo-enabled Sherlock activity. Feel free

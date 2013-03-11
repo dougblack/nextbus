@@ -3,6 +3,16 @@
 
     <color name="themecolor">#000000</color>
 
-    <style name="Theme.MySherlock" parent="Theme.Sherlock"></style>
+    <style name="Theme.Styled" parent="Theme.Sherlock">
+        <item name="actionBarStyle">@style/Widget.Styled.ActionBar</item>
+        <item name="actionBarSize">50dp</item>
+        <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar</item>
+        <item name="android:actionBarSize">50dp</item>
+    </style>
+    
+    <style name="Widget.Styled.ActionBar" parent="Widget.Sherlock.ActionBar">
+        <item name="android:background">@drawable/actionbarbackground</item>
+        <item name="background">@drawable/actionbarbackground</item>
+    </style>
 
 </resources>
