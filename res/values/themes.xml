@@ -5,14 +5,21 @@
 
     <style name="Theme.Styled" parent="Theme.Sherlock">
         <item name="actionBarStyle">@style/Widget.Styled.ActionBar</item>
-        <item name="actionBarSize">50dp</item>"
+        <item name="actionBarSize">50dp</item>
         <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar</item>
         <item name="android:actionBarSize">50dp</item>
     </style>
-    
+
     <style name="Widget.Styled.ActionBar" parent="Widget.Sherlock.ActionBar">
         <item name="android:background">@drawable/actionbarbackground</item>
         <item name="background">@drawable/actionbarbackground</item>
+        <item name="android:titleTextStyle">@style/Widget.Styled.ActionBar.TitleTextStyle</item>
+        <item name="titleTextStyle">@style/Widget.Styled.ActionBar.TitleTextStyle</item>
+    </style>
+
+    <style name="Widget.Styled.ActionBar.TitleTextStyle" parent="TextAppearance.Sherlock.Widget.ActionBar.Title">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">20sp</item>
     </style>
 
 </resources>

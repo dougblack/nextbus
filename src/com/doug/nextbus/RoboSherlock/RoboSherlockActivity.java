@@ -15,17 +15,8 @@
  */
 package com.doug.nextbus.RoboSherlock;
 
-import android.R.style;
-import android.content.Intent;
-import android.content.res.Configuration;
-import android.graphics.drawable.ColorDrawable;
-import android.os.Bundle;
-
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
-import com.doug.nextbus.R;
-import com.google.inject.Inject;
-import com.google.inject.Key;
+import java.util.HashMap;
+import java.util.Map;
 
 import roboguice.RoboGuice;
 import roboguice.activity.event.OnActivityResultEvent;
@@ -43,9 +34,15 @@ import roboguice.event.EventManager;
 import roboguice.inject.ContentViewListener;
 import roboguice.inject.RoboInjector;
 import roboguice.util.RoboContext;
+import android.content.Intent;
+import android.content.res.Configuration;
+import android.os.Bundle;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.doug.nextbus.R;
+import com.google.inject.Inject;
+import com.google.inject.Key;
 
 /**
  * An example of how to make your own Robo-enabled Sherlock activity. Feel free
