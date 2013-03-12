@@ -14,7 +14,6 @@ public class FavoritesComparator implements Comparator<Favorite> {
 				return -1;
 			else
 				return 1;
-
 		}
 
 		return lhs.toString().compareTo(rhs.toString());

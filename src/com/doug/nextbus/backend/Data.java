@@ -27,10 +27,10 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.doug.nextbus.R;
-import com.doug.nextbus.backend.DataGSON.Route;
-import com.doug.nextbus.backend.DataGSON.Route.Direction;
-import com.doug.nextbus.backend.DataGSON.Route.PathStop;
-import com.doug.nextbus.backend.DataGSON.Route.Stop;
+import com.doug.nextbus.backend.RouteDataGSON.Route;
+import com.doug.nextbus.backend.RouteDataGSON.Route.Direction;
+import com.doug.nextbus.backend.RouteDataGSON.Route.PathStop;
+import com.doug.nextbus.backend.RouteDataGSON.Route.Stop;
 import com.google.gson.Gson;
 
 /**
@@ -43,7 +43,7 @@ public class Data {
 
 	private static Context sCtx;
 	/** Used for JSON parsing */
-	private static DataGSON sDataGSON;
+	private static RouteDataGSON sRouteDataGSON;
 	/** Key: routeTag, Value: Route object */
 	final private static HashMap<String, Route> sRouteData;
 	/** Key: stopTitle, Value: RouteDirectionStop objects that share the stop */
@@ -65,7 +65,7 @@ public class Data {
 	/** Reads the data into memory if it already doesn't exist */
 	public static void setConfig(Context ctx) {
 		Data.sCtx = ctx;
-		if (sDataGSON == null)
+		if (sRouteDataGSON == null)
 			readData();
 	}
 
@@ -75,15 +75,15 @@ public class Data {
 				R.raw.routeconfig);
 		Reader reader = new InputStreamReader(is);
 		try {
-			sDataGSON = new Gson().fromJson(reader, DataGSON.class);
+			sRouteDataGSON = new Gson().fromJson(reader, RouteDataGSON.class);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
 
-		for (Route route : sDataGSON.route) {
+		for (Route route : sRouteDataGSON.route) {
 			for (Stop stop : route.stop) {
 				if (route.stopTagTable == null)
-					route.stopTagTable = new Hashtable<String, DataGSON.Route.Stop>();
+					route.stopTagTable = new Hashtable<String, RouteDataGSON.Route.Stop>();
 				route.stopTagTable.put(stop.tag, stop);
 			}
 			sRouteData.put(route.tag, route);

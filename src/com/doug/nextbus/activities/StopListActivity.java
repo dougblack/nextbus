@@ -17,9 +17,9 @@ import com.doug.nextbus.R;
 import com.doug.nextbus.RoboSherlock.RoboSherlockActivity;
 import com.doug.nextbus.backend.Data;
 import com.doug.nextbus.backend.MenuClass;
-import com.doug.nextbus.backend.DataGSON.Route;
-import com.doug.nextbus.backend.DataGSON.Route.Direction;
-import com.doug.nextbus.backend.DataGSON.Route.Stop;
+import com.doug.nextbus.backend.RouteDataGSON.Route;
+import com.doug.nextbus.backend.RouteDataGSON.Route.Direction;
+import com.doug.nextbus.backend.RouteDataGSON.Route.Stop;
 
 /* This activity shows a list of stops. */
 public class StopListActivity extends RoboSherlockActivity {

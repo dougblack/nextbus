@@ -1,8 +1,8 @@
 package com.doug.nextbus.backend;
 
-import com.doug.nextbus.backend.DataGSON.Route;
-import com.doug.nextbus.backend.DataGSON.Route.Direction;
-import com.doug.nextbus.backend.DataGSON.Route.Stop;
+import com.doug.nextbus.backend.RouteDataGSON.Route;
+import com.doug.nextbus.backend.RouteDataGSON.Route.Direction;
+import com.doug.nextbus.backend.RouteDataGSON.Route.Stop;
 
 /** Stores a specific route, direction, and stop */
 public class RouteDirectionStop implements Comparable<RouteDirectionStop> {
