@@ -27,10 +27,10 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.doug.nextbus.R;
-import com.doug.nextbus.backend.JSONDataResult.Route;
-import com.doug.nextbus.backend.JSONDataResult.Route.Direction;
-import com.doug.nextbus.backend.JSONDataResult.Route.PathStop;
-import com.doug.nextbus.backend.JSONDataResult.Route.Stop;
+import com.doug.nextbus.backend.DataGSON.Route;
+import com.doug.nextbus.backend.DataGSON.Route.Direction;
+import com.doug.nextbus.backend.DataGSON.Route.PathStop;
+import com.doug.nextbus.backend.DataGSON.Route.Stop;
 import com.google.gson.Gson;
 
 /**
@@ -43,13 +43,13 @@ public class Data {
 
 	private static Context sCtx;
 	/** Used for JSON parsing */
-	private static JSONDataResult sJsonDataResult;
+	private static DataGSON sJsonDataResult;
 	/** Key: routeTag, Value: Route object */
 	final private static HashMap<String, Route> sRouteData;
 	/** Key: stopTitle, Value: RouteDirectionStop objects that share the stop */
 	final private static HashMap<String, HashSet<RouteDirectionStop>> sSharedStops;
 	/** For holding the favorites */
-	private static Favorites sFavorites;
+	private static FavoritesGSON sFavorites;
 
 	public static final String SHOW_ACTIVE_ROUTES_PREF;
 	public static final String[] DEFAULT_ALL_ROUTES;
@@ -75,7 +75,7 @@ public class Data {
 				R.raw.routeconfig);
 		Reader reader = new InputStreamReader(is);
 		try {
-			sJsonDataResult = new Gson().fromJson(reader, JSONDataResult.class);
+			sJsonDataResult = new Gson().fromJson(reader, DataGSON.class);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -83,7 +83,7 @@ public class Data {
 		for (Route route : sJsonDataResult.route) {
 			for (Stop stop : route.stop) {
 				if (route.stopTagTable == null)
-					route.stopTagTable = new Hashtable<String, JSONDataResult.Route.Stop>();
+					route.stopTagTable = new Hashtable<String, DataGSON.Route.Stop>();
 				route.stopTagTable.put(stop.tag, stop);
 			}
 			sRouteData.put(route.tag, route);
@@ -277,10 +277,10 @@ public class Data {
 		try {
 			FileInputStream fis = sCtx.openFileInput("favorites.txt");
 			Reader reader = new InputStreamReader(fis);
-			Data.sFavorites = new Gson().fromJson(reader, Favorites.class);
+			Data.sFavorites = new Gson().fromJson(reader, FavoritesGSON.class);
 		} catch (Exception e) {
 			System.out.println(e);
-			Data.sFavorites = new Favorites();
+			Data.sFavorites = new FavoritesGSON();
 		}
 	}
 

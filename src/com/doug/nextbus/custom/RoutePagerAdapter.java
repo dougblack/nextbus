@@ -16,9 +16,9 @@ import com.doug.nextbus.R;
 import com.doug.nextbus.activities.StopListActivity;
 import com.doug.nextbus.activities.StopViewActivity;
 import com.doug.nextbus.backend.Data;
-import com.doug.nextbus.backend.JSONDataResult.Route;
-import com.doug.nextbus.backend.JSONDataResult.Route.Direction;
-import com.doug.nextbus.backend.JSONDataResult.Route.Stop;
+import com.doug.nextbus.backend.DataGSON.Route;
+import com.doug.nextbus.backend.DataGSON.Route.Direction;
+import com.doug.nextbus.backend.DataGSON.Route.Stop;
 
 /** The adapter for the swiping between route pages for the RoutePickerActivity */
 public class RoutePagerAdapter extends PagerAdapter {

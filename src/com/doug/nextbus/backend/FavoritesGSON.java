@@ -3,7 +3,7 @@ package com.doug.nextbus.backend;
 import java.util.ArrayList;
 
 // Once I figure out how to use HashSets with GSON, then I won't have to do a linear search
-public class Favorites {
+public class FavoritesGSON {
 
 	private ArrayList<Favorite> mFavs = new ArrayList<Favorite>();
 
