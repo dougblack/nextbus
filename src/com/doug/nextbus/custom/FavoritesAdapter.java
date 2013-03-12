@@ -30,7 +30,7 @@ public class FavoritesAdapter extends BaseAdapter {
 		TextView stopFavView = (TextView) vi.findViewById(R.id.stopFavView);
 
 		Favorite favorite = Data.getFavorite(position);
-		//		vi.setBackgroundDrawable(Data.getDrawableForRouteTag(favorite.routeTag));
+		// vi.setBackgroundDrawable(Data.getDrawableForRouteTag(favorite.routeTag));
 
 		routeFavView.setText(favorite.routeTag.substring(0, 1).toUpperCase());
 		directionFavView.setText(favorite.directionTitle);
@@ -49,7 +49,7 @@ public class FavoritesAdapter extends BaseAdapter {
 		// default is white
 
 		if (showActiveRoutes && !Data.isRouteActive(favorite.routeTag)) {
-			color = mCtx.getResources().getColor(R.color.fade2);
+			color = mCtx.getResources().getColor(R.color.fade3);
 		}
 
 		// routeFavView.setTextColor(color);
