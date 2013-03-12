@@ -74,11 +74,12 @@
         android:id="@+id/favoriteButton"
         android:layout_width="45dp"
         android:layout_height="45dp"
+        android:scaleType="fitXY"
         android:layout_alignParentLeft="true"
         android:background="@null"
         android:gravity="center"
         android:padding="10dp"
-        android:src="@drawable/rate_star_big_on_holo_light" />
+        android:src="@drawable/toadd_favorite" />
 
     <TextView
         android:id="@+id/thirdArrival"

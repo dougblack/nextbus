@@ -205,7 +205,7 @@ public class Data {
 		return String.valueOf(chars);
 	}
 
-	/* Reads the path data for a given route */
+	/** Reads the path data for a given route */
 	public static JSONArray getRoutePathData(String route) {
 
 		InputStream is = null;

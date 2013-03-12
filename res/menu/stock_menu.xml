@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/favoritesitem"
-        android:icon="@drawable/rate_star_big_on_holo_light"
+        android:icon="@drawable/default_favorite"
         android:showAsAction="ifRoom"
         android:title="Favorites"/>
     <item
