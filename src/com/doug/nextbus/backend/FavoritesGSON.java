@@ -1,6 +1,7 @@
 package com.doug.nextbus.backend;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 // Once I figure out how to use HashSets with GSON, then I won't have to do a linear search
 public class FavoritesGSON {
@@ -27,6 +28,10 @@ public class FavoritesGSON {
 
 	public int getSize() {
 		return mFavs.size();
+	}
+
+	public void sort() {
+		Collections.sort(mFavs, new FavoritesComparator());
 	}
 
 }

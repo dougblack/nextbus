@@ -43,7 +43,7 @@ public class Data {
 
 	private static Context sCtx;
 	/** Used for JSON parsing */
-	private static DataGSON sJsonDataResult;
+	private static DataGSON sDataGSON;
 	/** Key: routeTag, Value: Route object */
 	final private static HashMap<String, Route> sRouteData;
 	/** Key: stopTitle, Value: RouteDirectionStop objects that share the stop */
@@ -65,7 +65,7 @@ public class Data {
 	/** Reads the data into memory if it already doesn't exist */
 	public static void setConfig(Context ctx) {
 		Data.sCtx = ctx;
-		if (sJsonDataResult == null)
+		if (sDataGSON == null)
 			readData();
 	}
 
@@ -75,12 +75,12 @@ public class Data {
 				R.raw.routeconfig);
 		Reader reader = new InputStreamReader(is);
 		try {
-			sJsonDataResult = new Gson().fromJson(reader, DataGSON.class);
+			sDataGSON = new Gson().fromJson(reader, DataGSON.class);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
 
-		for (Route route : sJsonDataResult.route) {
+		for (Route route : sDataGSON.route) {
 			for (Stop stop : route.stop) {
 				if (route.stopTagTable == null)
 					route.stopTagTable = new Hashtable<String, DataGSON.Route.Stop>();
@@ -286,6 +286,7 @@ public class Data {
 
 	private static void saveFavoriteData() {
 		try {
+			Data.sFavorites.sort();
 			String toSave = new Gson().toJson(Data.sFavorites);
 			FileOutputStream fos = Data.sCtx.openFileOutput("favorites.txt",
 					Context.MODE_PRIVATE);

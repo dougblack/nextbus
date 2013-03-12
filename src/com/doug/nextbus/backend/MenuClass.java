@@ -42,8 +42,7 @@ public class MenuClass {
 			ctx.startActivity(preferenceIntent);
 			return true;
 		case R.id.favoritesitem:
-			Intent favoriteIntent = new Intent(ctx.getApplicationContext(),
-					FavoritesActivity.class);
+			Intent favoriteIntent = FavoritesActivity.createIntent(ctx);
 			ctx.startActivity(favoriteIntent);
 			return true;
 		case R.id.mapsitem:

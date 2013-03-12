@@ -1,6 +1,8 @@
 package com.doug.nextbus.activities;
 
 import roboguice.inject.InjectView;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -25,6 +27,13 @@ public class FavoritesActivity extends RoboSherlockActivity {
 	@InjectView(R.id.colorbar) private View colorBar;
 
 	FavoritesAdapter mFavoritesAdapter;
+
+	public static Intent createIntent(Context ctx) {
+		Intent intent = new Intent(ctx, FavoritesActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		return intent;
+
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

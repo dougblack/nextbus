@@ -112,9 +112,7 @@ public class RoutePickerActivity extends RoboSherlockActivity implements
 		MenuClass.onCreateOptionsMenu(this, menu, R.menu.stock_menu,
 				disabledItems);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-
 		return true;
-
 	}
 
 	@Override
