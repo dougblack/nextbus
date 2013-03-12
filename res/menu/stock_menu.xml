@@ -14,12 +14,12 @@
     <item
         android:id="@+id/preferencesmenuitem"
         android:icon="@drawable/ic_menu_preferences"
-        android:showAsAction="never"
+        android:showAsAction="ifRoom"
         android:title="Settings"/>
     <item
         android:id="@+id/aboutmenusitem"
         android:icon="@drawable/ic_menu_info_details"
-        android:showAsAction="never"
+        android:showAsAction="ifRoom"
         android:title="About"/>
 
 </menu>

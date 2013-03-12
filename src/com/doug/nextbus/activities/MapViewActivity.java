@@ -342,9 +342,7 @@ public class MapViewActivity extends RoboSherlockMapActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportMenuInflater().inflate(R.menu.stock_menu, menu);
-		menu.findItem(R.id.mapsitem).setVisible(false);
-		menu.findItem(R.id.favoritesitem).setVisible(false);
+		getSupportMenuInflater().inflate(R.menu.no_menu, menu);
 
 		return true;
 	}

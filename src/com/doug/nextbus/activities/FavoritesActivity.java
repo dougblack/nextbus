@@ -15,6 +15,7 @@ import com.doug.nextbus.R;
 import com.doug.nextbus.RoboSherlock.RoboSherlockActivity;
 import com.doug.nextbus.backend.Data;
 import com.doug.nextbus.backend.Favorite;
+import com.doug.nextbus.backend.MenuClass;
 import com.doug.nextbus.custom.FavoritesAdapter;
 
 public class FavoritesActivity extends RoboSherlockActivity {
@@ -69,23 +70,15 @@ public class FavoritesActivity extends RoboSherlockActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportMenuInflater().inflate(R.menu.stock_menu, menu);
-		menu.findItem(R.id.favoritesitem).setVisible(false);
-		menu.findItem(R.id.mapsitem).setVisible(false);
-
-		return true;
+		int[] disabledItems = { R.id.favoritesitem, R.id.mapsitem,
+				R.id.aboutmenusitem };
+		return MenuClass.onCreateOptionsMenu(this, menu, R.menu.stock_menu,
+				disabledItems);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			finish();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
+		return MenuClass.onOptionsItemSelected(this, item);
 	}
 
 }

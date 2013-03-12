@@ -13,6 +13,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.doug.nextbus.R;
 import com.doug.nextbus.RoboSherlock.RoboSherlockActivity;
+import com.doug.nextbus.backend.MenuClass;
 
 /*
  * The credits activity. Shows simple contact links. 
@@ -82,39 +83,14 @@ public class CreditsActivity extends RoboSherlockActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportMenuInflater().inflate(R.menu.about_menu, menu);
-		return true;
+		int[] disabledItems = {};
+		return MenuClass.onCreateOptionsMenu(this, menu, R.menu.no_menu,
+				disabledItems);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.aboutmenusitem:
-			Intent aboutActivity = new Intent(this, CreditsActivity.class);
-			startActivity(aboutActivity);
-			return true;
-		case R.id.preferencesmenuitem:
-			Intent preferenceIntent = new Intent(this,
-					PreferencesActivity.class);
-			startActivity(preferenceIntent);
-			return true;
-		case R.id.favoritesitem:
-			Intent favoriteIntent = new Intent(getApplicationContext(),
-					FavoritesActivity.class);
-			startActivity(favoriteIntent);
-			return true;
-		case R.id.mapsitem:
-			Intent mapIntent = new Intent(getApplicationContext(),
-					MapViewActivity.class);
-			startActivity(mapIntent);
-			return true;
-		case android.R.id.home:
-			finish();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
+		return MenuClass.onOptionsItemSelected(this, item);
 	}
 
 }
