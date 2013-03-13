@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/colorbar"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="40dp"
             android:gravity="center"
             android:text="Dep."
             android:textColor="@color/white"
@@ -47,8 +47,9 @@
             android:id="@+id/favoriteButton"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:layout_alignParentLeft="false"
-            android:layout_alignParentTop="false"
+            android:layout_below="@id/colorbar"
+            android:layout_marginLeft="34dp"
+            android:layout_marginTop="@dimen/top_offset_icons_stop_view"
             android:background="@null"
             android:padding="10dp"
             android:scaleType="fitStart"
@@ -59,8 +60,9 @@
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/firstArrival"
+            android:layout_below="@id/colorbar"
             android:layout_marginRight="34dp"
+            android:layout_marginTop="@dimen/top_offset_icons_stop_view"
             android:src="@drawable/ic_menu_refresh" />
 
         <ProgressBar
@@ -69,8 +71,9 @@
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/firstArrival"
+            android:layout_below="@id/colorbar"
             android:layout_marginRight="34dp"
+            android:layout_marginTop="@dimen/top_offset_icons_stop_view"
             android:padding="3dp" />
     </RelativeLayout>
 

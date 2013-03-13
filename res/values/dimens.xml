@@ -1,3 +1,4 @@
 <resources>
 
-</resources>
+
+    <dimen name="top_offset_icons_stop_view">10dp</dimen></resources>
