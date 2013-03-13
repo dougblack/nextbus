@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/favoritesitem"
-        android:icon="@drawable/default_favorite"
+        android:icon="@drawable/favorite_default"
         android:showAsAction="ifRoom"
         android:title="Favorites"/>
     <item

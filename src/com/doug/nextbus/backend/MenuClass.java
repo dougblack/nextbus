@@ -13,14 +13,6 @@ import com.doug.nextbus.activities.PreferencesActivity;
 
 public class MenuClass {
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
-	}
-
 	public static boolean onCreateOptionsMenu(RoboSherlockActivity ctx,
 			Menu menu, int menuRes, int[] disabledItems) {
 		ctx.getSupportActionBar().setDisplayHomeAsUpEnabled(true);

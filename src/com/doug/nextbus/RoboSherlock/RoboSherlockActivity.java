@@ -40,7 +40,6 @@ import android.os.Bundle;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
-import com.doug.nextbus.R;
 import com.google.inject.Inject;
 import com.google.inject.Key;
 

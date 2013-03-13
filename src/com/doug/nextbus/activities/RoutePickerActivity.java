@@ -3,7 +3,6 @@ package com.doug.nextbus.activities;
 import roboguice.inject.InjectView;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
@@ -41,9 +40,6 @@ public class RoutePickerActivity extends RoboSherlockActivity implements
 		new WakeupAsyncTask().execute();
 
 		Data.setConfig(this);
-
-		int titleId = Resources.getSystem().getIdentifier("action_bar_title",
-				"id", "android");
 
 		mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 		mPrefs.registerOnSharedPreferenceChangeListener(this);
