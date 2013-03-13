@@ -37,7 +37,7 @@ import com.doug.nextbus.backend.RouteDataGSON.Route.Stop;
 import com.doug.nextbus.backend.RouteDirectionStop;
 import com.doug.nextbus.custom.ArrivalsAdapter;
 
-/* This activity displays the predictions for a the current stop */
+/** This activity displays the predictions for a the current stop */
 public class StopViewActivity extends RoboSherlockActivity implements
 		OnSharedPreferenceChangeListener {
 
@@ -136,9 +136,9 @@ public class StopViewActivity extends RoboSherlockActivity implements
 
 		refresh();
 
-		int starImageResource = R.drawable.favorite_toadd;
+		int starImageResource = R.drawable.ic_favorite_toadd;
 		if (Data.isFavorite(favorite)) {
-			starImageResource = R.drawable.favorite_toremove;
+			starImageResource = R.drawable.ic_favorite_toremove;
 		}
 		favoriteButton.setImageResource(starImageResource);
 
@@ -158,7 +158,6 @@ public class StopViewActivity extends RoboSherlockActivity implements
 
 		refreshButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				routeViewProgressBar.setVisibility(View.VISIBLE);
 				refresh();
 			}
 		});
@@ -215,21 +214,29 @@ public class StopViewActivity extends RoboSherlockActivity implements
 		arrivalList.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				if (!mRdsArray[0].equals("No other arrivals")) {
-					RouteDirectionStop rds = mRdsArray[position];
-					Intent intent = StopViewActivity.createIntent(
-							getApplicationContext(), rds.route.tag,
-							rds.direction, rds.stop);
-					startActivity(intent);
-				}
+				RouteDirectionStop rds = mRdsArray[position];
+				Intent intent = StopViewActivity.createIntent(
+						getApplicationContext(), rds.route.tag, rds.direction,
+						rds.stop);
+				startActivity(intent);
+
 			}
 		});
 	}
 
 	/** Gets the latest prediction data */
 	private void refresh() {
+		routeViewProgressBar.setVisibility(View.VISIBLE);
+		refreshButton.setVisibility(View.INVISIBLE);
 		new LoadPredictionAsyncTask(this).execute(mRouteTag, mDirectionTag,
 				mStopTag);
+	}
+
+	@Override
+	protected void onRestart() {
+		super.onRestart();
+		Toast.makeText(this, "onresume", Toast.LENGTH_SHORT).show();
+		refresh();
 	}
 
 	/** Set color of text with respect to current routeTag */
@@ -273,13 +280,15 @@ public class StopViewActivity extends RoboSherlockActivity implements
 		@Override
 		public void onClick(View v) {
 			boolean ret = Data.toggleFavorite(favorite);
+
 			if (ret) {
 				((ImageButton) v)
-						.setImageResource(R.drawable.favorite_toremove);
+						.setImageResource(R.drawable.ic_favorite_toremove);
 				Toast.makeText(getApplicationContext(), "Added to Favorites",
 						Toast.LENGTH_SHORT).show();
 			} else {
-				((ImageButton) v).setImageResource(R.drawable.favorite_toadd);
+				((ImageButton) v)
+						.setImageResource(R.drawable.ic_favorite_toadd);
 				Toast.makeText(getApplicationContext(),
 						"Removed from Favorites", Toast.LENGTH_SHORT).show();
 			}
@@ -308,6 +317,7 @@ public class StopViewActivity extends RoboSherlockActivity implements
 		@Override
 		public void onPostExecute(ArrayList<String> predictions) {
 			routeViewProgressBar.setVisibility(View.INVISIBLE);
+			refreshButton.setVisibility(View.VISIBLE);
 			try {
 				if (predictions.size() == 1 && predictions.get(0).equals("-1")) {
 					Toast.makeText(ctx, "Error, Server Down?",
