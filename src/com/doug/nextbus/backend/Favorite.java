@@ -24,8 +24,11 @@ public class Favorite {
 
 	@Override
 	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+
 		// Returning false if Object o is not of type Favorite class
-		if (!(o.getClass().equals(Favorite.class))) {
+		if (!(o instanceof Favorite)) {
 			return false;
 		}
 
