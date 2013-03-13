@@ -171,11 +171,11 @@ public class MapViewActivity extends RoboSherlockMapActivity {
 		});
 
 		/* Grab all the drawables for the bus dots. */
-		redArrow = this.getResources().getDrawable(R.drawable.red_arrow);
-		blueArrow = this.getResources().getDrawable(R.drawable.blue_arrow);
-		greenArrow = this.getResources().getDrawable(R.drawable.green_arrow);
-		yellowArrow = this.getResources().getDrawable(R.drawable.yellow_arrow);
-		purpleArrow = this.getResources().getDrawable(R.drawable.purple_arrow);
+		redArrow = this.getResources().getDrawable(R.drawable.arrow_red);
+		blueArrow = this.getResources().getDrawable(R.drawable.arrow_blue);
+		greenArrow = this.getResources().getDrawable(R.drawable.arrow_green);
+		yellowArrow = this.getResources().getDrawable(R.drawable.arrow_yellow);
+		purpleArrow = this.getResources().getDrawable(R.drawable.arrow_purple);
 
 		/* The map bus icons */
 		purpleOverlay = new MapItemizedOverlay(purpleArrow);
@@ -342,9 +342,7 @@ public class MapViewActivity extends RoboSherlockMapActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportMenuInflater().inflate(R.menu.stock_menu, menu);
-		menu.findItem(R.id.mapsitem).setVisible(false);
-		menu.findItem(R.id.favoritesitem).setVisible(false);
+		getSupportMenuInflater().inflate(R.menu.no_menu, menu);
 
 		return true;
 	}

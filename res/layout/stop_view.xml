@@ -78,7 +78,8 @@
         android:background="@null"
         android:gravity="center"
         android:padding="10dp"
-        android:src="@drawable/rate_star_big_on_holo_light" />
+        android:scaleType="fitStart"
+        android:src="@drawable/favorite_toadd" />
 
     <TextView
         android:id="@+id/thirdArrival"

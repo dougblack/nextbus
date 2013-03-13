@@ -1,30 +1,35 @@
 GT NextBus
 ==========
 
-**Planned Changes**
+**Features Currently Being Worked On**
+- [?] Fix times for buses in JSON
+- [?] Update the JSON data [work in progress]
+- [ ] Fix Add-to-Favorites icon with a plus sign
+- [?] Implement warning for when the API is down? (Look into timeout issues)
 
+**Features to Consider**
+- [ ] Add support for Pause/onResume
+- [ ] Include static schedules for Grocery? Emory?
+- [ ] Make some sort of delete/reorder list for favorites
+
+**Already Completed**
 - [x] Change static modifiers to private.
 - [x] Removed same route for "Other Route" popup
-- [?] Added support for Emory route (seems like the NextBus doesn't have any updates for Emory, though)
+- [x] Added support for Emory route
 - [x] Fix support for stops that have different tags but are the same. (i.e. "fitten_a" for Blue and "fitten" for Red)
 - [x] Migrate from native JSON parser to GSON
 - [x] Fix "Other Route" Cells
 - [x] Made the SlidingDrawer use a BaseAdapter instead of an ArrayAdapter
-- [?] Fix times for buses in JSON
-- [?] Update the JSON data [work in progress]
-- [ ] Implement warning for when the API is down?
-- [ ] Add support for Pause/onResume
-- [ ] Have preferred order of routes?
-- [ ] Include static schedules for Grocery? Emory?
-- [ ] Fix on touch and release color effects
-- [ ] Make some sort of delete/reorder list for favorites
 
-**My preferences for code are:**
+
+
+
+**Preferences for code are:**
 
 - Prefer smaller, more compact code.
 - Try to follow the [Android Code Style Documentation](http://source.android.com/source/code-style.html) as much as possible.
 - Move getter/setters/trivial/overrided methods to bottom of file.
-- Annotate @Overrides to keep help understand the purpose of a method.
+- Annotate @Overrides to help understand the purpose of a method.
 - If there are multiple Event Listeners being created in the onCreate method, move them to a separate "eventListeners(args)" to keep the onCreate method clean.
 
 Quick Documentation
@@ -34,7 +39,7 @@ Quick Documentation
 
 Necessary libraries are:
 
-* RoboGuice: used for depedency injection so there aren't unneeded ```` = (TextView) findViewById(…)```` everywhere.
+* RoboGuice: used for depedency injection so there aren't unneeded ```` _ = (TextView) findViewById(…)```` everywhere.
     * Already included in /libs/ and necessary dependent libraries 
     * [Github Page](https://github.com/roboguice/roboguice)
     * [Tutorials](https://github.com/roboguice/roboguice/wiki/InjectView)
