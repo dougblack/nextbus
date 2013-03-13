@@ -27,7 +27,7 @@ public class ArrivalsAdapter extends BaseAdapter {
 		View vi = convertView;
 
 		if (convertView == null) {
-			vi = View.inflate(mCtx, R.layout.arrival_row, null);
+			vi = View.inflate(mCtx, R.layout.row_arrival, null);
 		}
 
 		TextView routeFavView = (TextView) vi.findViewById(R.id.routeFavView);

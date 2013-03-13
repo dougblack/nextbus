@@ -74,11 +74,11 @@
         android:id="@+id/favoriteButton"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:scaleType="fitXY"
         android:layout_alignParentLeft="true"
         android:background="@null"
         android:gravity="center"
         android:padding="10dp"
+        android:scaleType="fitStart"
         android:src="@drawable/favorite_toadd" />
 
     <TextView
