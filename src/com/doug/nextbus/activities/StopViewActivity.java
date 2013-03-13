@@ -136,9 +136,9 @@ public class StopViewActivity extends RoboSherlockActivity implements
 
 		refresh();
 
-		int starImageResource = R.drawable.favorite_toadd;
+		int starImageResource = R.drawable.favorite_toadd_bw;
 		if (Data.isFavorite(favorite)) {
-			starImageResource = R.drawable.favorite_toremove;
+			starImageResource = R.drawable.favorite_toremove_bw;
 		}
 		favoriteButton.setImageResource(starImageResource);
 
@@ -215,13 +215,12 @@ public class StopViewActivity extends RoboSherlockActivity implements
 		arrivalList.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				if (!mRdsArray[0].equals("No other arrivals")) {
-					RouteDirectionStop rds = mRdsArray[position];
-					Intent intent = StopViewActivity.createIntent(
-							getApplicationContext(), rds.route.tag,
-							rds.direction, rds.stop);
-					startActivity(intent);
-				}
+				RouteDirectionStop rds = mRdsArray[position];
+				Intent intent = StopViewActivity.createIntent(
+						getApplicationContext(), rds.route.tag, rds.direction,
+						rds.stop);
+				startActivity(intent);
+
 			}
 		});
 	}
@@ -273,13 +272,15 @@ public class StopViewActivity extends RoboSherlockActivity implements
 		@Override
 		public void onClick(View v) {
 			boolean ret = Data.toggleFavorite(favorite);
+
 			if (ret) {
 				((ImageButton) v)
-						.setImageResource(R.drawable.favorite_toremove);
+						.setImageResource(R.drawable.favorite_toremove_bw);
 				Toast.makeText(getApplicationContext(), "Added to Favorites",
 						Toast.LENGTH_SHORT).show();
 			} else {
-				((ImageButton) v).setImageResource(R.drawable.favorite_toadd);
+				((ImageButton) v)
+						.setImageResource(R.drawable.favorite_toadd_bw);
 				Toast.makeText(getApplicationContext(),
 						"Removed from Favorites", Toast.LENGTH_SHORT).show();
 			}
