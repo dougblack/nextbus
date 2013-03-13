@@ -136,9 +136,9 @@ public class StopViewActivity extends RoboSherlockActivity implements
 
 		refresh();
 
-		int starImageResource = R.drawable.favorite_toadd_bw;
+		int starImageResource = R.drawable.ic_favorite_toadd;
 		if (Data.isFavorite(favorite)) {
-			starImageResource = R.drawable.favorite_toremove_bw;
+			starImageResource = R.drawable.ic_favorite_toremove;
 		}
 		favoriteButton.setImageResource(starImageResource);
 
@@ -283,12 +283,12 @@ public class StopViewActivity extends RoboSherlockActivity implements
 
 			if (ret) {
 				((ImageButton) v)
-						.setImageResource(R.drawable.favorite_toremove_bw);
+						.setImageResource(R.drawable.ic_favorite_toremove);
 				Toast.makeText(getApplicationContext(), "Added to Favorites",
 						Toast.LENGTH_SHORT).show();
 			} else {
 				((ImageButton) v)
-						.setImageResource(R.drawable.favorite_toadd_bw);
+						.setImageResource(R.drawable.ic_favorite_toadd);
 				Toast.makeText(getApplicationContext(),
 						"Removed from Favorites", Toast.LENGTH_SHORT).show();
 			}
