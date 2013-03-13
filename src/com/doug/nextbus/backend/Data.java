@@ -167,19 +167,19 @@ public class Data {
 	}
 
 	public static Drawable getDrawableForRouteTag(String routeTag) {
-		int bg = R.drawable.redcell; // default cell type
+		int bg = R.drawable.cell_red; // default cell type
 		if (routeTag.equals("red"))
-			bg = R.drawable.redcell;
+			bg = R.drawable.cell_red;
 		else if (routeTag.equals("blue"))
-			bg = R.drawable.bluecell;
+			bg = R.drawable.cell_blue;
 		else if (routeTag.equals("green"))
-			bg = R.drawable.greencell;
+			bg = R.drawable.cell_green;
 		else if (routeTag.equals("trolley"))
-			bg = R.drawable.yellowcell;
+			bg = R.drawable.cell_yellow;
 		else if (routeTag.equals("emory"))
-			bg = R.drawable.pinkcell;
+			bg = R.drawable.cell_pink;
 		else if (routeTag.equals("night"))
-			bg = R.drawable.nightcell;
+			bg = R.drawable.cell_night;
 		return sCtx.getResources().getDrawable(bg);
 
 	}
