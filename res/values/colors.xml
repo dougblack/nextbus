@@ -9,17 +9,12 @@
     <color name="black">#000</color>
     <color name="white">#FFF</color>
     <color name="gray">#CCC</color>
-    <color name="darkpurple">#4B4E9C</color>
-    <color name="dark">#000000</color>
     <color name="titlecolor">#353535</color>
-    <color name="oldtitlecolor">#2f2f2f</color>
-    <color name="indicatorcolor">#b3b3b3</color>
     <color name="night">#6d2efb</color>
     <color name="subtitlecolor">#292929</color>
     <color name="fade1">#dddddd</color>
     <color name="fade2">#989797</color>
     <color name="fade3">#616161</color>
-    <color name="orange">#f8db16</color>
     <color name="dividercolor">#00000F</color>
 
 </resources>

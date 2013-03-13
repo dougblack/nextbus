@@ -31,8 +31,9 @@ import com.doug.nextbus.RoboSherlock.RoboSherlockActivity;
 import com.doug.nextbus.backend.APIController;
 import com.doug.nextbus.backend.Data;
 import com.doug.nextbus.backend.Favorite;
-import com.doug.nextbus.backend.JSONDataResult.Route.Direction;
-import com.doug.nextbus.backend.JSONDataResult.Route.Stop;
+import com.doug.nextbus.backend.MenuClass;
+import com.doug.nextbus.backend.RouteDataGSON.Route.Direction;
+import com.doug.nextbus.backend.RouteDataGSON.Route.Stop;
 import com.doug.nextbus.backend.RouteDirectionStop;
 import com.doug.nextbus.custom.ArrivalsAdapter;
 
@@ -135,9 +136,9 @@ public class StopViewActivity extends RoboSherlockActivity implements
 
 		refresh();
 
-		int starImageResource = R.drawable.rate_star_big_off_holo_light;
+		int starImageResource = R.drawable.favorite_toadd;
 		if (Data.isFavorite(favorite)) {
-			starImageResource = R.drawable.rate_star_big_on_holo_light;
+			starImageResource = R.drawable.favorite_toremove;
 		}
 		favoriteButton.setImageResource(starImageResource);
 
@@ -241,39 +242,14 @@ public class StopViewActivity extends RoboSherlockActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportMenuInflater().inflate(R.menu.stock_menu, menu);
-		return true;
+		int[] disabledItems = {};
+		return MenuClass.onCreateOptionsMenu(this, menu, R.menu.stock_menu,
+				disabledItems);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.aboutmenusitem:
-			Intent aboutActivity = new Intent(this, CreditsActivity.class);
-			startActivity(aboutActivity);
-			return true;
-		case R.id.preferencesmenuitem:
-			Intent preferenceIntent = new Intent(this,
-					PreferencesActivity.class);
-			startActivity(preferenceIntent);
-			return true;
-		case R.id.favoritesitem:
-			Intent favoriteIntent = new Intent(getApplicationContext(),
-					FavoritesActivity.class);
-			startActivity(favoriteIntent);
-			return true;
-		case R.id.mapsitem:
-			Intent mapIntent = new Intent(getApplicationContext(),
-					MapViewActivity.class);
-			startActivity(mapIntent);
-			return true;
-		case android.R.id.home:
-			finish();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
+		return MenuClass.onOptionsItemSelected(this, item);
 	}
 
 	@Override
@@ -299,12 +275,11 @@ public class StopViewActivity extends RoboSherlockActivity implements
 			boolean ret = Data.toggleFavorite(favorite);
 			if (ret) {
 				((ImageButton) v)
-						.setImageResource(R.drawable.rate_star_big_on_holo_light);
+						.setImageResource(R.drawable.favorite_toremove);
 				Toast.makeText(getApplicationContext(), "Added to Favorites",
 						Toast.LENGTH_SHORT).show();
 			} else {
-				((ImageButton) v)
-						.setImageResource(R.drawable.rate_star_big_off_holo_light);
+				((ImageButton) v).setImageResource(R.drawable.favorite_toadd);
 				Toast.makeText(getApplicationContext(),
 						"Removed from Favorites", Toast.LENGTH_SHORT).show();
 			}

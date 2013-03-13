@@ -1,5 +1,7 @@
 package com.doug.nextbus.custom;
 
+import java.util.Locale;
+
 import android.content.Context;
 import android.preference.PreferenceManager;
 import android.view.View;
@@ -21,7 +23,7 @@ public class FavoritesAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View vi, ViewGroup parent) {
 		if (vi == null) {
-			vi = View.inflate(mCtx, R.layout.favorite_row, null);
+			vi = View.inflate(mCtx, R.layout.row_favorite, null);
 		}
 
 		TextView routeFavView = (TextView) vi.findViewById(R.id.routeFavView);
@@ -30,9 +32,10 @@ public class FavoritesAdapter extends BaseAdapter {
 		TextView stopFavView = (TextView) vi.findViewById(R.id.stopFavView);
 
 		Favorite favorite = Data.getFavorite(position);
-		//		vi.setBackgroundDrawable(Data.getDrawableForRouteTag(favorite.routeTag));
+		// vi.setBackgroundDrawable(Data.getDrawableForRouteTag(favorite.routeTag));
 
-		routeFavView.setText(favorite.routeTag.substring(0, 1).toUpperCase());
+		routeFavView.setText(favorite.routeTag.substring(0, 1).toUpperCase(
+				Locale.US));
 		directionFavView.setText(favorite.directionTitle);
 		stopFavView.setText(favorite.stopTitle);
 
@@ -49,7 +52,7 @@ public class FavoritesAdapter extends BaseAdapter {
 		// default is white
 
 		if (showActiveRoutes && !Data.isRouteActive(favorite.routeTag)) {
-			color = mCtx.getResources().getColor(R.color.fade2);
+			color = mCtx.getResources().getColor(R.color.fade3);
 		}
 
 		// routeFavView.setTextColor(color);

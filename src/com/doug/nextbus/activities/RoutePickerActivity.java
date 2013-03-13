@@ -1,10 +1,8 @@
 package com.doug.nextbus.activities;
 
 import roboguice.inject.InjectView;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
@@ -16,6 +14,7 @@ import com.doug.nextbus.R;
 import com.doug.nextbus.RoboSherlock.RoboSherlockActivity;
 import com.doug.nextbus.backend.APIController;
 import com.doug.nextbus.backend.Data;
+import com.doug.nextbus.backend.MenuClass;
 import com.doug.nextbus.custom.RoutePagerAdapter;
 import com.doug.nextbus.custom.WakeupAsyncTask;
 import com.viewpagerindicator.TitlePageIndicator;
@@ -41,9 +40,6 @@ public class RoutePickerActivity extends RoboSherlockActivity implements
 		new WakeupAsyncTask().execute();
 
 		Data.setConfig(this);
-
-		int titleId = Resources.getSystem().getIdentifier("action_bar_title",
-				"id", "android");
 
 		mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 		mPrefs.registerOnSharedPreferenceChangeListener(this);
@@ -108,37 +104,18 @@ public class RoutePickerActivity extends RoboSherlockActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getSupportMenuInflater().inflate(R.menu.stock_menu, menu);
+		int[] disabledItems = {};
+		MenuClass.onCreateOptionsMenu(this, menu, R.menu.stock_menu,
+				disabledItems);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.aboutmenusitem:
-			Intent aboutActivity = new Intent(this, CreditsActivity.class);
-			startActivity(aboutActivity);
+		if (item.getItemId() == android.R.id.home)
 			return true;
-		case R.id.preferencesmenuitem:
-			Intent preferenceIntent = new Intent(this,
-					PreferencesActivity.class);
-			startActivity(preferenceIntent);
-			return true;
-		case R.id.favoritesitem:
-			Intent favoriteIntent = new Intent(getApplicationContext(),
-					FavoritesActivity.class);
-			startActivity(favoriteIntent);
-			return true;
-		case R.id.mapsitem:
-			Intent mapIntent = new Intent(getApplicationContext(),
-					MapViewActivity.class);
-			startActivity(mapIntent);
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
+		return MenuClass.onOptionsItemSelected(this, item);
 	}
 
 	@Override

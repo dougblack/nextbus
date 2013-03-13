@@ -27,10 +27,10 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.doug.nextbus.R;
-import com.doug.nextbus.backend.JSONDataResult.Route;
-import com.doug.nextbus.backend.JSONDataResult.Route.Direction;
-import com.doug.nextbus.backend.JSONDataResult.Route.PathStop;
-import com.doug.nextbus.backend.JSONDataResult.Route.Stop;
+import com.doug.nextbus.backend.RouteDataGSON.Route;
+import com.doug.nextbus.backend.RouteDataGSON.Route.Direction;
+import com.doug.nextbus.backend.RouteDataGSON.Route.PathStop;
+import com.doug.nextbus.backend.RouteDataGSON.Route.Stop;
 import com.google.gson.Gson;
 
 /**
@@ -43,13 +43,13 @@ public class Data {
 
 	private static Context sCtx;
 	/** Used for JSON parsing */
-	private static JSONDataResult sJsonDataResult;
+	private static RouteDataGSON sRouteDataGSON;
 	/** Key: routeTag, Value: Route object */
 	final private static HashMap<String, Route> sRouteData;
 	/** Key: stopTitle, Value: RouteDirectionStop objects that share the stop */
 	final private static HashMap<String, HashSet<RouteDirectionStop>> sSharedStops;
 	/** For holding the favorites */
-	private static Favorites sFavorites;
+	private static FavoritesGSON sFavorites;
 
 	public static final String SHOW_ACTIVE_ROUTES_PREF;
 	public static final String[] DEFAULT_ALL_ROUTES;
@@ -65,7 +65,7 @@ public class Data {
 	/** Reads the data into memory if it already doesn't exist */
 	public static void setConfig(Context ctx) {
 		Data.sCtx = ctx;
-		if (sJsonDataResult == null)
+		if (sRouteDataGSON == null)
 			readData();
 	}
 
@@ -75,15 +75,15 @@ public class Data {
 				R.raw.routeconfig);
 		Reader reader = new InputStreamReader(is);
 		try {
-			sJsonDataResult = new Gson().fromJson(reader, JSONDataResult.class);
+			sRouteDataGSON = new Gson().fromJson(reader, RouteDataGSON.class);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
 
-		for (Route route : sJsonDataResult.route) {
+		for (Route route : sRouteDataGSON.route) {
 			for (Stop stop : route.stop) {
 				if (route.stopTagTable == null)
-					route.stopTagTable = new Hashtable<String, JSONDataResult.Route.Stop>();
+					route.stopTagTable = new Hashtable<String, RouteDataGSON.Route.Stop>();
 				route.stopTagTable.put(stop.tag, stop);
 			}
 			sRouteData.put(route.tag, route);
@@ -167,19 +167,19 @@ public class Data {
 	}
 
 	public static Drawable getDrawableForRouteTag(String routeTag) {
-		int bg = R.drawable.redcell; // default cell type
+		int bg = R.drawable.cell_red; // default cell type
 		if (routeTag.equals("red"))
-			bg = R.drawable.redcell;
+			bg = R.drawable.cell_red;
 		else if (routeTag.equals("blue"))
-			bg = R.drawable.bluecell;
+			bg = R.drawable.cell_blue;
 		else if (routeTag.equals("green"))
-			bg = R.drawable.greencell;
+			bg = R.drawable.cell_green;
 		else if (routeTag.equals("trolley"))
-			bg = R.drawable.yellowcell;
+			bg = R.drawable.cell_yellow;
 		else if (routeTag.equals("emory"))
-			bg = R.drawable.pinkcell;
+			bg = R.drawable.cell_pink;
 		else if (routeTag.equals("night"))
-			bg = R.drawable.nightcell;
+			bg = R.drawable.cell_night;
 		return sCtx.getResources().getDrawable(bg);
 
 	}
@@ -205,7 +205,7 @@ public class Data {
 		return String.valueOf(chars);
 	}
 
-	/* Reads the path data for a given route */
+	/** Reads the path data for a given route */
 	public static JSONArray getRoutePathData(String route) {
 
 		InputStream is = null;
@@ -277,15 +277,16 @@ public class Data {
 		try {
 			FileInputStream fis = sCtx.openFileInput("favorites.txt");
 			Reader reader = new InputStreamReader(fis);
-			Data.sFavorites = new Gson().fromJson(reader, Favorites.class);
+			Data.sFavorites = new Gson().fromJson(reader, FavoritesGSON.class);
 		} catch (Exception e) {
 			System.out.println(e);
-			Data.sFavorites = new Favorites();
+			Data.sFavorites = new FavoritesGSON();
 		}
 	}
 
 	private static void saveFavoriteData() {
 		try {
+			Data.sFavorites.sort();
 			String toSave = new Gson().toJson(Data.sFavorites);
 			FileOutputStream fos = Data.sCtx.openFileOutput("favorites.txt",
 					Context.MODE_PRIVATE);

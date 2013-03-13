@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -258,7 +259,7 @@ public class Data_Old {
 	/* Capitalize a string */
 	public static String capitalize(String route) {
 
-		char[] chars = route.toLowerCase().toCharArray();
+		char[] chars = route.toLowerCase(Locale.US).toCharArray();
 		boolean found = false;
 		for (int i = 0; i < chars.length; i++) {
 			if (!found && Character.isLetter(chars[i])) {

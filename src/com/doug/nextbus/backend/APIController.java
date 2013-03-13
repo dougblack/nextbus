@@ -43,8 +43,8 @@ public class APIController {
 			try {
 				Reader reader = getReaderFromURL(target);
 
-				PredictionResult result = new Gson().fromJson(reader,
-						PredictionResult.class);
+				PredictionResultGSON result = new Gson().fromJson(reader,
+						PredictionResultGSON.class);
 				return result.predictions;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -131,7 +131,7 @@ public class APIController {
 	}
 
 	/** For Gson parsing */
-	private class PredictionResult {
+	private class PredictionResultGSON {
 		ArrayList<String> predictions;
 	}
 

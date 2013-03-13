@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/favoritesitem"
-        android:icon="@drawable/rate_star_big_on_holo_light"
+        android:icon="@drawable/favorite_default"
         android:showAsAction="ifRoom"
         android:title="Favorites"/>
     <item
@@ -14,12 +14,12 @@
     <item
         android:id="@+id/preferencesmenuitem"
         android:icon="@drawable/ic_menu_preferences"
-        android:showAsAction="never"
+        android:showAsAction="ifRoom"
         android:title="Settings"/>
     <item
         android:id="@+id/aboutmenusitem"
         android:icon="@drawable/ic_menu_info_details"
-        android:showAsAction="never"
+        android:showAsAction="ifRoom"
         android:title="About"/>
 
 </menu>
