@@ -37,7 +37,7 @@ import com.doug.nextbus.backend.RouteDataGSON.Route.Stop;
 import com.doug.nextbus.backend.RouteDirectionStop;
 import com.doug.nextbus.custom.ArrivalsAdapter;
 
-/* This activity displays the predictions for a the current stop */
+/** This activity displays the predictions for a the current stop */
 public class StopViewActivity extends RoboSherlockActivity implements
 		OnSharedPreferenceChangeListener {
 
@@ -158,7 +158,6 @@ public class StopViewActivity extends RoboSherlockActivity implements
 
 		refreshButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				routeViewProgressBar.setVisibility(View.VISIBLE);
 				refresh();
 			}
 		});
@@ -227,8 +226,17 @@ public class StopViewActivity extends RoboSherlockActivity implements
 
 	/** Gets the latest prediction data */
 	private void refresh() {
+		routeViewProgressBar.setVisibility(View.VISIBLE);
+		refreshButton.setVisibility(View.INVISIBLE);
 		new LoadPredictionAsyncTask(this).execute(mRouteTag, mDirectionTag,
 				mStopTag);
+	}
+
+	@Override
+	protected void onRestart() {
+		super.onRestart();
+		Toast.makeText(this, "onresume", Toast.LENGTH_SHORT).show();
+		refresh();
 	}
 
 	/** Set color of text with respect to current routeTag */
@@ -309,6 +317,7 @@ public class StopViewActivity extends RoboSherlockActivity implements
 		@Override
 		public void onPostExecute(ArrayList<String> predictions) {
 			routeViewProgressBar.setVisibility(View.INVISIBLE);
+			refreshButton.setVisibility(View.VISIBLE);
 			try {
 				if (predictions.size() == 1 && predictions.get(0).equals("-1")) {
 					Toast.makeText(ctx, "Error, Server Down?",
