@@ -123,7 +123,7 @@ public class StopViewActivity extends RoboSherlockActivity implements
 		stopTextView.setText(mStopTitle);
 		setViewColor();
 
-		setupArrivals();
+		updateArrivals();
 
 		// Setting text views to default values
 		firstArrival.setText("");
@@ -193,7 +193,7 @@ public class StopViewActivity extends RoboSherlockActivity implements
 
 	}
 
-	public void setupArrivals() {
+	public void updateArrivals() {
 		// TODO: check if the preferences is being used
 		mRdsArray = Data.getAllRdsWithStopTitle(mStopTitle, mRouteTag,
 				mDirectionTag);
@@ -235,7 +235,6 @@ public class StopViewActivity extends RoboSherlockActivity implements
 	@Override
 	protected void onRestart() {
 		super.onRestart();
-		Toast.makeText(this, "onresume", Toast.LENGTH_SHORT).show();
 		refresh();
 	}
 
@@ -263,7 +262,7 @@ public class StopViewActivity extends RoboSherlockActivity implements
 	public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
 
 		if (key.equals(Data.SHOW_ACTIVE_ROUTES_PREF)) {
-			this.setupArrivals();
+			this.updateArrivals();
 		}
 
 	}
@@ -318,6 +317,7 @@ public class StopViewActivity extends RoboSherlockActivity implements
 		public void onPostExecute(ArrayList<String> predictions) {
 			routeViewProgressBar.setVisibility(View.INVISIBLE);
 			refreshButton.setVisibility(View.VISIBLE);
+
 			try {
 				if (predictions.size() == 1 && predictions.get(0).equals("-1")) {
 					Toast.makeText(ctx, "Error, Server Down?",
@@ -325,25 +325,24 @@ public class StopViewActivity extends RoboSherlockActivity implements
 					predictions.clear();
 				}
 
-				if (predictions.size() == 0
-						|| predictions.get(0).equals("error")) {
+				if (predictions.size() == 0) {
 					firstArrival.setText("--");
 					secondArrival.setText("");
 					thirdArrival.setText("");
 					fourthArrival.setText("");
 
 				} else {
-					firstArrival.setText(predictions.get(0).toString());
+					firstArrival.setText(predictions.get(0));
 					if (predictions.size() > 1)
-						secondArrival.setText(predictions.get(1).toString());
+						secondArrival.setText(predictions.get(1));
 					else
 						secondArrival.setText("");
 					if (predictions.size() > 2)
-						thirdArrival.setText(predictions.get(2).toString());
+						thirdArrival.setText(predictions.get(2));
 					else
 						thirdArrival.setText("");
 					if (predictions.size() > 3)
-						fourthArrival.setText(predictions.get(3).toString());
+						fourthArrival.setText(predictions.get(3));
 					else
 						fourthArrival.setText("");
 				}
