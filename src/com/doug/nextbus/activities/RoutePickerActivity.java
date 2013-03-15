@@ -6,7 +6,6 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.SimpleOnPageChangeListener;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -48,7 +47,8 @@ public class RoutePickerActivity extends RoboSherlockActivity implements
 		updateCurrentRoutes();
 
 		// Setup Pager and Adapter, make sure passing this
-		mPagerAdapter = new RoutePagerAdapter(this, mCurrentRoutes);
+		mPagerAdapter = new RoutePagerAdapter(this, mCurrentRoutes,
+				titleIndicator);
 		pager.setAdapter(mPagerAdapter);
 
 		// Setup ViewGroup Indicator
@@ -64,7 +64,7 @@ public class RoutePickerActivity extends RoboSherlockActivity implements
 		float pixels = textSize * scale;
 		titleIndicator.setTextSize(pixels);
 		titleIndicator.setViewPager(pager);
-		setViewColor(0);
+		mPagerAdapter.setViewColor(0);
 
 		setEventListeners();
 
@@ -72,13 +72,8 @@ public class RoutePickerActivity extends RoboSherlockActivity implements
 
 	private void setEventListeners() {
 		// Listener for page changing. Basically the left and right swiping
-		titleIndicator
-				.setOnPageChangeListener(new SimpleOnPageChangeListener() {
-					@Override
-					public void onPageSelected(int position) {
-						setViewColor(position);
-					}
-				});
+		titleIndicator.setOnPageChangeListener(mPagerAdapter);
+
 	}
 
 	/** Updates available routes depending on show active routes preference. */
@@ -90,16 +85,6 @@ public class RoutePickerActivity extends RoboSherlockActivity implements
 		} else {
 			mCurrentRoutes = Data.DEFAULT_ALL_ROUTES;
 		}
-	}
-
-	/** Updates text color depending on the position of view page */
-	private void setViewColor(int position) {
-		int color = R.color.blue; // default color
-		if (mCurrentRoutes.length > 0) { // if there are active routes
-			color = Data.getColorFromRouteTag(mCurrentRoutes[position]);
-		}
-		titleIndicator.setSelectedColor(getResources().getColor(color));
-		titleIndicator.setFooterColor(getResources().getColor(color));
 	}
 
 	@Override
@@ -123,8 +108,8 @@ public class RoutePickerActivity extends RoboSherlockActivity implements
 		if (key.equals(Data.SHOW_ACTIVE_ROUTES_PREF)) {
 			updateCurrentRoutes();
 			mPagerAdapter.updateRoutes(this.mCurrentRoutes);
+			mPagerAdapter.setViewColor(pager.getCurrentItem());
 			// Making sure the right color is chosen for the view
-			setViewColor(pager.getCurrentItem());
 		}
 
 	}

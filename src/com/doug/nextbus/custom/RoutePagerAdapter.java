@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -19,22 +20,31 @@ import com.doug.nextbus.backend.Data;
 import com.doug.nextbus.backend.RouteDataGSON.Route;
 import com.doug.nextbus.backend.RouteDataGSON.Route.Direction;
 import com.doug.nextbus.backend.RouteDataGSON.Route.Stop;
+import com.viewpagerindicator.TitlePageIndicator;
 
-/** The adapter for the swiping between route pages for the RoutePickerActivity */
-public class RoutePagerAdapter extends PagerAdapter {
+/**
+ * The adapter for the swiping between route pages for the RoutePickerActivity
+ * and handles color changes
+ */
+public class RoutePagerAdapter extends PagerAdapter implements
+		OnPageChangeListener {
 
 	private final Context mCtx;
 	private String[] mRoutes;
+	private TitlePageIndicator titleIndicator;
 
-	public RoutePagerAdapter(Context ctx, String[] routes) {
+	public RoutePagerAdapter(Context ctx, String[] routes,
+			TitlePageIndicator titleIndicator) {
 		this.mCtx = ctx;
 		this.mRoutes = routes;
+		this.titleIndicator = titleIndicator;
 	}
 
 	/** How to update the routes at runtime, calls notifyDataSetChanged() */
 	public void updateRoutes(String[] routes) {
 		this.mRoutes = routes;
 		notifyDataSetChanged();
+
 	}
 
 	/*
@@ -153,4 +163,26 @@ public class RoutePagerAdapter extends PagerAdapter {
 		}
 	}
 
+	@Override
+	public void onPageScrollStateChanged(int arg0) {
+	}
+
+	@Override
+	public void onPageScrolled(int arg0, float arg1, int arg2) {
+	}
+
+	@Override
+	public void onPageSelected(int position) {
+		setViewColor(position);
+	}
+
+	/** Updates text color depending on the position of view page */
+	public void setViewColor(int position) {
+		int color = R.color.blue; // default color
+		if (mRoutes.length > 0) { // if there are active routes
+			color = Data.getColorFromRouteTag(mRoutes[position]);
+		}
+		titleIndicator.setSelectedColor(mCtx.getResources().getColor(color));
+		titleIndicator.setFooterColor(mCtx.getResources().getColor(color));
+	}
 }
