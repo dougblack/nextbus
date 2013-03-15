@@ -134,13 +134,15 @@ public class StopViewActivity extends RoboSherlockActivity implements
 		Favorite favorite = new Favorite(mRouteTag, mDirectionTag,
 				mDirectionTitle, mStopTag, mStopTitle);
 
-		refresh();
-
 		int starImageResource = R.drawable.ic_favorite_toadd;
 		if (Data.isFavorite(favorite)) {
 			starImageResource = R.drawable.ic_favorite_toremove;
 		}
 		favoriteButton.setImageResource(starImageResource);
+
+		routeViewProgressBar.setVisibility(View.INVISIBLE);
+
+		refresh();
 
 		setEventListeners(favorite);
 
@@ -152,6 +154,12 @@ public class StopViewActivity extends RoboSherlockActivity implements
 				R.color.yellow));
 		mFooterGreenCell.setBackgroundColor(getResources().getColor(
 				R.color.green));
+	}
+
+	@Override
+	protected void onRestart() {
+		refresh();
+		super.onRestart();
 	}
 
 	private void setEventListeners(Favorite favorite) {
@@ -230,12 +238,6 @@ public class StopViewActivity extends RoboSherlockActivity implements
 		refreshButton.setVisibility(View.INVISIBLE);
 		new LoadPredictionAsyncTask(this).execute(mRouteTag, mDirectionTag,
 				mStopTag);
-	}
-
-	@Override
-	protected void onRestart() {
-		super.onRestart();
-		refresh();
 	}
 
 	/** Set color of text with respect to current routeTag */
