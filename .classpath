@@ -9,5 +9,6 @@
 	<classpathentry kind="lib" path="libs/javax.inject.jar"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="lib" path="/Users/darkzeroman/Documents/workspaceAndroid/GT NextBus/libs/date4j.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

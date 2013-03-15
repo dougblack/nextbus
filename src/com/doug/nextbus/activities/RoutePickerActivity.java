@@ -6,6 +6,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
+import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -43,13 +44,13 @@ public class RoutePickerActivity extends RoboSherlockActivity implements
 		mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 		mPrefs.registerOnSharedPreferenceChangeListener(this);
 
-		// Updating available routes depending on preference
-		updateCurrentRoutes();
-
 		// Setup Pager and Adapter, make sure passing this
 		mPagerAdapter = new RoutePagerAdapter(this, mCurrentRoutes,
 				titleIndicator);
 		pager.setAdapter(mPagerAdapter);
+
+		// Updating available routes depending on preference
+		updateCurrentRoutes();
 
 		// Setup ViewGroup Indicator
 		titleIndicator.setFooterIndicatorStyle(IndicatorStyle.Underline);
@@ -91,6 +92,10 @@ public class RoutePickerActivity extends RoboSherlockActivity implements
 		} else {
 			mCurrentRoutes = Data.DEFAULT_ALL_ROUTES;
 		}
+		mPagerAdapter.updateRoutes(mCurrentRoutes);
+		mPagerAdapter.notifyDataSetChanged();
+		mPagerAdapter.setViewColor(pager.getCurrentItem());
+
 	}
 
 	@Override
