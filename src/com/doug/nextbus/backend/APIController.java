@@ -3,6 +3,7 @@ package com.doug.nextbus.backend;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -33,7 +34,6 @@ public class APIController {
 		// + direction + "/" + stop;
 
 		return url;
-
 	}
 
 	public static ArrayList<String> getPrediction(String route,
@@ -54,7 +54,6 @@ public class APIController {
 		ArrayList<String> al = new ArrayList<String>();
 		al.add("-1"); // Returning -1 if there was an error
 		return al;
-
 	}
 
 	/**
@@ -105,13 +104,11 @@ public class APIController {
 			if ((hour >= 20) || (hour <= 3)) {
 				// 8:45pm - 3:30am
 				activeRoutesList.add("night");
-
 			}
 		}
 
 		String[] strings = {};
 		return activeRoutesList.toArray(strings);
-
 	}
 
 	private static Reader getReaderFromURL(String target) throws Exception {
@@ -124,6 +121,9 @@ public class APIController {
 
 		urlConnection.setRequestProperty("Accept", "application/json");
 
+		new Thread(new InterruptThread(Thread.currentThread(), urlConnection,
+				3000)).start();
+
 		InputStream input = urlConnection.getInputStream();
 
 		Reader reader = new InputStreamReader(input, "UTF-8");
@@ -134,5 +134,28 @@ public class APIController {
 	private class PredictionResultGSON {
 		ArrayList<String> predictions;
 	}
+}
 
+class InterruptThread implements Runnable {
+	Thread parent;
+	URLConnection con;
+	long timeout;
+
+	public InterruptThread(Thread parent, URLConnection con, long timeout) {
+		this.parent = parent;
+		this.con = con;
+		this.timeout = timeout;
+	}
+
+	public void run() {
+		try {
+			Thread.sleep(timeout);
+		} catch (InterruptedException e) {
+
+		}
+		// Timer thread forcing parent to quit connection
+		((HttpURLConnection) con).disconnect();
+		System.out
+				.println("Timer thread closed connection held by parent, exiting");
+	}
 }
