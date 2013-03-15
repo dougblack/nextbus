@@ -65,44 +65,44 @@ public class APIController {
 		ArrayList<String> activeRoutesList = new ArrayList<String>();
 
 		Time time = new Time();
-		time.switchTimezone("EST");
+		// time.switchTimezone("EST");
 
 		time.setToNow();
 		int hour = time.hour;
 		int day = time.weekDay;
 		if (1 <= day && day <= 5) {
 			// Monday - Friday
-			if ((hour >= 7) && (hour <= 22)) {
-				// 6:45am - 10:45pm
+			if ((hour >= 7) && (hour < 22)) {
+				// 6:45am - 9:45pm
 				activeRoutesList.add("blue");
 				activeRoutesList.add("red");
 			}
 			if ((hour >= 5) && (hour <= 22)) {
-				// 5:15am - 11:00pm
+				// 5:45am - 10:30pm
 				activeRoutesList.add("trolley");
 			}
-			if ((day != 4) && (hour >= 21) || (hour <= 3)) {
-				// 8:45pm - 3:30am
+			if ((day != 5) && ((hour >= 21) || (hour < 3))) {
+				// 9:00pm - 3:00am
 				activeRoutesList.add("night");
 			}
 			if ((hour >= 7) && (hour <= 21)) {
-				// 6:15am - 9:45pm
+				// 6:45am - 9:00pm
 				activeRoutesList.add("green");
 			}
 		} else if (day == 6) {
 			// Saturday
 			if ((hour >= 10) && (hour <= 18)) {
-				// 9:30am - 7:00pm
+				// 10:00am - 6:30pm
 				activeRoutesList.add("trolley");
 			}
 		} else if (day == 0) {
 			// Sunday
 			if ((hour >= 15) && (hour <= 21)) {
-				// 2:30pm - 6:30pm
+				// 3:00pm - 9:45pm
 				activeRoutesList.add("trolley");
 			}
-			if ((hour >= 20) || (hour <= 3)) {
-				// 8:45pm - 3:30am
+			if ((hour >= 21) || (hour <= 3)) {
+				// 9:00pm - 3:00am
 				activeRoutesList.add("night");
 			}
 		}

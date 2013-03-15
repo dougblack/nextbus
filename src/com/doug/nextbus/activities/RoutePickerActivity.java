@@ -76,6 +76,12 @@ public class RoutePickerActivity extends RoboSherlockActivity implements
 
 	}
 
+	@Override
+	protected void onResume() {
+		updateCurrentRoutes();
+		super.onResume();
+	}
+
 	/** Updates available routes depending on show active routes preference. */
 	private void updateCurrentRoutes() {
 		boolean onlyActiveRoutes = mPrefs.getBoolean(
