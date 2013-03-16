@@ -66,6 +66,7 @@ public class APIController {
 	public static String[] getActiveRoutesList(Context context) {
 
 		DateTime allNow = DateTime.now(TimeZone.getDefault());
+
 		DateTime now = DateTime
 				.forTimeOnly(allNow.getHour(), allNow.getMinute(),
 						allNow.getSecond(), allNow.getNanoseconds());

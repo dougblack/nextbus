@@ -6,7 +6,6 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
-import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -31,6 +30,7 @@ public class RoutePickerActivity extends RoboSherlockActivity implements
 	private SharedPreferences mPrefs;
 	private RoutePagerAdapter mPagerAdapter;
 
+	@Override
 	public void onCreate(Bundle savedInstance) {
 		super.onCreate(savedInstance);
 		// requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -67,14 +67,8 @@ public class RoutePickerActivity extends RoboSherlockActivity implements
 		titleIndicator.setViewPager(pager);
 		mPagerAdapter.setViewColor(0);
 
-		setEventListeners();
-
-	}
-
-	private void setEventListeners() {
 		// Listener for page changing. Basically the left and right swiping
 		titleIndicator.setOnPageChangeListener(mPagerAdapter);
-
 	}
 
 	@Override

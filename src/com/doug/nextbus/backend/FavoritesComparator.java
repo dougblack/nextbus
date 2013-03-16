@@ -2,6 +2,7 @@ package com.doug.nextbus.backend;
 
 import java.util.Comparator;
 
+/** Used for sorting the favorites */
 public class FavoritesComparator implements Comparator<Favorite> {
 
 	@Override

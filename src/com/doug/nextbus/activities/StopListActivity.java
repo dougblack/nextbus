@@ -15,6 +15,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.doug.nextbus.R;
 import com.doug.nextbus.RoboSherlock.RoboSherlockActivity;
+import com.doug.nextbus.backend.BundleKeys;
 import com.doug.nextbus.backend.Data;
 import com.doug.nextbus.backend.MenuClass;
 import com.doug.nextbus.backend.RouteDataGSON.Route;
@@ -28,14 +29,11 @@ public class StopListActivity extends RoboSherlockActivity {
 	@InjectView(R.id.directionTextView) private TextView directionTextView;
 	@InjectView(R.id.colorbar) private View colorBar;
 
-	private static final String ROUTE_TAG_KEY = "routeTag";
-	private static final String DIRECTION_TITLE_KEY = "directionTitle";
-
 	public static Intent createIntent(Context ctx, String routeTag,
 			String directionTitle) {
 		Intent intent = new Intent(ctx, StopListActivity.class);
-		intent.putExtra(ROUTE_TAG_KEY, routeTag);
-		intent.putExtra(DIRECTION_TITLE_KEY, directionTitle);
+		intent.putExtra(BundleKeys.ROUTE_TAG_KEY, routeTag);
+		intent.putExtra(BundleKeys.DIRECTION_TITLE_KEY, directionTitle);
 		return intent;
 	}
 
@@ -48,8 +46,9 @@ public class StopListActivity extends RoboSherlockActivity {
 
 		if (extras != null) {
 			/* Pull route and direction for extras */
-			final String routeTag = extras.getString(ROUTE_TAG_KEY);
-			final String directionTitle = extras.getString(DIRECTION_TITLE_KEY);
+			final String routeTag = extras.getString(BundleKeys.ROUTE_TAG_KEY);
+			final String directionTitle = extras
+					.getString(BundleKeys.DIRECTION_TITLE_KEY);
 
 			final Route route = Data.getRouteWithTag(routeTag);
 			final String[] stopTitles = route.getStopTitles(directionTitle);
