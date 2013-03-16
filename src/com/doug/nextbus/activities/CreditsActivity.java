@@ -13,7 +13,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.doug.nextbus.R;
 import com.doug.nextbus.RoboSherlock.RoboSherlockActivity;
-import com.doug.nextbus.backend.MenuClass;
+import com.doug.nextbus.backend.MenuFunctions;
 
 /*
  * The credits activity. Shows simple contact links. 
@@ -84,13 +84,13 @@ public class CreditsActivity extends RoboSherlockActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		int[] disabledItems = {};
-		return MenuClass.onCreateOptionsMenu(this, menu, R.menu.no_menu,
+		return MenuFunctions.onCreateOptionsMenu(this, menu, R.menu.no_menu,
 				disabledItems);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		return MenuClass.onOptionsItemSelected(this, item);
+		return MenuFunctions.onOptionsItemSelected(this, item);
 	}
 
 }

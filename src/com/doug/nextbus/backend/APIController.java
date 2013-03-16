@@ -1,5 +1,7 @@
 package com.doug.nextbus.backend;
 
+import hirondelle.date4j.DateTime;
+
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -7,6 +9,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.TimeZone;
 
 import android.content.Context;
 import android.text.format.Time;
@@ -19,7 +22,7 @@ import com.google.gson.Gson;
  * data for easy consumption by other objects in the app.
  */
 public class APIController {
-	/** How many times to retry before giving up */
+	/** How many times to retry to make connection */
 	private static final int NUM_RETRIES = 2;
 
 	private static String createURL(String route, String direction, String stop) {
@@ -62,47 +65,69 @@ public class APIController {
 	 */
 	public static String[] getActiveRoutesList(Context context) {
 
+		DateTime allNow = DateTime.now(TimeZone.getDefault());
+
+		DateTime now = DateTime
+				.forTimeOnly(allNow.getHour(), allNow.getMinute(),
+						allNow.getSecond(), allNow.getNanoseconds());
+
 		ArrayList<String> activeRoutesList = new ArrayList<String>();
 
 		Time time = new Time();
-		time.switchTimezone("EST");
 
 		time.setToNow();
-		int hour = time.hour;
 		int day = time.weekDay;
-		if (1 <= day && day <= 5) {
-			// Monday - Friday
-			if ((hour >= 7) && (hour <= 22)) {
-				// 6:45am - 10:45pm
+
+		if (1 <= day && day <= 5) { // Monday - Friday
+			if (now.gteq(new DateTime("06:50:00"))
+					&& now.lteq(new DateTime("22:10:00"))) {
+				// 7:00am - 9:45pm
 				activeRoutesList.add("blue");
 				activeRoutesList.add("red");
 			}
-			if ((hour >= 5) && (hour <= 22)) {
-				// 5:15am - 11:00pm
+			if (now.gteq(new DateTime("05:35:00"))
+					&& now.lteq(new DateTime("22:40:00"))) {
+				// 5:45am - 10:30pm
 				activeRoutesList.add("trolley");
 			}
-			if ((day != 4) && (hour >= 21) || (hour <= 3)) {
-				// 8:45pm - 3:30am
+			if ((day != 5) && (now.gteq(new DateTime("20:50:00")))) {
+				// 9:00pm - 3:00am
+				// 9:00pm - midnight on everyday except Friday
 				activeRoutesList.add("night");
 			}
-			if ((hour >= 7) && (hour <= 21)) {
-				// 6:15am - 9:45pm
+
+			if ((now.lteq(new DateTime("03:10:00")))) {
+				// midnight - 3:00am on all weekdays
+				activeRoutesList.add("night");
+			}
+			if (now.gteq(new DateTime("06:35:00"))
+					&& now.lteq(new DateTime("21:10:00"))) {
+				// 6:45am - 9:00pm
 				activeRoutesList.add("green");
 			}
-		} else if (day == 6) {
-			// Saturday
-			if ((hour >= 10) && (hour <= 18)) {
-				// 9:30am - 7:00pm
+			if (now.gteq(new DateTime("07:05:00"))
+					&& now.lteq(new DateTime("19:25:00"))) {
+				// 7:15am - 7:12pm
+				activeRoutesList.add("emory");
+			}
+		} else if (day == 6) { // Saturday
+			if (now.gteq(new DateTime("09:50:00"))
+					&& now.lteq(new DateTime("18:40:00"))) {
+				// 10:00am - 6:30pm
 				activeRoutesList.add("trolley");
 			}
-		} else if (day == 0) {
-			// Sunday
-			if ((hour >= 15) && (hour <= 21)) {
-				// 2:30pm - 6:30pm
+		} else if (day == 0) { // Sunday
+			if (now.gteq(new DateTime("14:50:00"))
+					&& now.lteq(new DateTime("21:55:00"))) {
+				// 3:00pm - 9:45pm
 				activeRoutesList.add("trolley");
 			}
-			if ((hour >= 20) || (hour <= 3)) {
-				// 8:45pm - 3:30am
+			if (now.gteq(new DateTime("20:50:00"))) {
+				// 9:00pm - 3:00am
+				activeRoutesList.add("night");
+			}
+			if (now.lteq(new DateTime("03:10:00"))) {
+				// 9:00pm - 3:00am
 				activeRoutesList.add("night");
 			}
 		}
@@ -115,14 +140,14 @@ public class APIController {
 		URL url = new URL(target);
 
 		URLConnection urlConnection = url.openConnection();
-		int time = 2000;
+		int time = 2000; // time logic is weird, I know, but it works
 		urlConnection.setConnectTimeout(time);
 		urlConnection.setReadTimeout(time * 2);
 
 		urlConnection.setRequestProperty("Accept", "application/json");
 
 		new Thread(new InterruptThread(Thread.currentThread(), urlConnection,
-				3000)).start();
+				time * (3 / 2))).start();
 
 		InputStream input = urlConnection.getInputStream();
 

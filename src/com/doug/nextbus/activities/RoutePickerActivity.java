@@ -13,7 +13,7 @@ import com.doug.nextbus.R;
 import com.doug.nextbus.RoboSherlock.RoboSherlockActivity;
 import com.doug.nextbus.backend.APIController;
 import com.doug.nextbus.backend.Data;
-import com.doug.nextbus.backend.MenuClass;
+import com.doug.nextbus.backend.MenuFunctions;
 import com.doug.nextbus.custom.RoutePagerAdapter;
 import com.doug.nextbus.custom.WakeupAsyncTask;
 import com.viewpagerindicator.TitlePageIndicator;
@@ -30,6 +30,7 @@ public class RoutePickerActivity extends RoboSherlockActivity implements
 	private SharedPreferences mPrefs;
 	private RoutePagerAdapter mPagerAdapter;
 
+	@Override
 	public void onCreate(Bundle savedInstance) {
 		super.onCreate(savedInstance);
 		// requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -43,13 +44,13 @@ public class RoutePickerActivity extends RoboSherlockActivity implements
 		mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 		mPrefs.registerOnSharedPreferenceChangeListener(this);
 
-		// Updating available routes depending on preference
-		updateCurrentRoutes();
-
 		// Setup Pager and Adapter, make sure passing this
 		mPagerAdapter = new RoutePagerAdapter(this, mCurrentRoutes,
 				titleIndicator);
 		pager.setAdapter(mPagerAdapter);
+
+		// Updating available routes depending on preference
+		updateCurrentRoutes();
 
 		// Setup ViewGroup Indicator
 		titleIndicator.setFooterIndicatorStyle(IndicatorStyle.Underline);
@@ -66,14 +67,14 @@ public class RoutePickerActivity extends RoboSherlockActivity implements
 		titleIndicator.setViewPager(pager);
 		mPagerAdapter.setViewColor(0);
 
-		setEventListeners();
-
-	}
-
-	private void setEventListeners() {
 		// Listener for page changing. Basically the left and right swiping
 		titleIndicator.setOnPageChangeListener(mPagerAdapter);
+	}
 
+	@Override
+	protected void onResume() {
+		updateCurrentRoutes();
+		super.onResume();
 	}
 
 	/** Updates available routes depending on show active routes preference. */
@@ -85,12 +86,16 @@ public class RoutePickerActivity extends RoboSherlockActivity implements
 		} else {
 			mCurrentRoutes = Data.DEFAULT_ALL_ROUTES;
 		}
+		mPagerAdapter.updateRoutes(mCurrentRoutes);
+		mPagerAdapter.notifyDataSetChanged();
+		mPagerAdapter.setViewColor(pager.getCurrentItem());
+
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		int[] disabledItems = {};
-		MenuClass.onCreateOptionsMenu(this, menu, R.menu.stock_menu,
+		MenuFunctions.onCreateOptionsMenu(this, menu, R.menu.stock_menu,
 				disabledItems);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 		return true;
@@ -100,7 +105,7 @@ public class RoutePickerActivity extends RoboSherlockActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == android.R.id.home)
 			return true;
-		return MenuClass.onOptionsItemSelected(this, item);
+		return MenuFunctions.onOptionsItemSelected(this, item);
 	}
 
 	@Override

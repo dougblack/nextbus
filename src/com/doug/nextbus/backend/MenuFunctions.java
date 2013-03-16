@@ -11,7 +11,8 @@ import com.doug.nextbus.activities.FavoritesActivity;
 import com.doug.nextbus.activities.MapViewActivity;
 import com.doug.nextbus.activities.PreferencesActivity;
 
-public class MenuClass {
+/** Keeping it DRY for menus */
+public class MenuFunctions {
 
 	public static boolean onCreateOptionsMenu(RoboSherlockActivity ctx,
 			Menu menu, int menuRes, int[] disabledItems) {
