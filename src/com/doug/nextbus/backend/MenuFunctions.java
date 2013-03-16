@@ -12,7 +12,7 @@ import com.doug.nextbus.activities.MapViewActivity;
 import com.doug.nextbus.activities.PreferencesActivity;
 
 /** Keeping it DRY for menus */
-public class MenuClass {
+public class MenuFunctions {
 
 	public static boolean onCreateOptionsMenu(RoboSherlockActivity ctx,
 			Menu menu, int menuRes, int[] disabledItems) {

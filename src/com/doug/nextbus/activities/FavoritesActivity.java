@@ -17,7 +17,7 @@ import com.doug.nextbus.R;
 import com.doug.nextbus.RoboSherlock.RoboSherlockActivity;
 import com.doug.nextbus.backend.Data;
 import com.doug.nextbus.backend.Favorite;
-import com.doug.nextbus.backend.MenuClass;
+import com.doug.nextbus.backend.MenuFunctions;
 import com.doug.nextbus.custom.FavoritesAdapter;
 
 public class FavoritesActivity extends RoboSherlockActivity {
@@ -81,13 +81,13 @@ public class FavoritesActivity extends RoboSherlockActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		int[] disabledItems = { R.id.favoritesitem, R.id.mapsitem,
 				R.id.aboutmenusitem };
-		return MenuClass.onCreateOptionsMenu(this, menu, R.menu.stock_menu,
+		return MenuFunctions.onCreateOptionsMenu(this, menu, R.menu.stock_menu,
 				disabledItems);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		return MenuClass.onOptionsItemSelected(this, item);
+		return MenuFunctions.onOptionsItemSelected(this, item);
 	}
 
 }

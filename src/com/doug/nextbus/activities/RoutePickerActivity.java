@@ -13,7 +13,7 @@ import com.doug.nextbus.R;
 import com.doug.nextbus.RoboSherlock.RoboSherlockActivity;
 import com.doug.nextbus.backend.APIController;
 import com.doug.nextbus.backend.Data;
-import com.doug.nextbus.backend.MenuClass;
+import com.doug.nextbus.backend.MenuFunctions;
 import com.doug.nextbus.custom.RoutePagerAdapter;
 import com.doug.nextbus.custom.WakeupAsyncTask;
 import com.viewpagerindicator.TitlePageIndicator;
@@ -95,7 +95,7 @@ public class RoutePickerActivity extends RoboSherlockActivity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		int[] disabledItems = {};
-		MenuClass.onCreateOptionsMenu(this, menu, R.menu.stock_menu,
+		MenuFunctions.onCreateOptionsMenu(this, menu, R.menu.stock_menu,
 				disabledItems);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 		return true;
@@ -105,7 +105,7 @@ public class RoutePickerActivity extends RoboSherlockActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == android.R.id.home)
 			return true;
-		return MenuClass.onOptionsItemSelected(this, item);
+		return MenuFunctions.onOptionsItemSelected(this, item);
 	}
 
 	@Override

@@ -32,7 +32,7 @@ import com.doug.nextbus.backend.APIController;
 import com.doug.nextbus.backend.BundleKeys;
 import com.doug.nextbus.backend.Data;
 import com.doug.nextbus.backend.Favorite;
-import com.doug.nextbus.backend.MenuClass;
+import com.doug.nextbus.backend.MenuFunctions;
 import com.doug.nextbus.backend.RouteDataGSON.Route.Direction;
 import com.doug.nextbus.backend.RouteDataGSON.Route.Stop;
 import com.doug.nextbus.backend.RouteDirectionStop;
@@ -246,13 +246,13 @@ public class StopViewActivity extends RoboSherlockActivity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		int[] disabledItems = {};
-		return MenuClass.onCreateOptionsMenu(this, menu, R.menu.stock_menu,
+		return MenuFunctions.onCreateOptionsMenu(this, menu, R.menu.stock_menu,
 				disabledItems);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		return MenuClass.onOptionsItemSelected(this, item);
+		return MenuFunctions.onOptionsItemSelected(this, item);
 	}
 
 	@Override
