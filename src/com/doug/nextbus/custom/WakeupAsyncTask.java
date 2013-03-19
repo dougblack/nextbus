@@ -14,7 +14,7 @@ public class WakeupAsyncTask extends AsyncTask<Void, Void, Void> {
 
 	@Override
 	protected Void doInBackground(Void... params) {
-		String target = "http://desolate-escarpment-6039.herokuapp.com/metacritic_review/";
+		String target = "http://desolate-escarpment-6039.herokuapp.com/bus/info";
 		try {
 			URL url = new URL(target);
 			URLConnection urlConnection = url.openConnection();

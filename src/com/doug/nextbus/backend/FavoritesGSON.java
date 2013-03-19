@@ -31,7 +31,7 @@ public class FavoritesGSON {
 	}
 
 	public void sort() {
-		Collections.sort(mFavs, new FavoritesComparator());
+		Collections.sort(mFavs, new Favorite.FavoriteComparator());
 	}
 
 }

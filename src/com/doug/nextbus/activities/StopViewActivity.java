@@ -29,9 +29,10 @@ import com.actionbarsherlock.view.MenuItem;
 import com.doug.nextbus.R;
 import com.doug.nextbus.RoboSherlock.RoboSherlockActivity;
 import com.doug.nextbus.backend.APIController;
+import com.doug.nextbus.backend.BundleKeys;
 import com.doug.nextbus.backend.Data;
 import com.doug.nextbus.backend.Favorite;
-import com.doug.nextbus.backend.MenuClass;
+import com.doug.nextbus.backend.MenuFunctions;
 import com.doug.nextbus.backend.RouteDataGSON.Route.Direction;
 import com.doug.nextbus.backend.RouteDataGSON.Route.Stop;
 import com.doug.nextbus.backend.RouteDirectionStop;
@@ -63,12 +64,6 @@ public class StopViewActivity extends RoboSherlockActivity implements
 	@InjectView(R.id.footer_yellowcell) private View mFooterYellowCell;
 	@InjectView(R.id.footer_greencell) private View mFooterGreenCell;
 
-	private static final String ROUTE_TAG_KEY = "routeTag";
-	private static final String DIRECTION_TITLE_KEY = "directionTitle";
-	private static final String DIRECTION_TAG_KEY = "directionTag";
-	private static final String STOP_TITLE_KEY = "stopTitle";
-	private static final String STOP_TAG_KEY = "stopTag";
-
 	private String mRouteTag;
 	private String mDirectionTitle;
 	private String mDirectionTag;
@@ -80,11 +75,11 @@ public class StopViewActivity extends RoboSherlockActivity implements
 	public static Intent createIntent(Context ctx, String routeTag,
 			Direction direction, Stop stop) {
 		Intent intent = new Intent(ctx, StopViewActivity.class);
-		intent.putExtra(ROUTE_TAG_KEY, routeTag);
-		intent.putExtra(DIRECTION_TITLE_KEY, direction.title);
-		intent.putExtra(DIRECTION_TAG_KEY, direction.tag);
-		intent.putExtra(STOP_TITLE_KEY, stop.title);
-		intent.putExtra(STOP_TAG_KEY, stop.tag);
+		intent.putExtra(BundleKeys.ROUTE_TAG_KEY, routeTag);
+		intent.putExtra(BundleKeys.DIRECTION_TITLE_KEY, direction.title);
+		intent.putExtra(BundleKeys.DIRECTION_TAG_KEY, direction.tag);
+		intent.putExtra(BundleKeys.STOP_TITLE_KEY, stop.title);
+		intent.putExtra(BundleKeys.STOP_TAG_KEY, stop.tag);
 		// Closes all instances of the same activity
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		return intent;
@@ -92,11 +87,11 @@ public class StopViewActivity extends RoboSherlockActivity implements
 
 	public static Intent createIntent(Context ctx, Favorite favorite) {
 		Intent intent = new Intent(ctx, StopViewActivity.class);
-		intent.putExtra(ROUTE_TAG_KEY, favorite.routeTag);
-		intent.putExtra(DIRECTION_TITLE_KEY, favorite.directionTitle);
-		intent.putExtra(DIRECTION_TAG_KEY, favorite.directionTag);
-		intent.putExtra(STOP_TITLE_KEY, favorite.stopTitle);
-		intent.putExtra(STOP_TAG_KEY, favorite.stopTag);
+		intent.putExtra(BundleKeys.ROUTE_TAG_KEY, favorite.routeTag);
+		intent.putExtra(BundleKeys.DIRECTION_TITLE_KEY, favorite.directionTitle);
+		intent.putExtra(BundleKeys.DIRECTION_TAG_KEY, favorite.directionTag);
+		intent.putExtra(BundleKeys.STOP_TITLE_KEY, favorite.stopTitle);
+		intent.putExtra(BundleKeys.STOP_TAG_KEY, favorite.stopTag);
 		// Closes all instances of the same activity
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		return intent;
@@ -114,11 +109,11 @@ public class StopViewActivity extends RoboSherlockActivity implements
 
 		// Extras
 		Bundle extras = getIntent().getExtras();
-		mRouteTag = extras.getString(ROUTE_TAG_KEY);
-		mDirectionTitle = extras.getString(DIRECTION_TITLE_KEY);
-		mDirectionTag = extras.getString(DIRECTION_TAG_KEY);
-		mStopTitle = extras.getString(STOP_TITLE_KEY);
-		mStopTag = extras.getString(STOP_TAG_KEY);
+		mRouteTag = extras.getString(BundleKeys.ROUTE_TAG_KEY);
+		mDirectionTitle = extras.getString(BundleKeys.DIRECTION_TITLE_KEY);
+		mDirectionTag = extras.getString(BundleKeys.DIRECTION_TAG_KEY);
+		mStopTitle = extras.getString(BundleKeys.STOP_TITLE_KEY);
+		mStopTag = extras.getString(BundleKeys.STOP_TAG_KEY);
 
 		stopTextView.setText(mStopTitle);
 		setViewColor();
@@ -251,13 +246,13 @@ public class StopViewActivity extends RoboSherlockActivity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		int[] disabledItems = {};
-		return MenuClass.onCreateOptionsMenu(this, menu, R.menu.stock_menu,
+		return MenuFunctions.onCreateOptionsMenu(this, menu, R.menu.stock_menu,
 				disabledItems);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		return MenuClass.onOptionsItemSelected(this, item);
+		return MenuFunctions.onOptionsItemSelected(this, item);
 	}
 
 	@Override
@@ -306,9 +301,9 @@ public class StopViewActivity extends RoboSherlockActivity implements
 			this.ctx = ctx;
 		}
 
-		/* Get the data. */
 		@Override
 		protected ArrayList<String> doInBackground(String... values) {
+			// Gets the data
 			ArrayList<String> predictions = APIController.getPrediction(
 					values[0], values[1], values[2]);
 			return predictions;
