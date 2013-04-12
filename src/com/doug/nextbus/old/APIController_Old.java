@@ -35,7 +35,8 @@ public class APIController_Old {
 	 */
 	public static ArrayList<Integer> getPrediction(String route, String stoptag) {
 
-		Log.i("Info", "Getting prediction for stoptag=" + stoptag + " and route=" + route);
+		Log.i("Info", "Getting prediction for stoptag=" + stoptag
+				+ " and route=" + route);
 		String finalURL = createYQLUrl(route, stoptag);
 		Log.i("APIController", "Final URL: " + finalURL);
 
@@ -67,12 +68,13 @@ public class APIController_Old {
 	 * @throws JSONException
 	 *             if something fails while grabbing the values
 	 */
-	private static ArrayList<Integer> parseResults(JSONObject stopPredictionJSON) throws JSONException {
+	private static ArrayList<Integer> parseResults(JSONObject stopPredictionJSON)
+			throws JSONException {
 
 		ArrayList<Integer> predictions = new ArrayList<Integer>();
 
-		JSONArray predictionsJSON = stopPredictionJSON.getJSONObject("query").getJSONObject("results")
-				.getJSONArray("p");
+		JSONArray predictionsJSON = stopPredictionJSON.getJSONObject("query")
+				.getJSONObject("results").getJSONArray("p");
 
 		if (predictionsJSON.isNull(0)) {
 			return null;
@@ -102,10 +104,12 @@ public class APIController_Old {
 		return sb.toString();
 	}
 
-	private static JSONObject readJsonFromUrl(String url) throws IOException, JSONException {
+	private static JSONObject readJsonFromUrl(String url) throws IOException,
+			JSONException {
 		InputStream is = new URL(url).openStream();
 		try {
-			BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+			BufferedReader rd = new BufferedReader(new InputStreamReader(is,
+					Charset.forName("UTF-8")));
 			String jsonText = readAll(rd);
 			JSONObject json = new JSONObject(jsonText);
 			return json;
@@ -114,19 +118,26 @@ public class APIController_Old {
 		}
 	}
 
-  /* Okay. So here's where stuff gets tricky. There isn't actually a public-facing API for grabbing
-   * NextBus data for Georgia Tech, so we actually use the Yahoo Query Language (YQL) to strip the
-   * relevant data out of NextBus site and consume it as JSON. It works. For now. */
+	/*
+	 * Okay. So here's where stuff gets tricky. There isn't actually a
+	 * public-facing API for grabbing NextBus data for Georgia Tech, so we
+	 * actually use the Yahoo Query Language (YQL) to strip the relevant data
+	 * out of NextBus site and consume it as JSON. It works. For now.
+	 */
 	private static String createYQLUrl(String route, String stoptag) {
 
 		return "http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D%22http"
 				+ "%3A%2F%2Fwww.nextbus.com%2Fpredictor%2FfancyBookmarkablePredictionLayer.shtml%3Fa%3Dgeorgi"
-				+ "a-tech%26r%3D" + route + "%26d%3DCounterclo%26s%3D" + stoptag + "%26ts%3Dnull%22%20and%20xpath"
+				+ "a-tech%26r%3D"
+				+ route
+				+ "%26d%3DCounterclo%26s%3D"
+				+ stoptag
+				+ "%26ts%3Dnull%22%20and%20xpath"
 				+ "%3D%22%2F%2Ftd%5B%40class%3D'predictionNumberForFirstPred'%5D%2Fdiv%2Fp%7C%2F%2Ftd%5B%40cl"
 				+ "ass%3D'predictionNumberForOtherPreds'%5D%2Fdiv%2Fp%22&format=json";
 	}
 
-  /* Gets bus locations from the Georgia Tech mobile app. */
+	/* Gets bus locations from the Georgia Tech mobile app. */
 	public static ArrayList<String[]> getBusLocations() {
 
 		String busLocUrl = "http://m.gatech.edu/proxy/walkpath.cip.gatech.edu/bus_position.php";
@@ -146,15 +157,20 @@ public class APIController_Old {
 		} catch (JSONException e) {
 			e.printStackTrace();
 			return new ArrayList<String[]>();
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+			return new ArrayList<String[]>();
 		}
 
 	}
 
-  /* Gets JSON from URL array */
-	private static JSONArray readJsonArrayFromUrl(String url) throws IOException, JSONException {
+	/* Gets JSON from URL array */
+	private static JSONArray readJsonArrayFromUrl(String url)
+			throws IOException, JSONException {
 		InputStream is = new URL(url).openStream();
 		try {
-			BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+			BufferedReader rd = new BufferedReader(new InputStreamReader(is,
+					Charset.forName("UTF-8")));
 			String jsonText = readAll(rd);
 			JSONArray json = new JSONArray(jsonText);
 			return json;
@@ -163,15 +179,18 @@ public class APIController_Old {
 		}
 	}
 
-  /* Curate JSON location results */
-	private static ArrayList<String[]> parseLocationResults(JSONArray busLocationsJSON) throws JSONException {
+	/* Curate JSON location results */
+	private static ArrayList<String[]> parseLocationResults(
+			JSONArray busLocationsJSON) throws JSONException {
 
 		ArrayList<String[]> busLocations = new ArrayList<String[]>();
 
 		for (int i = 0; i < busLocationsJSON.length(); i++) {
 			JSONObject busData = busLocationsJSON.getJSONObject(i);
-			String[] entry = { busData.getString("color"), busData.getString("id"), busData.getString("lat"),
-					busData.getString("lng"), busData.getString("plat"), busData.getString("plng") };
+			String[] entry = { busData.getString("color"),
+					busData.getString("id"), busData.getString("lat"),
+					busData.getString("lng"), busData.getString("plat"),
+					busData.getString("plng") };
 			busLocations.add(entry);
 		}
 
@@ -186,15 +205,14 @@ public class APIController_Old {
 	 * @return active routes
 	 */
 	public static Object[] getActiveRoutesList(Context context) {
-		
-		
+
 		int red = context.getResources().getColor(R.color.red);
 		int blue = context.getResources().getColor(R.color.blue);
 		int green = context.getResources().getColor(R.color.green);
 		int yellow = context.getResources().getColor(R.color.yellow);
 		int night = context.getResources().getColor(R.color.night);
 		boolean activeRoutesExist = true;
-		
+
 		ArrayList<String> activeRoutesList = new ArrayList<String>();
 		ArrayList<Integer> activeColorsList = new ArrayList<Integer>();
 		ArrayList<Boolean> activeRoutesHasDirectionsList = new ArrayList<Boolean>();
@@ -214,7 +232,8 @@ public class APIController_Old {
 				activeRoutesHasDirectionsList.add(false);
 				activeRoutesList.add("blue");
 				activeColorsList.add(blue);
-				activeRoutesHasDirectionsList.add(false); }
+				activeRoutesHasDirectionsList.add(false);
+			}
 			if ((hour >= 7) && (hour <= 18)) {
 				// 6:15am - 9:45pm
 				activeRoutesList.add("green");
@@ -249,7 +268,8 @@ public class APIController_Old {
 				activeColorsList.add(yellow);
 				activeRoutesHasDirectionsList.add(true);
 			}
-			if ((hour >= 20 && time.minute >= 45) || (hour <= 3 && time.minute <= 30)) {
+			if ((hour >= 20 && time.minute >= 45)
+					|| (hour <= 3 && time.minute <= 30)) {
 				// 8:45pm - 3:30am
 				activeRoutesList.add("night");
 				activeColorsList.add(night);
@@ -261,8 +281,11 @@ public class APIController_Old {
 			activeRoutesExist = false;
 		}
 
-		Object[] returnData = { Data_Old.convertToStringArray(activeRoutesList), Data_Old.convertIntegers(activeColorsList),
-				Data_Old.convertToBooleanArray(activeRoutesHasDirectionsList), activeRoutesExist };
+		Object[] returnData = {
+				Data_Old.convertToStringArray(activeRoutesList),
+				Data_Old.convertIntegers(activeColorsList),
+				Data_Old.convertToBooleanArray(activeRoutesHasDirectionsList),
+				activeRoutesExist };
 
 		return returnData;
 

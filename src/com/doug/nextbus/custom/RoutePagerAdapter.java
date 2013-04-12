@@ -29,13 +29,13 @@ import com.viewpagerindicator.TitlePageIndicator;
 public class RoutePagerAdapter extends PagerAdapter implements
 		OnPageChangeListener {
 
-	private final Context mCtx;
+	public static Context mCtx;
 	private String[] mRoutes;
 	private TitlePageIndicator titleIndicator;
 
 	public RoutePagerAdapter(Context ctx, String[] routes,
 			TitlePageIndicator titleIndicator) {
-		this.mCtx = ctx;
+		mCtx = ctx;
 		this.mRoutes = routes;
 		this.titleIndicator = titleIndicator;
 	}
@@ -69,7 +69,7 @@ public class RoutePagerAdapter extends PagerAdapter implements
 		// At this point there are routes, so list view as necessary
 		final int listPosition = position;
 		final String routeTag = mRoutes[listPosition];
-		final Route currentRoute = Data.getRouteWithTag(routeTag);
+		final Route currentRoute = Data.getRouteData().get(routeTag);
 		final boolean hasMultipleDirections = currentRoute
 				.hasMultipleDirections();
 

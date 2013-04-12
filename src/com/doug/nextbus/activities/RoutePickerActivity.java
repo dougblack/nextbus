@@ -1,5 +1,7 @@
 package com.doug.nextbus.activities;
 
+import java.io.InputStream;
+
 import roboguice.inject.InjectView;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -38,8 +40,6 @@ public class RoutePickerActivity extends RoboSherlockActivity implements
 
 		// Used for waking up the server, done first
 		new WakeupAsyncTask().execute();
-
-		Data.setConfig(this);
 
 		mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 		mPrefs.registerOnSharedPreferenceChangeListener(this);
@@ -82,7 +82,7 @@ public class RoutePickerActivity extends RoboSherlockActivity implements
 		boolean onlyActiveRoutes = mPrefs.getBoolean(
 				Data.SHOW_ACTIVE_ROUTES_PREF, true);
 		if (onlyActiveRoutes) {
-			mCurrentRoutes = APIController.getActiveRoutesList(this);
+			mCurrentRoutes = APIController.getActiveRoutesList();
 		} else {
 			mCurrentRoutes = Data.DEFAULT_ALL_ROUTES;
 		}

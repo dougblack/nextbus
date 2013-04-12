@@ -29,6 +29,8 @@ public class StopListActivity extends RoboSherlockActivity {
 	@InjectView(R.id.directionTextView) private TextView directionTextView;
 	@InjectView(R.id.colorbar) private View colorBar;
 
+	public static Context mCtx;
+
 	public static Intent createIntent(Context ctx, String routeTag,
 			String directionTitle) {
 		Intent intent = new Intent(ctx, StopListActivity.class);
@@ -41,6 +43,8 @@ public class StopListActivity extends RoboSherlockActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.stop_list);
+
+		this.mCtx = getApplicationContext();
 
 		Bundle extras = getIntent().getExtras();
 
@@ -59,7 +63,7 @@ public class StopListActivity extends RoboSherlockActivity {
 
 		directionTextView.setText(Data.capitalize(directionTitle));
 
-		final Route route = Data.getRouteWithTag(routeTag);
+		final Route route = Data.getRouteData().get(routeTag);
 		final String[] stopTitles = route.getStopTitles(directionTitle);
 
 		stopListView.setAdapter(new ArrayAdapter<String>(this,
