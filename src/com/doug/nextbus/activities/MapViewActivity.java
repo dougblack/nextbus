@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -361,6 +362,8 @@ public class MapViewActivity extends RoboSherlockMapActivity {
 	/* Refresh bus locations. Implemented as AsyncTask so UI thread is free. */
 	private class refreshBusLocations extends
 			AsyncTask<Void, Void, ArrayList<MapItemizedOverlay>> {
+		boolean updateError = false;
+		Toast toast;
 
 		protected ArrayList<MapItemizedOverlay> doInBackground(Void... voids) {
 
@@ -395,6 +398,9 @@ public class MapViewActivity extends RoboSherlockMapActivity {
 			overlays.add(backgroundBlueOverlay);
 			overlays.add(backgroundYellowOverlay);
 			overlays.add(backgroundGreenOverlay);
+
+			if (busLocations.size() == 0)
+				updateError = true;
 
 			for (String[] entry : busLocations) {
 
@@ -450,10 +456,34 @@ public class MapViewActivity extends RoboSherlockMapActivity {
 			yellowOverlay = overlays.get(3);
 			greenOverlay = overlays.get(4);
 
+			if (updateError)
+				showAToast("No bus location updates available, Server might be down");
+
 			refreshMap();
 			Log.v("RefreshMap", "Map refreshed");
 		}
 
+		/**
+		 * <strong>public void showAToast (String st)</strong></br> this little
+		 * method displays a toast on the screen.</br> it checks if a toast is
+		 * currently visible</br> if so </br> ... it "sets" the new text</br>
+		 * else</br> ... it "makes" the new text</br> and "shows" either or
+		 * 
+		 * @param st
+		 *            the string to be toasted
+		 */
+
+		public void showAToast(String st) { // "Toast toast" is declared in the
+											// class
+			try {
+				toast.getView().isShown(); // true if visible
+				toast.setText(st);
+			} catch (Exception e) { // invisible if exception
+				toast = Toast.makeText(getApplicationContext(), st,
+						Toast.LENGTH_LONG);
+			}
+			toast.show(); // finally display it
+		}
 	}
 
 }

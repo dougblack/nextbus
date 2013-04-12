@@ -373,18 +373,6 @@ public class StopViewActivity extends RoboSherlockActivity implements
 		return sFavorites.contains(favorite);
 	}
 
-	public int getFavoritesSize() {
-		if (sFavorites == null)
-			loadFavoritesData();
-		return sFavorites.getSize();
-	}
-
-	public Favorite getFavorite(int index) {
-		if (sFavorites == null)
-			loadFavoritesData();
-		return sFavorites.getFavorite(index);
-	}
-
 	/**
 	 * Finds all route/direction/stops with that share the same stop title.
 	 * Excludes Rds with given routeTag and directionTag

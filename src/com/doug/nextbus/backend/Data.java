@@ -96,7 +96,6 @@ public class Data {
 							new RouteDirectionStop(route, direction, stop));
 				}
 		}
-
 	}
 
 	public static int getColorFromRouteTag(String routeTag) {

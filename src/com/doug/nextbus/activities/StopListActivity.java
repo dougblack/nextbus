@@ -44,7 +44,7 @@ public class StopListActivity extends RoboSherlockActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.stop_list);
 
-		this.mCtx = getApplicationContext();
+		mCtx = getApplicationContext();
 
 		Bundle extras = getIntent().getExtras();
 
@@ -80,7 +80,6 @@ public class StopListActivity extends RoboSherlockActivity {
 				startActivity(intent);
 			}
 		});
-
 	}
 
 	@Override

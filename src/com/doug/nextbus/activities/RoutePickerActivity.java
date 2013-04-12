@@ -1,7 +1,5 @@
 package com.doug.nextbus.activities;
 
-import java.io.InputStream;
-
 import roboguice.inject.InjectView;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
