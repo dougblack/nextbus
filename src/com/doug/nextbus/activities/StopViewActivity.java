@@ -1,6 +1,16 @@
 package com.doug.nextbus.activities;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 
 import roboguice.inject.InjectView;
 import android.content.Context;
@@ -32,11 +42,13 @@ import com.doug.nextbus.backend.APIController;
 import com.doug.nextbus.backend.BundleKeys;
 import com.doug.nextbus.backend.Data;
 import com.doug.nextbus.backend.Favorite;
+import com.doug.nextbus.backend.FavoritesGSON;
 import com.doug.nextbus.backend.MenuFunctions;
 import com.doug.nextbus.backend.RouteDataGSON.Route.Direction;
 import com.doug.nextbus.backend.RouteDataGSON.Route.Stop;
 import com.doug.nextbus.backend.RouteDirectionStop;
 import com.doug.nextbus.custom.ArrivalsAdapter;
+import com.google.gson.Gson;
 
 /** This activity displays the predictions for a the current stop */
 public class StopViewActivity extends RoboSherlockActivity implements
@@ -70,7 +82,10 @@ public class StopViewActivity extends RoboSherlockActivity implements
 	private String mStopTitle;
 	private String mStopTag;
 
+	private static FavoritesGSON sFavorites;
 	private RouteDirectionStop[] mRdsArray;
+
+	public static Context mCtx;
 
 	public static Intent createIntent(Context ctx, String routeTag,
 			Direction direction, Stop stop) {
@@ -101,6 +116,9 @@ public class StopViewActivity extends RoboSherlockActivity implements
 	public void onCreate(Bundle savedInstance) {
 
 		super.onCreate(savedInstance);
+
+		this.mCtx = getApplicationContext();
+
 		setContentView(R.layout.stop_view);
 
 		SharedPreferences prefs = PreferenceManager
@@ -114,6 +132,13 @@ public class StopViewActivity extends RoboSherlockActivity implements
 		mDirectionTag = extras.getString(BundleKeys.DIRECTION_TAG_KEY);
 		mStopTitle = extras.getString(BundleKeys.STOP_TITLE_KEY);
 		mStopTag = extras.getString(BundleKeys.STOP_TAG_KEY);
+
+		String[] extraStrings = new String[] { mRouteTag, mDirectionTitle,
+				mDirectionTag, mStopTitle, mStopTag };
+		for (String str : extraStrings) {
+			if (str == null)
+				finish();
+		}
 
 		stopTextView.setText(mStopTitle);
 		setViewColor();
@@ -130,7 +155,7 @@ public class StopViewActivity extends RoboSherlockActivity implements
 				mDirectionTitle, mStopTag, mStopTitle);
 
 		int starImageResource = R.drawable.ic_favorite_toadd;
-		if (Data.isFavorite(favorite)) {
+		if (isFavorite(favorite)) {
 			starImageResource = R.drawable.ic_favorite_toremove;
 		}
 		favoriteButton.setImageResource(starImageResource);
@@ -153,8 +178,12 @@ public class StopViewActivity extends RoboSherlockActivity implements
 
 	@Override
 	protected void onRestart() {
-		refresh();
-		super.onRestart();
+		try {
+			refresh();
+			super.onRestart();
+		} catch (Exception e) {
+			finish();
+		}
 	}
 
 	private void setEventListeners(Favorite favorite) {
@@ -198,8 +227,13 @@ public class StopViewActivity extends RoboSherlockActivity implements
 
 	public void updateArrivals() {
 		// TODO: check if the preferences is being used
-		mRdsArray = Data.getAllRdsWithStopTitle(mStopTitle, mRouteTag,
-				mDirectionTag);
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(getApplicationContext());
+		boolean onlyActiveRoutes = prefs.getBoolean(
+				Data.SHOW_ACTIVE_ROUTES_PREF, false);
+
+		mRdsArray = getAllRdsWithStopTitle(onlyActiveRoutes, mStopTitle,
+				mRouteTag, mDirectionTag);
 
 		if (mRdsArray.length == 0) {
 			arrivalsDrawer.setVisibility(View.INVISIBLE);
@@ -229,6 +263,10 @@ public class StopViewActivity extends RoboSherlockActivity implements
 
 	/** Gets the latest prediction data */
 	private void refresh() {
+		if (mRouteTag == null || mDirectionTag == null || mStopTag == null) {
+			return;
+		}
+
 		routeViewProgressBar.setVisibility(View.VISIBLE);
 		refreshButton.setVisibility(View.INVISIBLE);
 		new LoadPredictionAsyncTask(this).execute(mRouteTag, mDirectionTag,
@@ -275,7 +313,7 @@ public class StopViewActivity extends RoboSherlockActivity implements
 
 		@Override
 		public void onClick(View v) {
-			boolean ret = Data.toggleFavorite(favorite);
+			boolean ret = toggleFavorite(favorite);
 
 			if (ret) {
 				((ImageButton) v)
@@ -290,6 +328,88 @@ public class StopViewActivity extends RoboSherlockActivity implements
 			}
 		}
 
+	}
+
+	public boolean toggleFavorite(Favorite favorite) {
+		if (sFavorites == null)
+			loadFavoritesData();
+		boolean ret = sFavorites.toggleFavorite(favorite);
+		saveFavoriteData();
+		return ret;
+
+	}
+
+	private void loadFavoritesData() {
+		try {
+			FileInputStream fis = getApplicationContext().openFileInput(
+					"favorites.txt");
+			Reader reader = new InputStreamReader(fis);
+			sFavorites = new Gson().fromJson(reader, FavoritesGSON.class);
+		} catch (Exception e) {
+			System.out.println(e);
+			sFavorites = new FavoritesGSON();
+		}
+	}
+
+	private void saveFavoriteData() {
+		try {
+			sFavorites.sort();
+			String toSave = new Gson().toJson(sFavorites);
+			FileOutputStream fos = getApplicationContext().openFileOutput(
+					"favorites.txt", Context.MODE_PRIVATE);
+			fos.write(toSave.getBytes());
+			fos.close();
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public boolean isFavorite(Favorite favorite) {
+		if (sFavorites == null)
+			loadFavoritesData();
+		return sFavorites.contains(favorite);
+	}
+
+	/**
+	 * Finds all route/direction/stops with that share the same stop title.
+	 * Excludes Rds with given routeTag and directionTag
+	 */
+	public static RouteDirectionStop[] getAllRdsWithStopTitle(
+			boolean onlyActiveRoutes, String stopTitle, String routeTag,
+			String directionTag) {
+
+		ArrayList<RouteDirectionStop> rdsList = new ArrayList<RouteDirectionStop>();
+
+		// Get the default list of routes and overwrite if active routes is true
+		String[] currentRoutes = Data.DEFAULT_ALL_ROUTES;
+		if (onlyActiveRoutes)
+			currentRoutes = APIController.getActiveRoutesList();
+
+		HashMap<String, HashSet<RouteDirectionStop>> sSharedStops = Data
+				.getSharedStops();
+
+		/*
+		 * Iterate through route and direction if the rds matches the given
+		 * route/direction or is not in the activeRoutes then continue
+		 */
+		Iterator<RouteDirectionStop> iter = sSharedStops.get(stopTitle)
+				.iterator();
+		while (iter.hasNext()) {
+			RouteDirectionStop rds = iter.next();
+			if ((rds.route.tag.equals(routeTag) && rds.direction.tag
+					.equals(directionTag))
+					|| !Data.isInArray(currentRoutes, rds.route.tag))
+				continue;
+			rdsList.add(rds);
+		}
+
+		// Sorting to put the blues, reds, etc together
+		Collections.sort(rdsList);
+		RouteDirectionStop[] rdsArray = {};
+		return rdsList.toArray(rdsArray);
 	}
 
 	/** Load prediction data asynchronously. */
