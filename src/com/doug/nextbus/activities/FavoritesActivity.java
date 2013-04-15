@@ -15,7 +15,6 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.doug.nextbus.R;
 import com.doug.nextbus.RoboSherlock.RoboSherlockActivity;
-import com.doug.nextbus.backend.Data;
 import com.doug.nextbus.backend.Favorite;
 import com.doug.nextbus.backend.MenuFunctions;
 import com.doug.nextbus.custom.FavoritesAdapter;
@@ -63,13 +62,14 @@ public class FavoritesActivity extends RoboSherlockActivity {
 		super.onResume();
 		// In case any preferences were changed.
 		mFavoritesAdapter.notifyDataSetChanged();
+		mFavoritesAdapter.updateFavorites();
 	}
 
 	private void setEventListeners() {
 		stopListView.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				Favorite favorite = Data.getFavorite(position);
+				Favorite favorite = mFavoritesAdapter.getFavorite(position);
 				startActivity(StopViewActivity.createIntent(
 						getApplicationContext(), favorite));
 			}

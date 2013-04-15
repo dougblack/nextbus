@@ -11,7 +11,6 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.TimeZone;
 
-import android.content.Context;
 import android.text.format.Time;
 import android.util.Log;
 
@@ -63,7 +62,7 @@ public class APIController {
 	 * This method returns the list of active routes by NextBus official
 	 * schedule.
 	 */
-	public static String[] getActiveRoutesList(Context context) {
+	public static String[] getActiveRoutesList() {
 
 		DateTime allNow = DateTime.now(TimeZone.getDefault());
 
